@@ -1,0 +1,44 @@
+@page "/register"
+@layout HeadlessLayout
+
+<PageTitle>Sigetre - Register</PageTitle>
+
+<MudGrid Justify="Justify.FlexStart">
+    <MudItem xs="12" sm="12" md="10" lg="8" xl="8" xxl="8">
+        <MudPaper Class="mud-width-full pa-4">
+            <div class="d-flex justify-center pb-6 pt-6">
+                <MudImage Src="images/icon-192.png" Alt="Sigetre - Treinamentos" Width="250" Height="250"/>
+            </div>
+            <MudForm @ref="_mudForm">
+                <MudTextField
+                    T="string"
+                    Label="E-mail"
+                    InputType="InputType.Email"
+                    Placeholder="exemple@exemple.com"
+                    Required="true"
+                    RequiredError="Informe o E-mail"
+                    Validation="@(new EmailAddressAttribute{ErrorMessage="E-mail Inválido"})" />
+                <MudTextField
+                    T="string"
+                    Label="Senha"
+                    InputType="InputType.Password"
+                    Placeholder="Senha"
+                    Required="true"
+                    RequiredError="Senha Inválida" />
+            </MudForm>
+
+            <div class="d-flex mt-8">
+                <MudButton Variant="Variant.Filled" Color="Color.Success" Class="mx-5">Register</MudButton>
+                <MudSpacer />
+                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Href="/login" Class="mx-5">Already have an account</MudButton>
+            </div>
+
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    
+    MudForm? _mudForm;
+    
+}
