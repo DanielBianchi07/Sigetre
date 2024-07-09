@@ -4,9 +4,11 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sigetre.Api.Data;
+using Sigetre.Api.EndPoints;
 using Sigetre.Api.Handlers;
 using Sigetre.Api.Models;
 using Sigetre.Core.Handlers;
+using Sigetre.Core.Models;
 
 #endregion
 
@@ -38,6 +40,7 @@ builder.Services
     .AddApiEndpoints();
 
 builder.Services.AddTransient<ICompanyHandler, CompanyHandler>();
+builder.Services.AddTransient<IAlternativeHandler, AlternativeHandler>();
 
 #endregion
 
@@ -51,7 +54,8 @@ app.UseAuthorization();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/", () => new { message = "OK" });
+app.MapEndpoints();
 
 app.MapGroup("v1/identity")
     .WithTags("Identity")
