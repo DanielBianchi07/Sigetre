@@ -12,7 +12,7 @@ using Sigetre.Api.Data;
 namespace Sigetre.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240705233943_v1")]
+    [Migration("20240708022616_v1")]
     partial class v1
     {
         /// <inheritdoc />
@@ -70,6 +70,146 @@ namespace Sigetre.Api.Migrations
                     b.ToTable("InstructorTraining");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<long>", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<long?>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("IdentityRole", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityRoleClaim", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<long>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ClaimType")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("IdentityClaim", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<long>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("IdentityUserLogin", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RoleId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.ToTable("IdentityUserRole", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<long>", b =>
+                {
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(180)
+                        .HasColumnType("nvarchar(180)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("IdentityUserToken", (string)null);
+                });
+
             modelBuilder.Entity("QuestionTest", b =>
                 {
                     b.Property<long>("QuestionsId")
@@ -83,6 +223,80 @@ namespace Sigetre.Api.Migrations
                     b.HasIndex("TestsId");
 
                     b.ToTable("QuestionTest");
+                });
+
+            modelBuilder.Entity("Sigetre.Api.Models.User", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<long>("ClientId")
+                        .HasColumnType("BIGINT");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(180)
+                        .HasColumnType("nvarchar(180)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(180)
+                        .HasColumnType("nvarchar(180)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .IsUnique()
+                        .HasFilter("[NormalizedEmail] IS NOT NULL");
+
+                    b.HasIndex("NormalizedUserName");
+
+                    b.ToTable("IdentityUser", (string)null);
                 });
 
             modelBuilder.Entity("Sigetre.Core.Models.Alternative", b =>
@@ -119,7 +333,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -166,7 +381,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<byte[]>("Watermark")
@@ -216,7 +432,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<byte[]>("Watermark")
@@ -268,7 +485,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -330,7 +548,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("ZipCode")
@@ -374,7 +593,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -421,7 +641,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<short>("Validity")
@@ -485,7 +706,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -544,7 +766,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<short?>("Workload")
@@ -588,7 +811,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -623,7 +847,7 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -678,7 +902,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -717,7 +942,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -762,7 +988,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<long>("UpdatedBy")
+                    b.Property<long?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -830,6 +1057,49 @@ namespace Sigetre.Api.Migrations
                     b.HasOne("Sigetre.Core.Models.Training", null)
                         .WithMany()
                         .HasForeignKey("TrainingsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<long>", b =>
+                {
+                    b.HasOne("Sigetre.Api.Models.User", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<long>", b =>
+                {
+                    b.HasOne("Sigetre.Api.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<long>", b =>
+                {
+                    b.HasOne("Sigetre.Api.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
+                {
+                    b.HasOne("Sigetre.Api.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<long>", b =>
+                {
+                    b.HasOne("Sigetre.Api.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -982,6 +1252,11 @@ namespace Sigetre.Api.Migrations
                         .HasForeignKey("TrainingsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Sigetre.Api.Models.User", b =>
+                {
+                    b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("Sigetre.Core.Models.Company", b =>
