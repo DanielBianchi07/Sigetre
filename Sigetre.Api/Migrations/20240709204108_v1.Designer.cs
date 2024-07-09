@@ -12,7 +12,7 @@ using Sigetre.Api.Data;
 namespace Sigetre.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240708022616_v1")]
+    [Migration("20240709204108_v1")]
     partial class v1
     {
         /// <inheritdoc />
@@ -95,7 +95,9 @@ namespace Sigetre.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.HasIndex("UserId");
 
@@ -250,22 +252,24 @@ namespace Sigetre.Api.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("NVARCHAR");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(180)
                         .HasColumnType("nvarchar(180)");
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                        .HasMaxLength(180)
+                        .HasColumnType("nvarchar(180)");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
@@ -285,8 +289,8 @@ namespace Sigetre.Api.Migrations
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("nvarchar(32)");
+                        .HasMaxLength(180)
+                        .HasColumnType("nvarchar(180)");
 
                     b.HasKey("Id");
 
@@ -294,7 +298,9 @@ namespace Sigetre.Api.Migrations
                         .IsUnique()
                         .HasFilter("[NormalizedEmail] IS NOT NULL");
 
-                    b.HasIndex("NormalizedUserName");
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("IdentityUser", (string)null);
                 });

@@ -18,8 +18,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x => x.CustomSchemaIds(n => n.FullName));
 
 builder.Services
-    .AddAuthentication(IdentityConstants.ApplicationScheme)
-    .AddIdentityCookies();
+    .AddAuthentication(o=>
+    {
+        o.DefaultScheme = IdentityConstants.ApplicationScheme;
+        o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+    })
+    .AddIdentityCookies(o => { });
 builder.Services.AddAuthorization();
 
 var cnnStr = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
@@ -72,6 +76,34 @@ app.MapGroup("v1/identity")
         return Results.Ok();
     })
     .RequireAuthorization();
+
+app.MapPost("/register", async (RegisterModel model, UserManager<User> userManager) =>
+    {
+        if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password) ||
+            string.IsNullOrEmpty(model.Name) || string.IsNullOrEmpty(model.PhoneNumber))
+        {
+            return Results.BadRequest("Todos os campos são obrigatórios.");
+        }
+
+        var user = new User
+        {
+            UserName = model.Email,
+            Email = model.Email,
+            Name = model.Name,
+            PhoneNumber = model.PhoneNumber,
+            ClientId = model.ClientId
+            // Mapeie outros campos conforme necessário
+        };
+    
+        var result = await userManager.CreateAsync(user, model.Password);
+    
+        if (result.Succeeded)
+        {
+            return Results.Ok("Usuário registrado com sucesso.");
+        }
+
+        return Results.BadRequest(result.Errors);
+    });
 
 app.Run();
 

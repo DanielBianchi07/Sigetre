@@ -80,10 +80,10 @@ namespace Sigetre.Api.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "NVARCHAR(32)", maxLength: 32, nullable: false),
                     ClientId = table.Column<long>(type: "BIGINT", nullable: false),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: false),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(32)", maxLength: 32, nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: false),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
                     EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
@@ -708,7 +708,9 @@ namespace Sigetre.Api.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityRole_NormalizedName",
                 table: "IdentityRole",
-                column: "NormalizedName");
+                column: "NormalizedName",
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityRole_UserId",
@@ -725,7 +727,9 @@ namespace Sigetre.Api.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityUser_NormalizedUserName",
                 table: "IdentityUser",
-                column: "NormalizedUserName");
+                column: "NormalizedUserName",
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityUserLogin_UserId",

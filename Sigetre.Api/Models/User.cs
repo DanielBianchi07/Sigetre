@@ -5,8 +5,10 @@ namespace Sigetre.Api.Models;
 public class User : IdentityUser<long>
 {
     // claims -> afirmação
-    public List<IdentityRole<long>>? Roles { get; set; }
-    public string Name { get; set; } = string.Empty;
+    [PersonalData]
     public long ClientId { get; set; } //empresa referente
-    public bool IsAdmin { get; set; }
+    [PersonalData]
+    public string Name { get; set; } = string.Empty;
+    
+    public List<IdentityRole<long>>? Roles { get; set; }
 }
