@@ -10,8 +10,8 @@ public class Company : BaseClass
     public string Email { get; set; } = String.Empty;
     
     // relationship
-    public long AddressId { get; set; }
-    public CompanyAddress Address { get; set; } = null!;
+    public long CompanyAddressId { get; set; }
+    public Addresses CompanyAddress { get; set; } = null!;
     
     public ICollection<CompanyPhone> Telephone { get; set; } = null!;
     public ICollection<Student> Students { get; set; } = null!;

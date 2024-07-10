@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Sigetre.Core.Requests.CompanyAddress;
+namespace Sigetre.Core.Requests.Address;
 
-public class CreateCompanyAddressRequest : Request
+public class UpdateAddressRequest : Request
 {
+    [Required]
+    public long Id { get; set; }
     [Required]
     public string ZipCode { get; set; } = String.Empty;
     public string State { get; set; } = String.Empty;

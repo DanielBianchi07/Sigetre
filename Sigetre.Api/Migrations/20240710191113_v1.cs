@@ -20,7 +20,7 @@ namespace Sigetre.Api.Migrations
                     Name = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
                     Ein = table.Column<string>(type: "VARCHAR(32)", maxLength: 32, nullable: true),
                     Email = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
-                    AddressId = table.Column<long>(type: "bigint", nullable: false),
+                    ClientAddressId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
@@ -34,18 +34,15 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompanyAddresses",
+                name: "Companies",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ZipCode = table.Column<string>(type: "VARCHAR(9)", maxLength: 9, nullable: false),
-                    State = table.Column<string>(type: "NVARCHAR(48)", maxLength: 48, nullable: false),
-                    City = table.Column<string>(type: "NVARCHAR(32)", maxLength: 32, nullable: false),
-                    District = table.Column<string>(type: "VARCHAR(2)", maxLength: 2, nullable: false),
-                    StreetName = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
-                    Number = table.Column<string>(type: "NVARCHAR(5)", maxLength: 5, nullable: false),
-                    Complement = table.Column<string>(type: "NVARCHAR(64)", maxLength: 64, nullable: true),
+                    Name = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
+                    Ein = table.Column<string>(type: "VARCHAR(32)", maxLength: 32, nullable: true),
+                    Email = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    CompanyAddressId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
@@ -55,7 +52,7 @@ namespace Sigetre.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompanyAddresses", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -188,7 +185,7 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ClientAddresses",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -209,24 +206,29 @@ namespace Sigetre.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ClientAddresses", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ClientAddresses_Clients_ClientId",
+                        name: "FK_Addresses_Clients_ClientId",
                         column: x => x.ClientId,
                         principalTable: "Clients",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Companies_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Companies",
+                name: "CompanyPhones",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
-                    Ein = table.Column<string>(type: "VARCHAR(32)", maxLength: 32, nullable: true),
-                    Email = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
-                    AddressId = table.Column<long>(type: "bigint", nullable: false),
+                    Number = table.Column<string>(type: "VARCHAR(16)", maxLength: 16, nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
@@ -236,13 +238,18 @@ namespace Sigetre.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Companies", x => x.Id);
+                    table.PrimaryKey("PK_CompanyPhones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Companies_CompanyAddresses_AddressId",
-                        column: x => x.AddressId,
-                        principalTable: "CompanyAddresses",
+                        name: "FK_CompanyPhones_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CompanyPhones_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -458,37 +465,6 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompanyPhones",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<string>(type: "VARCHAR(16)", maxLength: 16, nullable: false),
-                    CompanyId = table.Column<long>(type: "bigint", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
-                    CreateBy = table.Column<long>(type: "BIGINT", nullable: false),
-                    UpdatedBy = table.Column<long>(type: "BIGINT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompanyPhones", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CompanyPhones_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CompanyPhones_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CompanyStudent",
                 columns: table => new
                 {
@@ -670,6 +646,13 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Addresses_ClientId",
+                table: "Addresses",
+                column: "ClientId",
+                unique: true,
+                filter: "[ClientId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Alternatives_QuestionId",
                 table: "Alternatives",
                 column: "QuestionId");
@@ -683,19 +666,6 @@ namespace Sigetre.Api.Migrations
                 name: "IX_Certificates_TrainingId",
                 table: "Certificates",
                 column: "TrainingId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ClientAddresses_ClientId",
-                table: "ClientAddresses",
-                column: "ClientId",
-                unique: true,
-                filter: "[ClientId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Companies_AddressId",
-                table: "Companies",
-                column: "AddressId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CompanyPhones_ClientId",
@@ -788,6 +758,9 @@ namespace Sigetre.Api.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "Addresses");
+
+            migrationBuilder.DropTable(
                 name: "Alternatives");
 
             migrationBuilder.DropTable(
@@ -795,9 +768,6 @@ namespace Sigetre.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Certificates");
-
-            migrationBuilder.DropTable(
-                name: "ClientAddresses");
 
             migrationBuilder.DropTable(
                 name: "CompanyPhones");
@@ -858,9 +828,6 @@ namespace Sigetre.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Trainings");
-
-            migrationBuilder.DropTable(
-                name: "CompanyAddresses");
 
             migrationBuilder.DropTable(
                 name: "Specializations");

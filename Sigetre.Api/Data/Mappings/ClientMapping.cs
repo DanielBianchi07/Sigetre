@@ -24,9 +24,14 @@ public class ClientMapping : IEntityTypeConfiguration<Client>
             .HasColumnType("VARCHAR")
             .HasMaxLength(160);
 
-        builder.HasOne(x => x.Address)
-            .WithOne(x => x.Client)
-            .HasForeignKey<ClientAddress>(x => x.ClientId);
+        builder.Property(x => x.ClientAddressId)
+            .HasColumnType("BIGINT")
+            .IsRequired();
+        builder.HasOne(x => x.ClientAddress)
+            .WithOne(x => x.Clt)
+            .HasForeignKey<Addresses>(x=>x.ClientId)
+            .IsRequired();
+        
         
         builder.Property(x => x.Status)
             .IsRequired(true)

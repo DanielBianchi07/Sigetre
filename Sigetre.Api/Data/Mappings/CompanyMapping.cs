@@ -25,6 +25,14 @@ public class CompanyMapping : IEntityTypeConfiguration<Company>
             .HasColumnType("VARCHAR")
             .HasMaxLength(160);
         
+        builder.Property(x => x.CompanyAddressId)
+            .HasColumnType("BIGINT")
+            .IsRequired();
+        builder.HasOne(x => x.CompanyAddress)
+            .WithOne(x => x.Company)
+            .HasForeignKey<Addresses>(x=>x.ClientId)
+            .IsRequired();
+        
         builder.Property(x => x.Status)
             .IsRequired(true)
             .HasColumnType("SMALLINT");
