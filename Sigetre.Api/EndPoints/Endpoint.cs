@@ -1,5 +1,6 @@
 ﻿using Sigetre.Api.Common.Api;
 using Sigetre.Api.EndPoints.Alternatives;
+using Sigetre.Api.EndPoints.Companies;
 
 namespace Sigetre.Api.EndPoints;
 
@@ -19,6 +20,15 @@ public static class Endpoint
             .MapEndpoint<DeleteAlternativeEndpoint>()
             .MapEndpoint<GetAlternativeByIdEndpoint>()
             .MapEndpoint<GetAlternativeByQuestionEndpoint>();
+        
+        endpoints.MapGroup("v1/companies")
+            .WithTags("Companies")
+            //.RequireAuthorization()
+            .MapEndpoint<CreateCompanyEndpoint>()
+            .MapEndpoint<UpdateCompanyEndpoint>()
+            .MapEndpoint<DeleteCompanyEndpoint>()
+            .MapEndpoint<GetCompanyByIdEndpoint>()
+            .MapEndpoint<GetAllCompanyEndpoint>();
     }
     
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
