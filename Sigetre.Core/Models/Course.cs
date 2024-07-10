@@ -9,11 +9,10 @@ public class Course : BaseClass
     public int? PeriodicWorkload { get; set; }
     public int? Validity { get; set; }
     public Byte[]? Logo { get; set; }
+    public long SpecializationId { get; set; }
     // relationship
-    public ICollection<InstructorCourse> InstructorCourses { get; set; } = null!;
     public ICollection<Training> Trainings { get; set; } = null!;
     public ICollection<ProgramContent> ProgramContents { get; set; } = null!;
-    public ICollection<Test> Tests { get; set; } = null!;
     public ICollection<Question> Questions { get; set; } = null!;
 
 }

@@ -7,7 +7,7 @@ public class Certificate : BaseClass
     public long Id { get; set; }
     public string Code { get; set; } = String.Empty;
     public DateTime? TrainingStartedAt { get; set; }
-    public Byte[] Watermark { get; set; }
+    public Byte[]? Watermark { get; set; }
     public EDocumentSituation Situation { get; set; }
     
     public long TrainingId { get; set; }

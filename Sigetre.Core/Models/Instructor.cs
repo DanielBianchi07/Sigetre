@@ -11,7 +11,6 @@ public class Instructor : BaseClass
     public string Telephone { get; set; } = String.Empty;
     public Byte[]? Signature { get; set; }
     // relationship
-    public ICollection<InstructorCourse> InstructorCourses { get; set; } = null!;
     public ICollection<Training> Trainings { get; set; } = null!;
     public long SpecializationId { get; set; }
     public Specialization Specialization { get; set; } = null!;

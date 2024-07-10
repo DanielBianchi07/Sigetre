@@ -23,6 +23,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Alternative> Alternatives { get; set; } = null!;
     public DbSet<AttendanceList> AttendanceLists { get; set; } = null!;
     public DbSet<Certificate> Certificates { get; set; } = null!;
+    public DbSet<Client> Clients { get; set; } = null!;
     public DbSet<Company> Companies { get; set; } = null!;
     public DbSet<CompanyAddress> CompanyAddresses { get; set; } = null!;
     public DbSet<CompanyPhone> CompanyPhones { get; set; } = null!;
@@ -30,13 +31,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Instructor> Instructors { get; set; } = null!;
     public DbSet<ProgramContent> ProgramContents { get; set; } = null!;
     public DbSet<Question> Questions { get; set; } = null!;
+    public DbSet<Specialization> Specializations { get; set; } = null!;
     public DbSet<Student> Students { get; set; } = null!;
     public DbSet<Test> Tests { get; set; } = null!;
     public DbSet<Training> Trainings { get; set; } = null!;
-    public DbSet<InstructorCourse> InstructorCourses { get; set; } = null!;
-
-    
-    
+  
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

@@ -2,7 +2,7 @@ using Sigetre.Core.Enums;
 
 namespace Sigetre.Core.Models;
 
-public class Company : BaseClass
+public class Client : BaseClass
 {
     public long Id { get; set; }
     public string Name { get; set; } = String.Empty;
@@ -11,8 +11,6 @@ public class Company : BaseClass
     
     // relationship
     public long AddressId { get; set; }
-    public CompanyAddress Address { get; set; } = null!;
-    
+    public ClientAddress Address { get; set; } = null!;
     public ICollection<CompanyPhone> Telephone { get; set; } = null!;
-    public ICollection<Student> Students { get; set; } = null!;
 }
