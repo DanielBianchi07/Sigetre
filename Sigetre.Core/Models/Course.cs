@@ -8,7 +8,7 @@ public class Course : BaseClass
     public int? InitialWorkload { get; set; }
     public int? PeriodicWorkload { get; set; }
     public int? Validity { get; set; }
-    public Byte[] Logo { get; set; }
+    public Byte[]? Logo { get; set; }
     // relationship
     public ICollection<InstructorCourse> InstructorCourses { get; set; } = null!;
     public ICollection<Training> Trainings { get; set; } = null!;

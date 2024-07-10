@@ -13,7 +13,7 @@ public class Training : BaseClass
     public Course Course { get; set; } = null!;
     public ICollection<Student> Students { get; set; } = null!;
     public ICollection<Instructor> Instructors { get; set; } = null!;
-
+    
     public ICollection<Certificate> Certificates { get; set; } = null!;
     public ICollection<AttendanceList> AttendanceLists { get; set; } = null!;
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sigetre.Core.Requests.CompanyAddress;
 
-public class UpdateCompanyAddressRequest
+public class UpdateCompanyAddressRequest : Request
 {
     [Required]
     public long Id { get; set; }

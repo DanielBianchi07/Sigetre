@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Sigetre.Core.Requests.Company;
+namespace Sigetre.Core.Requests.Test;
 
-public class GetCompanyByIdRequest : Request
+public class GetTestByIdRequest : Request
 {
     [Required]
     public long Id { get; set; }

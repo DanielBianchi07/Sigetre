@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sigetre.Core.Requests.CompanyAddress;
 
-public class CreateCompanyAddressRequest
+public class CreateCompanyAddressRequest : Request
 {
     [Required]
     public string ZipCode { get; set; } = String.Empty;

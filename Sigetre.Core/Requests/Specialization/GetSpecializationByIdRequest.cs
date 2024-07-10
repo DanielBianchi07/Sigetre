@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Sigetre.Core.Requests.Company;
+namespace Sigetre.Core.Requests.Specialization;
 
-public class GetCompanyByIdRequest : Request
+public class GetSpecializationByIdRequest
 {
     [Required]
     public long Id { get; set; }

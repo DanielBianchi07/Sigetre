@@ -1,18 +1,22 @@
-namespace Sigetre.Core.Models;
+using System.ComponentModel.DataAnnotations;
 
-public class Instructor : BaseClass
+namespace Sigetre.Core.Requests.Instructor;
+
+public class UpdateInstructorRequest
 {
-    // fields
+    [Required]
     public long Id { get; set; }
+    [Required]
     public string Name { get; set; } = String.Empty;
+    [Required]
     public string Ssn { get; set; } = String.Empty;
     public string Email { get; set; } = String.Empty;
+    [Required]
     public string Registry { get; set; } = String.Empty;
+    [Required]
     public string Telephone { get; set; } = String.Empty;
     public Byte[]? Signature { get; set; }
     // relationship
-    public ICollection<InstructorCourse> InstructorCourses { get; set; } = null!;
-    public ICollection<Training> Trainings { get; set; } = null!;
+    [Required]
     public long SpecializationId { get; set; }
-    public Specialization Specialization { get; set; } = null!;
 }
