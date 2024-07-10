@@ -5,7 +5,4 @@ public class CompanyPhone : BaseClass
     // fields
     public long Id { get; set; }
     public string Number { get; set; } = String.Empty;
-    // relationship
-    public long CompanyId { get; set; }
-    public Company Company { get; set; } = null!;
 }

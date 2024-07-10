@@ -7,7 +7,8 @@ public class Question : BaseClass
     public string Content { get; set; } = String.Empty;
     public long? CorrectAnswer { get; set; }
     // relationship
-    public ICollection<Course> Courses { get; set; } = null!;
+    public long CourseId { get; set; }
+    public Course Course { get; set; } = null!;
     public ICollection<Test> Tests { get; set; } = null!;
     public ICollection<Alternative> Alternatives { get; set; } = null!;
 }

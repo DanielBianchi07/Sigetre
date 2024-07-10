@@ -19,7 +19,6 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
                 Name = request.Name,
                 Ein = request.Ein,
                 Email = request.Email,
-                AddressId = request.AddressId,
                 ClientId = request.ClientId,
                 CreateBy = request.CreateBy,
                 CreatedAt = request.CreatedAt,
@@ -70,7 +69,6 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
             company.Name = request.Name;
             company.Ein = request.Ein;
             company.Email = request.Email;
-            company.AddressId = request.AddressId;
             company.ClientId = request.ClientId;
             company.UpdatedBy = request.UpdatedBy;
             company.UpdatedAt = request.UpdatedAt;
@@ -121,7 +119,7 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
 
             return new PagedResponse<List<Company>>(companies, count, request.PageNumber, request.PageSize);
         }
-        catch (Exception e)
+        catch
         {
             return new PagedResponse<List<Company>>(null, 500, "Não foi possível consultar as empresas");
         }

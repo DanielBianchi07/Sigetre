@@ -1,8 +1,6 @@
-using Sigetre.Core.Enums;
-
 namespace Sigetre.Core.Models;
 
-public class CompanyAddress : BaseClass
+public class ClientAddress : BaseClass
 {
     public long Id { get; set; }
     public string ZipCode { get; set; } = String.Empty;
@@ -13,5 +11,7 @@ public class CompanyAddress : BaseClass
     public string Number { get; set; } = String.Empty;
     public string? Complement { get; set; }
     
-    public Company? Company { get; set; }
+    public new long? ClientId { get; set; }
+
+    public Client? Client { get; set; }
 }

@@ -28,6 +28,9 @@ public class CourseMapping : IEntityTypeConfiguration<Course>
         builder.Property(x => x.Logo)
             .IsRequired(false)
             .HasColumnType("VARBINARY(MAX)");
+        builder.Property(x => x.SpecializationId)
+            .IsRequired(true)
+            .HasColumnType("BIGINT");
         
         builder.Property(x => x.Status)
             .IsRequired(true)
