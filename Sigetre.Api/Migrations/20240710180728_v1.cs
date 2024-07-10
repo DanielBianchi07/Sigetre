@@ -12,6 +12,28 @@ namespace Sigetre.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
+                    Ein = table.Column<string>(type: "VARCHAR(32)", maxLength: 32, nullable: true),
+                    Email = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    AddressId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<short>(type: "SMALLINT", nullable: false),
+                    ClientId = table.Column<long>(type: "bigint", nullable: false),
+                    CreateBy = table.Column<long>(type: "BIGINT", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "BIGINT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CompanyAddresses",
                 columns: table => new
                 {
@@ -47,6 +69,7 @@ namespace Sigetre.Api.Migrations
                     PeriodicWorkload = table.Column<short>(type: "SMALLINT", nullable: false),
                     Validity = table.Column<short>(type: "SMALLINT", nullable: false),
                     Logo = table.Column<byte[]>(type: "VARBINARY(MAX)", nullable: true),
+                    SpecializationId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
@@ -80,8 +103,8 @@ namespace Sigetre.Api.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "NVARCHAR(32)", maxLength: 32, nullable: false),
                     ClientId = table.Column<long>(type: "BIGINT", nullable: false),
+                    Name = table.Column<string>(type: "NVARCHAR(32)", maxLength: 32, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
@@ -103,13 +126,12 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Questions",
+                name: "Specializations",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
-                    CorrectAnswer = table.Column<long>(type: "bigint", nullable: true),
+                    Name = table.Column<string>(type: "NVARCHAR(64)", maxLength: 64, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
@@ -119,26 +141,7 @@ namespace Sigetre.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Questions", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Specialization",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    ClientId = table.Column<long>(type: "bigint", nullable: false),
-                    CreateBy = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Specialization", x => x.Id);
+                    table.PrimaryKey("PK_Specializations", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -166,6 +169,55 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tests",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "NVARCHAR(16)", maxLength: 16, nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<short>(type: "SMALLINT", nullable: false),
+                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
+                    CreateBy = table.Column<long>(type: "BIGINT", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "BIGINT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tests", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ClientAddresses",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ZipCode = table.Column<string>(type: "VARCHAR(9)", maxLength: 9, nullable: false),
+                    State = table.Column<string>(type: "NVARCHAR(48)", maxLength: 48, nullable: false),
+                    City = table.Column<string>(type: "NVARCHAR(32)", maxLength: 32, nullable: false),
+                    District = table.Column<string>(type: "VARCHAR(2)", maxLength: 2, nullable: false),
+                    StreetName = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
+                    Number = table.Column<string>(type: "NVARCHAR(5)", maxLength: 5, nullable: false),
+                    Complement = table.Column<string>(type: "NVARCHAR(64)", maxLength: 64, nullable: true),
+                    ClientId = table.Column<long>(type: "BIGINT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<short>(type: "SMALLINT", nullable: false),
+                    CreateBy = table.Column<long>(type: "BIGINT", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "BIGINT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClientAddresses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ClientAddresses_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Companies",
                 columns: table => new
                 {
@@ -174,7 +226,7 @@ namespace Sigetre.Api.Migrations
                     Name = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
                     Ein = table.Column<string>(type: "VARCHAR(32)", maxLength: 32, nullable: true),
                     Email = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
-                    AddressId = table.Column<long>(type: "bigint", nullable: true),
+                    AddressId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
@@ -189,7 +241,8 @@ namespace Sigetre.Api.Migrations
                         name: "FK_Companies_CompanyAddresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "CompanyAddresses",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -220,12 +273,13 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tests",
+                name: "Questions",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "NVARCHAR(16)", maxLength: 16, nullable: false),
+                    Content = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
+                    CorrectAnswer = table.Column<long>(type: "bigint", nullable: true),
                     CourseId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -236,9 +290,36 @@ namespace Sigetre.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tests", x => x.Id);
+                    table.PrimaryKey("PK_Questions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tests_Courses_CourseId",
+                        name: "FK_Questions_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Trainings",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Type = table.Column<short>(type: "SMALLINT", nullable: false),
+                    Situation = table.Column<short>(type: "SMALLINT", nullable: false),
+                    CourseId = table.Column<long>(type: "bigint", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Status = table.Column<short>(type: "SMALLINT", nullable: false),
+                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
+                    CreateBy = table.Column<long>(type: "BIGINT", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "BIGINT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Trainings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Trainings_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id",
@@ -346,57 +427,6 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Alternatives",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Content = table.Column<string>(type: "NVARCHAR(255)", maxLength: 255, nullable: false),
-                    Answer = table.Column<short>(type: "SMALLINT", nullable: false),
-                    QuestionId = table.Column<long>(type: "bigint", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
-                    CreateBy = table.Column<long>(type: "BIGINT", nullable: false),
-                    UpdatedBy = table.Column<long>(type: "BIGINT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Alternatives", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Alternatives_Questions_QuestionId",
-                        column: x => x.QuestionId,
-                        principalTable: "Questions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CourseQuestion",
-                columns: table => new
-                {
-                    CoursesId = table.Column<long>(type: "bigint", nullable: false),
-                    QuestionsId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseQuestion", x => new { x.CoursesId, x.QuestionsId });
-                    table.ForeignKey(
-                        name: "FK_CourseQuestion_Courses_CoursesId",
-                        column: x => x.CoursesId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CourseQuestion_Questions_QuestionsId",
-                        column: x => x.QuestionsId,
-                        principalTable: "Questions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Instructors",
                 columns: table => new
                 {
@@ -420,9 +450,9 @@ namespace Sigetre.Api.Migrations
                 {
                     table.PrimaryKey("PK_Instructors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Instructors_Specialization_SpecializationId",
+                        name: "FK_Instructors_Specializations_SpecializationId",
                         column: x => x.SpecializationId,
-                        principalTable: "Specialization",
+                        principalTable: "Specializations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -434,7 +464,7 @@ namespace Sigetre.Api.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<string>(type: "VARCHAR(16)", maxLength: 16, nullable: false),
-                    CompanyId = table.Column<long>(type: "bigint", nullable: false),
+                    CompanyId = table.Column<long>(type: "bigint", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
@@ -446,11 +476,16 @@ namespace Sigetre.Api.Migrations
                 {
                     table.PrimaryKey("PK_CompanyPhones", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_CompanyPhones_Clients_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "Clients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_CompanyPhones_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -478,15 +513,14 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Trainings",
+                name: "Alternatives",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Type = table.Column<short>(type: "SMALLINT", nullable: false),
-                    Situation = table.Column<short>(type: "SMALLINT", nullable: false),
-                    CourseId = table.Column<long>(type: "bigint", nullable: false),
-                    CompanyId = table.Column<long>(type: "bigint", nullable: true),
+                    Content = table.Column<string>(type: "NVARCHAR(255)", maxLength: 255, nullable: false),
+                    Answer = table.Column<short>(type: "SMALLINT", nullable: false),
+                    QuestionId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
@@ -496,16 +530,11 @@ namespace Sigetre.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Trainings", x => x.Id);
+                    table.PrimaryKey("PK_Alternatives", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Trainings_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Trainings_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
+                        name: "FK_Alternatives_Questions_QuestionId",
+                        column: x => x.QuestionId,
+                        principalTable: "Questions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -530,31 +559,6 @@ namespace Sigetre.Api.Migrations
                         name: "FK_QuestionTest_Tests_TestsId",
                         column: x => x.TestsId,
                         principalTable: "Tests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "InstructorCourses",
-                columns: table => new
-                {
-                    InstructorId = table.Column<long>(type: "bigint", nullable: false),
-                    CourseId = table.Column<long>(type: "bigint", nullable: false),
-                    TechnicalManager = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InstructorCourses", x => new { x.InstructorId, x.CourseId });
-                    table.ForeignKey(
-                        name: "FK_InstructorCourses_Courses_CourseId",
-                        column: x => x.CourseId,
-                        principalTable: "Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InstructorCourses_Instructors_InstructorId",
-                        column: x => x.InstructorId,
-                        principalTable: "Instructors",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -618,30 +622,6 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "InstructorTraining",
-                columns: table => new
-                {
-                    InstructorsId = table.Column<long>(type: "bigint", nullable: false),
-                    TrainingsId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_InstructorTraining", x => new { x.InstructorsId, x.TrainingsId });
-                    table.ForeignKey(
-                        name: "FK_InstructorTraining_Instructors_InstructorsId",
-                        column: x => x.InstructorsId,
-                        principalTable: "Instructors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_InstructorTraining_Trainings_TrainingsId",
-                        column: x => x.TrainingsId,
-                        principalTable: "Trainings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "StudentTraining",
                 columns: table => new
                 {
@@ -665,6 +645,30 @@ namespace Sigetre.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "InstructorTraining",
+                columns: table => new
+                {
+                    InstructorsId = table.Column<long>(type: "bigint", nullable: false),
+                    TrainingsId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_InstructorTraining", x => new { x.InstructorsId, x.TrainingsId });
+                    table.ForeignKey(
+                        name: "FK_InstructorTraining_Instructors_InstructorsId",
+                        column: x => x.InstructorsId,
+                        principalTable: "Instructors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_InstructorTraining_Trainings_TrainingsId",
+                        column: x => x.TrainingsId,
+                        principalTable: "Trainings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Alternatives_QuestionId",
                 table: "Alternatives",
@@ -681,9 +685,22 @@ namespace Sigetre.Api.Migrations
                 column: "TrainingId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ClientAddresses_ClientId",
+                table: "ClientAddresses",
+                column: "ClientId",
+                unique: true,
+                filter: "[ClientId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Companies_AddressId",
                 table: "Companies",
-                column: "AddressId");
+                column: "AddressId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanyPhones_ClientId",
+                table: "CompanyPhones",
+                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CompanyPhones_CompanyId",
@@ -694,11 +711,6 @@ namespace Sigetre.Api.Migrations
                 name: "IX_CompanyStudent_StudentsId",
                 table: "CompanyStudent",
                 column: "StudentsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CourseQuestion_QuestionsId",
-                table: "CourseQuestion",
-                column: "QuestionsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IdentityClaim_UserId",
@@ -737,11 +749,6 @@ namespace Sigetre.Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_InstructorCourses_CourseId",
-                table: "InstructorCourses",
-                column: "CourseId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Instructors_SpecializationId",
                 table: "Instructors",
                 column: "SpecializationId");
@@ -757,6 +764,11 @@ namespace Sigetre.Api.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Questions_CourseId",
+                table: "Questions",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_QuestionTest_TestsId",
                 table: "QuestionTest",
                 column: "TestsId");
@@ -765,16 +777,6 @@ namespace Sigetre.Api.Migrations
                 name: "IX_StudentTraining_TrainingsId",
                 table: "StudentTraining",
                 column: "TrainingsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Tests_CourseId",
-                table: "Tests",
-                column: "CourseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Trainings_CompanyId",
-                table: "Trainings",
-                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trainings_CourseId",
@@ -795,13 +797,13 @@ namespace Sigetre.Api.Migrations
                 name: "Certificates");
 
             migrationBuilder.DropTable(
+                name: "ClientAddresses");
+
+            migrationBuilder.DropTable(
                 name: "CompanyPhones");
 
             migrationBuilder.DropTable(
                 name: "CompanyStudent");
-
-            migrationBuilder.DropTable(
-                name: "CourseQuestion");
 
             migrationBuilder.DropTable(
                 name: "IdentityClaim");
@@ -822,9 +824,6 @@ namespace Sigetre.Api.Migrations
                 name: "IdentityUserToken");
 
             migrationBuilder.DropTable(
-                name: "InstructorCourses");
-
-            migrationBuilder.DropTable(
                 name: "InstructorTraining");
 
             migrationBuilder.DropTable(
@@ -835,6 +834,12 @@ namespace Sigetre.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "StudentTraining");
+
+            migrationBuilder.DropTable(
+                name: "Clients");
+
+            migrationBuilder.DropTable(
+                name: "Companies");
 
             migrationBuilder.DropTable(
                 name: "IdentityUser");
@@ -855,16 +860,13 @@ namespace Sigetre.Api.Migrations
                 name: "Trainings");
 
             migrationBuilder.DropTable(
-                name: "Specialization");
+                name: "CompanyAddresses");
 
             migrationBuilder.DropTable(
-                name: "Companies");
+                name: "Specializations");
 
             migrationBuilder.DropTable(
                 name: "Courses");
-
-            migrationBuilder.DropTable(
-                name: "CompanyAddresses");
         }
     }
 }

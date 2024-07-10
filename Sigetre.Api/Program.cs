@@ -72,7 +72,7 @@ app.MapGroup("v1/identity")
 
 app.MapGroup("v1/identity")
     .WithTags("Identity")
-    .MapPost("/roles", async (ClaimsPrincipal user) =>
+    .MapPost("/roles", (ClaimsPrincipal user) =>
     {
         if (user.Identity is null || !user.Identity.IsAuthenticated)
             return Results.Unauthorized();
@@ -103,7 +103,7 @@ app.MapPost("/register", async (RegisterModel model, UserManager<User> userManag
     
         if (result.Succeeded)
         {
-            return Results.Ok("Usuário registrado com sucesso.");
+            return Results.Ok(user);
         }
 
         return Results.BadRequest(result.Errors);

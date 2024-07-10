@@ -117,7 +117,7 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
 
             return new PagedResponse<List<Alternative>>(alternatives, count, request.PageNumber, request.PageSize);
         }
-        catch (Exception e)
+        catch
         {
             return new PagedResponse<List<Alternative>>(null, 500, "Não foi possível consultar as alternativas");
         }
