@@ -12,7 +12,7 @@ using Sigetre.Api.Data;
 namespace Sigetre.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240710180728_v1")]
+    [Migration("20240710181808_v1")]
     partial class v1
     {
         /// <inheritdoc />
