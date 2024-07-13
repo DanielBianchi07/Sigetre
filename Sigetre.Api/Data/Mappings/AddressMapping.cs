@@ -4,11 +4,11 @@ using Sigetre.Core.Models;
 
 namespace Sigetre.Api.Data.Mappings;
 
-public class CompanyAddressMapping : IEntityTypeConfiguration<CompanyAddress>
+public class AddressMapping : IEntityTypeConfiguration<Addresses>
 {
-    public void Configure(EntityTypeBuilder<CompanyAddress> builder)
+    public void Configure(EntityTypeBuilder<Addresses> builder)
     {
-        builder.ToTable("CompanyAddresses");
+        builder.ToTable("Addresses");
 
         builder.HasKey(x => x.Id);
 
@@ -41,12 +41,13 @@ public class CompanyAddressMapping : IEntityTypeConfiguration<CompanyAddress>
             .HasColumnType("NVARCHAR")
             .HasMaxLength(64);
         
+        builder.Property(x => x.ClientId)
+            .IsRequired(false)
+            .HasColumnType("BIGINT");
+        
         builder.Property(x => x.Status)
             .IsRequired(true)
             .HasColumnType("SMALLINT");
-        builder.Property(x => x.ClientId)
-            .IsRequired(true)
-            .HasColumnType("BIGINT");
         builder.Property(x => x.CreateBy)
             .IsRequired(true)
             .HasColumnType("BIGINT");

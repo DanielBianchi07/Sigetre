@@ -1,12 +1,8 @@
-using System.ComponentModel.DataAnnotations;
+namespace Sigetre.Core.Models;
 
-namespace Sigetre.Core.Requests.CompanyAddress;
-
-public class UpdateCompanyAddressRequest : Request
+public class Addresses : BaseClass
 {
-    [Required]
     public long Id { get; set; }
-    [Required]
     public string ZipCode { get; set; } = String.Empty;
     public string State { get; set; } = String.Empty;
     public string City { get; set; } = String.Empty;
@@ -14,4 +10,8 @@ public class UpdateCompanyAddressRequest : Request
     public string StreetName { get; set; } = String.Empty;
     public string Number { get; set; } = String.Empty;
     public string? Complement { get; set; }
+    
+    public Company? Company { get; set; }
+    public new long? ClientId { get; set; }
+    public Client? Clt { get; set; }
 }

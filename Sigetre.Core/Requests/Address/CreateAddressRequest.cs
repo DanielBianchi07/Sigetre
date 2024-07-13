@@ -1,8 +1,10 @@
-namespace Sigetre.Core.Models;
+using System.ComponentModel.DataAnnotations;
 
-public class ClientAddress : BaseClass
+namespace Sigetre.Core.Requests.Address;
+
+public class CreateAddressRequest : Request
 {
-    public long Id { get; set; }
+    [Required]
     public string ZipCode { get; set; } = String.Empty;
     public string State { get; set; } = String.Empty;
     public string City { get; set; } = String.Empty;
@@ -10,8 +12,4 @@ public class ClientAddress : BaseClass
     public string StreetName { get; set; } = String.Empty;
     public string Number { get; set; } = String.Empty;
     public string? Complement { get; set; }
-    
-    public new long? ClientId { get; set; }
-
-    public Client? Client { get; set; }
 }
