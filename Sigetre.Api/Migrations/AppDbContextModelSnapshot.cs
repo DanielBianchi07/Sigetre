@@ -600,7 +600,7 @@ namespace Sigetre.Api.Migrations
                     b.ToTable("Companies", (string)null);
                 });
 
-            modelBuilder.Entity("Sigetre.Core.Models.CompanyPhone", b =>
+            modelBuilder.Entity("Sigetre.Core.Models.Phones", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1178,7 +1178,7 @@ namespace Sigetre.Api.Migrations
                     b.Navigation("Training");
                 });
 
-            modelBuilder.Entity("Sigetre.Core.Models.CompanyPhone", b =>
+            modelBuilder.Entity("Sigetre.Core.Models.Phones", b =>
                 {
                     b.HasOne("Sigetre.Core.Models.Client", null)
                         .WithMany("Telephone")

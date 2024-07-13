@@ -13,6 +13,6 @@ public class Company : BaseClass
     public long CompanyAddressId { get; set; }
     public Addresses CompanyAddress { get; set; } = null!;
     
-    public ICollection<CompanyPhone> Telephone { get; set; } = null!;
+    public ICollection<Phones> Telephone { get; set; } = null!;
     public ICollection<Student> Students { get; set; } = null!;
 }
