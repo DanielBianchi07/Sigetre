@@ -25,8 +25,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Certificate> Certificates { get; set; } = null!;
     public DbSet<Client> Clients { get; set; } = null!;
     public DbSet<Company> Companies { get; set; } = null!;
-    public DbSet<CompanyAddress> CompanyAddresses { get; set; } = null!;
-    public DbSet<CompanyPhone> CompanyPhones { get; set; } = null!;
+    public DbSet<Addresses> Addresses { get; set; } = null!;
+    public DbSet<Phones> CompanyPhones { get; set; } = null!;
     public DbSet<Course> Courses { get; set; } = null!;
     public DbSet<Instructor> Instructors { get; set; } = null!;
     public DbSet<ProgramContent> ProgramContents { get; set; } = null!;

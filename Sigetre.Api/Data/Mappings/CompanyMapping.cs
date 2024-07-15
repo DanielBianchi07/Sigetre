@@ -9,7 +9,6 @@ public class CompanyMapping : IEntityTypeConfiguration<Company>
     public void Configure(EntityTypeBuilder<Company> builder)
     {
         builder.ToTable("Companies");
-
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name)
@@ -25,13 +24,21 @@ public class CompanyMapping : IEntityTypeConfiguration<Company>
             .HasColumnType("VARCHAR")
             .HasMaxLength(160);
         
+        builder.Property(x => x.CompanyAddressId)
+            .HasColumnType("BIGINT")
+            .IsRequired();
+        builder.HasOne(x => x.CompanyAddress)
+            .WithOne(x => x.Company)
+            .HasForeignKey<Addresses>(x=>x.ClientId)
+            .IsRequired();
+        
         builder.Property(x => x.Status)
             .IsRequired(true)
             .HasColumnType("SMALLINT");
         builder.Property(x => x.ClientId)
             .IsRequired(true)
             .HasColumnType("BIGINT");
-        builder.Property(x => x.CreateBy)
+        builder.Property(x => x.CreatedBy)
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)

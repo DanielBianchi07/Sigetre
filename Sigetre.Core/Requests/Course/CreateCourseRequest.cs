@@ -13,4 +13,6 @@ public class CreateCourseRequest : Request
     [Required]
     public int? Validity { get; set; }
     public Byte[]? Logo { get; set; }
+    [Required]
+    public long SpecializationId { get; set; }
 }

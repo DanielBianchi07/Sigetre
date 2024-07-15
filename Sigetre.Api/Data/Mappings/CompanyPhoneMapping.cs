@@ -4,9 +4,9 @@ using Sigetre.Core.Models;
 
 namespace Sigetre.Api.Data.Mappings;
 
-public class CompanyPhoneMapping : IEntityTypeConfiguration<CompanyPhone>
+public class CompanyPhoneMapping : IEntityTypeConfiguration<Phones>
 {
-    public void Configure(EntityTypeBuilder<CompanyPhone> builder)
+    public void Configure(EntityTypeBuilder<Phones> builder)
     {
         builder.ToTable("CompanyPhones");
 
@@ -23,7 +23,7 @@ public class CompanyPhoneMapping : IEntityTypeConfiguration<CompanyPhone>
         builder.Property(x => x.ClientId)
             .IsRequired(true)
             .HasColumnType("BIGINT");
-        builder.Property(x => x.CreateBy)
+        builder.Property(x => x.CreatedBy)
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)

@@ -26,7 +26,7 @@ public class AlternativeMapping : IEntityTypeConfiguration<Alternative>
         builder.Property(x => x.ClientId)
             .IsRequired(true)
             .HasColumnType("BIGINT");
-        builder.Property(x => x.CreateBy)
+        builder.Property(x => x.CreatedBy)
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)

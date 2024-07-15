@@ -10,5 +10,5 @@ public interface ICourseHandler
     Task<Response<Course?>> DeleteAsync(DeleteCourseRequest request);
     Task<Response<Course?>> UpdateAsync(UpdateCourseRequest request);
     Task<Response<Course?>> GetByIdAsync(GetCourseByIdRequest request);
-    Task<PagedResponse<List<Course>>> GetByQuestionAsync(GetAllCourseRequest request);
+    Task<PagedResponse<List<Course>>> GetAllCourseAsync(GetAllCourseRequest request);
 }
