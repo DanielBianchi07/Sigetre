@@ -19,7 +19,7 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
                 Answer = request.Answer,
                 QuestionId = request.QuestionId,
                 ClientId = request.ClientId,
-                CreateBy = request.CreateBy,
+                CreatedBy = request.CreateBy,
                 CreatedAt = request.CreatedAt,
                 Status = request.Status
             };

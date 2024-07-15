@@ -23,7 +23,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
                 Number = request.Number,
                 Complement = request.Complement,
                 ClientId = request.ClientId,
-                CreateBy = request.CreateBy,
+                CreatedBy = request.CreateBy,
                 CreatedAt = request.CreatedAt,
                 Status = request.Status
             };
@@ -77,8 +77,8 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
             address.Number = request.Number;
             address.Complement = request.Complement;
             address.ClientId = request.ClientId;
-            address.CreateBy = request.CreateBy;
-            address.CreatedAt = request.CreatedAt;
+            address.UpdatedBy = request.UpdatedBy;
+            address.UpdatedAt = request.UpdatedAt;
             address.Status = request.Status;
 
             context.Addresses.Update(address);
