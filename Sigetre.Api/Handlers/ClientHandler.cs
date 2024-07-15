@@ -20,7 +20,7 @@ public class ClientHandler(AppDbContext context) : IClientHandler
                 Ein = request.Ein,
                 Email = request.Email,
                 ClientId = request.ClientId,
-                CreateBy = request.CreateBy,
+                CreatedBy = request.CreateBy,
                 CreatedAt = request.CreatedAt,
                 Status = request.Status
             };

@@ -36,7 +36,7 @@ public class ClientMapping : IEntityTypeConfiguration<Client>
         builder.Property(x => x.Status)
             .IsRequired(true)
             .HasColumnType("SMALLINT");
-        builder.Property(x => x.CreateBy)
+        builder.Property(x => x.CreatedBy)
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)

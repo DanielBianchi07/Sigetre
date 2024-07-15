@@ -20,7 +20,7 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
                 Ein = request.Ein,
                 Email = request.Email,
                 ClientId = request.ClientId,
-                CreateBy = request.CreateBy,
+                CreatedBy = request.CreateBy,
                 CreatedAt = request.CreatedAt,
                 Status = request.Status
             };

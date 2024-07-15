@@ -9,6 +9,6 @@ public abstract class BaseClass
     public EStatus Status { get; set; }
     
     public long ClientId { get; set; }
-    public long CreateBy { get; set; }
+    public long CreatedBy { get; set; }
     public long? UpdatedBy { get; set; }
 }

@@ -9,7 +9,6 @@ public class CompanyMapping : IEntityTypeConfiguration<Company>
     public void Configure(EntityTypeBuilder<Company> builder)
     {
         builder.ToTable("Companies");
-
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name)
@@ -39,7 +38,7 @@ public class CompanyMapping : IEntityTypeConfiguration<Company>
         builder.Property(x => x.ClientId)
             .IsRequired(true)
             .HasColumnType("BIGINT");
-        builder.Property(x => x.CreateBy)
+        builder.Property(x => x.CreatedBy)
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)
