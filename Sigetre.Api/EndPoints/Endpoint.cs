@@ -1,9 +1,13 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Sigetre.Api.Common.Api;
+
 using Sigetre.Api.EndPoints.Alternatives;
+using Sigetre.Api.EndPoints.Clients;
 using Sigetre.Api.EndPoints.Companies;
 using Sigetre.Api.EndPoints.Instructors;
+using Sigetre.Api.EndPoints.Courses;
+
 using Sigetre.Api.Models;
 
 namespace Sigetre.Api.EndPoints;
@@ -43,6 +47,24 @@ public static class Endpoint
             .MapEndpoint<GetInstructorByIdEndpoint>()
             .MapEndpoint<GetInstructorBySpecializationEndpoint>()
             .MapEndpoint<GetAllInstructorEndpoint>();
+      
+      endpoints.MapGroup("v1/clients")
+            .WithTags("Clients")
+            //.RequireAuthorization()
+            .MapEndpoint<CreateClientEndpoint>()
+            .MapEndpoint<UpdateClientEndpoint>()
+            .MapEndpoint<DeleteClientEndpoint>()
+            .MapEndpoint<GetClientByIdEndpoint>()
+            .MapEndpoint<GetAllClientEndpoint>();
+        
+        endpoints.MapGroup("v1/courses")
+            .WithTags("Courses")
+            //.RequireAuthorization()
+            .MapEndpoint<CreateCourseEndpoint>()
+            .MapEndpoint<UpdateCourseEndpoint>()
+            .MapEndpoint<DeleteCourseEndpoint>()
+            .MapEndpoint<GetCourseByIdEndpoint>()
+            .MapEndpoint<GetAllCourseEndpoint>();
         
         endpoints.MapGroup("v1/identity")
             .WithTags("Identity")
@@ -91,6 +113,7 @@ public static class Endpoint
 
             return Results.BadRequest(result.Errors);
         });
+
     }
     
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
