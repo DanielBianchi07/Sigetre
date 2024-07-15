@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Sigetre.Api.Common.Api;
-
+using Sigetre.Api.EndPoints.Addresses;
 using Sigetre.Api.EndPoints.Alternatives;
 using Sigetre.Api.EndPoints.Clients;
 using Sigetre.Api.EndPoints.Companies;
@@ -19,6 +19,14 @@ public static class Endpoint
     {
         var endpoints = app
             .MapGroup("");
+
+        endpoints.MapGroup("v1/addresses")
+            .WithTags("Addresses")
+            //.RequireAuthorization()
+            .MapEndpoint<CreateAddressEndpoint>()
+            .MapEndpoint<UpdateAddressEndpoint>()
+            .MapEndpoint<DeleteAddressEndpoint>()
+            .MapEndpoint<GetAddressByIdEndpoint>();
 
         endpoints.MapGroup("v1/alternatives")
             .WithTags("Alternatives")
