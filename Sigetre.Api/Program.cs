@@ -29,6 +29,7 @@ builder.Services
 builder.Services.AddAuthorization();
 
 var cnnStr = builder.Configuration.GetConnectionString("DefaultConnection2") ?? string.Empty;
+var cnnStr = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 
 builder.Services.AddDbContext<AppDbContext>(
     x => { x.UseSqlServer(cnnStr); }
