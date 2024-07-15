@@ -107,9 +107,4 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
             return new Response<Address?>(null, 500, "Não foi possível recuperar o endereço");
         }
     }
-
-    public Task<PagedResponse<List<Address>>> GetByCompanyOrClientIdAsync(GetAddressByCompanyOrClientRequest request)
-    {
-        throw new NotImplementedException();
-    }
 }

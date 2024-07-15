@@ -10,6 +10,6 @@ public interface IInstructorHandler
     Task<Response<Instructor?>> DeleteAsync(DeleteInstructorRequest request);
     Task<Response<Instructor?>> UpdateAsync(UpdateInstructorRequest request);
     Task<Response<Instructor?>> GetByIdAsync(GetInstructorByIdRequest request);
-    Task<PagedResponse<List<Instructor>>> GetByQuestionAsync(GetAllInstructorRequest request);
-    Task<PagedResponse<List<Instructor>>> GetByQuestionAsync(GetInstructorBySpecialityRequest request);
+    Task<PagedResponse<List<Instructor>>> GetAllAsync(GetAllInstructorRequest request);
+    Task<PagedResponse<List<Instructor>>> GetBySpecializationAsync(GetInstructorBySpecialityRequest request);
 }

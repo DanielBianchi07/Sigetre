@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sigetre.Core.Requests.Instructor;
 
-public class UpdateInstructorRequest
+public class UpdateInstructorRequest : Request
 {
     [Required]
     public long Id { get; set; }
