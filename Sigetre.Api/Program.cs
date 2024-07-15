@@ -41,6 +41,10 @@ builder.Services
 
 builder.Services.AddTransient<ICompanyHandler, CompanyHandler>();
 builder.Services.AddTransient<IAlternativeHandler, AlternativeHandler>();
+builder.Services.AddTransient<IAddressHandler, AddressesHandler>();
+builder.Services.AddTransient<IClientHandler, ClientHandler>();
+builder.Services.AddTransient<ICourseHandler, CourseHandler>();
+builder.Services.AddTransient<IInstructorHandler, InstructorHandler>();
 
 #endregion
 
@@ -56,58 +60,6 @@ app.UseSwaggerUI();
 
 app.MapGet("/", () => new { message = "OK" });
 app.MapEndpoints();
-
-app.MapGroup("v1/identity")
-    .WithTags("Identity")
-    .MapIdentityApi<User>();
-
-app.MapGroup("v1/identity")
-    .WithTags("Identity")
-    .MapPost("/logout", async (SignInManager<User> signInManager) =>
-    {
-        await signInManager.SignOutAsync();
-        return Results.Ok();
-    })
-    .RequireAuthorization();
-
-app.MapGroup("v1/identity")
-    .WithTags("Identity")
-    .MapPost("/roles", (ClaimsPrincipal user) =>
-    {
-        if (user.Identity is null || !user.Identity.IsAuthenticated)
-            return Results.Unauthorized();
-        
-        return Results.Ok();
-    })
-    .RequireAuthorization();
-
-app.MapPost("/register", async (RegisterModel model, UserManager<User> userManager) =>
-    {
-        if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password) ||
-            string.IsNullOrEmpty(model.Name) || string.IsNullOrEmpty(model.PhoneNumber))
-        {
-            return Results.BadRequest("Todos os campos são obrigatórios.");
-        }
-
-        var user = new User
-        {
-            UserName = model.Email,
-            Email = model.Email,
-            Name = model.Name,
-            PhoneNumber = model.PhoneNumber,
-            ClientId = model.ClientId
-            // Mapeie outros campos conforme necessário
-        };
-    
-        var result = await userManager.CreateAsync(user, model.Password);
-    
-        if (result.Succeeded)
-        {
-            return Results.Ok(user);
-        }
-
-        return Results.BadRequest(result.Errors);
-    });
 
 app.Run();
 

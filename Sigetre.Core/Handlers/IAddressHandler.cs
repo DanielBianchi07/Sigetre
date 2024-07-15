@@ -10,5 +10,4 @@ public interface IAddressHandler
     Task<Response<Address?>> DeleteAsync(DeleteAddressRequest request);
     Task<Response<Address?>> UpdateAsync(UpdateAddressRequest request);
     Task<Response<Address?>> GetByIdAsync(GetAddressByIdRequest request);
-    Task<PagedResponse<List<Address>>> GetByCompanyOrClientIdAsync(GetAddressByCompanyOrClientRequest request);
 }

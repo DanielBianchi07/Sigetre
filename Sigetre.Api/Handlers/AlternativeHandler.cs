@@ -105,7 +105,7 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
         {
             var query = context.Alternatives
                 .AsNoTracking()
-                .Where(x => x.ClientId == request.ClientId)
+                .Where(x => x.QuestionId == request.QuestionId && x.ClientId == request.ClientId)
                 .OrderBy(x=>x.Question.Content);
 
             var alternatives = await query

@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Sigetre.Api.Data;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Instructor;
@@ -5,35 +7,149 @@ using Sigetre.Core.Responses;
 
 namespace Sigetre.Api.Handlers;
 
-public class InstructorHandler : IInstructorHandler
+public class InstructorHandler(AppDbContext context) : IInstructorHandler
 {
-    public Task<Response<Instructor?>> CreateAsync(CreateInstructorRequest request)
+    public async Task<Response<Instructor?>> CreateAsync(CreateInstructorRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var instructor = new Instructor
+            {
+                Name = request.Name,
+                Ssn = request.Ssn,
+                Email = request.Email,
+                Registry = request.Registry,
+                Telephone = request.Telephone,
+                Signature = request.Signature,
+                SpecializationId = request.SpecializationId,
+                CreatedAt = request.CreatedAt,
+                Status = request.Status,
+                ClientId = request.ClientId,
+                CreatedBy = request.CreateBy,
+            };
+
+            await context.Instructors.AddAsync(instructor);
+            await context.SaveChangesAsync();
+
+            return new Response<Instructor?>(instructor, 201, "Instrutor cadastrado com sucesso");
+        }
+        catch
+        {
+            return new Response<Instructor?>(null, 500, "Não foi possível cadastrar o instrutor");
+        }
     }
 
-    public Task<Response<Instructor?>> DeleteAsync(DeleteInstructorRequest request)
+    public async Task<Response<Instructor?>> DeleteAsync(DeleteInstructorRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var instructor = await context.Instructors.FirstOrDefaultAsync(x=>x.Id == request.Id && x.ClientId == request.ClientId);
+
+            if (instructor == null)
+                return new Response<Instructor?>(null, 404, "Instrutor não encontrado");
+
+            context.Instructors.Remove(instructor);
+            await context.SaveChangesAsync();
+
+            return new Response<Instructor?>(instructor, 200, "Instrutor removido com sucesso");
+        }
+        catch
+        {
+            return new Response<Instructor?>(null, 500, "Não foi possível cadastrar o instrutor");
+        }
     }
 
-    public Task<Response<Instructor?>> UpdateAsync(UpdateInstructorRequest request)
+    public async Task<Response<Instructor?>> UpdateAsync(UpdateInstructorRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var instructor = await context.Instructors.FirstOrDefaultAsync(x=>x.Id == request.Id && x.ClientId == request.ClientId);
+
+            if (instructor == null)
+                return new Response<Instructor?>(null, 404, "Instrutor não encontrado");
+            
+            instructor.Name = request.Name;
+            instructor.Ssn = request.Ssn;
+            instructor.Email = request.Email;
+            instructor.Registry = request.Registry;
+            instructor.Telephone = request.Telephone;
+            instructor.Signature = request.Signature;
+            instructor.SpecializationId = request.SpecializationId;
+            instructor.UpdatedAt = request.UpdatedAt;
+            instructor.Status = request.Status;
+            instructor.ClientId = request.ClientId;
+            instructor.UpdatedBy = request.UpdatedBy;
+
+            context.Instructors.Update(instructor);
+            await context.SaveChangesAsync();
+
+            return new Response<Instructor?>(instructor);
+        }
+        catch
+        {
+            return new Response<Instructor?>(null, 500, "Não foi possível alterar o instrutor");
+        }
     }
 
-    public Task<Response<Instructor?>> GetByIdAsync(GetInstructorByIdRequest request)
+    public async Task<Response<Instructor?>> GetByIdAsync(GetInstructorByIdRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var instructor =
+                await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+            return instructor is null
+                ? new Response<Instructor?>(null, 404, "Instrutor não encontrado")
+                : new Response<Instructor?>(instructor);
+        }
+        catch
+        {
+            return new Response<Instructor?>(null, 500, "Não foi possível recuperar o instrutor");
+        }
     }
 
-    public Task<PagedResponse<List<Instructor>>> GetByQuestionAsync(GetAllInstructorRequest request)
+    public async Task<PagedResponse<List<Instructor>>> GetAllAsync(GetAllInstructorRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var query = context.Instructors
+                .AsNoTracking()
+                .Where(x=> x.ClientId == request.ClientId)
+                .OrderBy(x => x.Name);
+
+            var instructors = await query
+                .Skip(request.PageSize * (request.PageNumber - 1))
+                .Take(request.PageSize)
+                .ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PagedResponse<List<Instructor>>(instructors, count, request.PageNumber, request.PageSize);
+        }
+        catch
+        {
+            return new PagedResponse<List<Instructor>>(null, 500, "Não foi possível consultar os instrutores");
+        }
     }
 
-    public Task<PagedResponse<List<Instructor>>> GetByQuestionAsync(GetInstructorBySpecialityRequest request)
+    public async Task<PagedResponse<List<Instructor>>> GetBySpecializationAsync(GetInstructorBySpecialityRequest request)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var query = context.Instructors
+                .AsNoTracking()
+                .Where(x=>x.SpecializationId == request.SpecialityId && x.ClientId == request.ClientId)
+                .OrderBy(x => x.Name);
+
+            var instructors = await query
+                .Skip(request.PageSize * (request.PageNumber - 1))
+                .Take(request.PageSize)
+                .ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PagedResponse<List<Instructor>>(instructors, count, request.PageNumber, request.PageSize);
+        }
+        catch
+        {
+            return new PagedResponse<List<Instructor>>(null, 500, "Não foi possível consultar os instrutores");
+        }
     }
 }
