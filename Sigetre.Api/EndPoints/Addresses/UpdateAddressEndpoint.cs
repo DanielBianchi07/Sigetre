@@ -1,12 +1,12 @@
 ﻿using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
-using Sigetre.Core.Requests.CompanyAddress;
+using Sigetre.Core.Requests.Address;
 using Sigetre.Core.Responses;
 
-namespace Sigetre.Api.EndPoints.CompanyAddresses;
+namespace Sigetre.Api.EndPoints.Addresses;
 
-public class UpdateCompanyAddressEndpoint : IEndpoint
+public class UpdateAddressEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
         => app.MapPut("/{id}", HandleAsync)
@@ -14,11 +14,11 @@ public class UpdateCompanyAddressEndpoint : IEndpoint
             .WithSummary("Update an address from a company")
             .WithDescription("Update an address from a company")
             .WithOrder(2)
-            .Produces<Response<CompanyAddress?>>();
+            .Produces<Response<Address?>>();
 
     private static async Task<IResult> HandleAsync(
-        ICompanyAddressHandler handler,
-        UpdateCompanyAddressRequest request,
+        IAddressHandler handler,
+        UpdateAddressRequest request,
         long id)//, long clientId)
     {
         request.ClientId = 2;

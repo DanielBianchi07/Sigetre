@@ -1,6 +1,6 @@
 namespace Sigetre.Core.Models;
 
-public class Addresses : BaseClass
+public class Address : BaseClass
 {
     public long Id { get; set; }
     public string ZipCode { get; set; } = String.Empty;

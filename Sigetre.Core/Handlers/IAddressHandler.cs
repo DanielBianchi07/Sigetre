@@ -6,9 +6,9 @@ namespace Sigetre.Core.Handlers;
 
 public interface IAddressHandler
 {
-    Task<Response<Addresses?>> CreateAsync(CreateAddressRequest request);
-    Task<Response<Addresses?>> DeleteAsync(DeleteAddressRequest request);
-    Task<Response<Addresses?>> UpdateAsync(UpdateAddressRequest request);
-    Task<Response<Addresses?>> GetByIdAsync(GetAddressByIdRequest request);
-    Task<PagedResponse<List<Addresses>>> GetByCompanyOrClientIdAsync(GetAddressByCompanyOrClientRequest request);
+    Task<Response<Address?>> CreateAsync(CreateAddressRequest request);
+    Task<Response<Address?>> DeleteAsync(DeleteAddressRequest request);
+    Task<Response<Address?>> UpdateAsync(UpdateAddressRequest request);
+    Task<Response<Address?>> GetByIdAsync(GetAddressByIdRequest request);
+    Task<PagedResponse<List<Address>>> GetByCompanyOrClientIdAsync(GetAddressByCompanyOrClientRequest request);
 }

@@ -9,11 +9,11 @@ namespace Sigetre.Api.Handlers;
 
 public class AddressesHandler(AppDbContext context) : IAddressHandler
 {
-    public async Task<Response<Addresses?>> CreateAsync(CreateAddressRequest request)
+    public async Task<Response<Address?>> CreateAsync(CreateAddressRequest request)
     {
         try
         {
-            var address = new Addresses
+            var address = new Address
             {
                 ZipCode = request.ZipCode,
                 State = request.State,
@@ -31,15 +31,15 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
             await context.Addresses.AddAsync(address);
             await context.SaveChangesAsync();
             
-            return new Response<Addresses?>(address, 201, "Endereço cadastrado com sucesso");
+            return new Response<Address?>(address, 201, "Endereço cadastrado com sucesso");
         }
         catch
         {
-            return new Response<Addresses?>(null, 500, "Não foi possível cadastrar o endereço");
+            return new Response<Address?>(null, 500, "Não foi possível cadastrar o endereço");
         }
     }
 
-    public async Task<Response<Addresses?>> DeleteAsync(DeleteAddressRequest request)
+    public async Task<Response<Address?>> DeleteAsync(DeleteAddressRequest request)
     {
         try
         {
@@ -47,19 +47,19 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
                 await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
 
             if (address == null)
-                return new Response<Addresses?>(null, 404, "Endereço não encontrado");
+                return new Response<Address?>(null, 404, "Endereço não encontrado");
             context.Addresses.Remove(address);
             await context.SaveChangesAsync();
             
-            return new Response<Addresses?>(address, message:"Endereço excluído com sucesso");
+            return new Response<Address?>(address, message:"Endereço excluído com sucesso");
         }
         catch
         {
-            return new Response<Addresses?>(null, 500, "Não foi possível excluir o endereço");
+            return new Response<Address?>(null, 500, "Não foi possível excluir o endereço");
         }
     }
 
-    public async Task<Response<Addresses?>> UpdateAsync(UpdateAddressRequest request)
+    public async Task<Response<Address?>> UpdateAsync(UpdateAddressRequest request)
     {
         try
         {
@@ -67,7 +67,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
                 await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
 
             if (address == null)
-                return new Response<Addresses?>(null, 404, "Endereço não encontrado");
+                return new Response<Address?>(null, 404, "Endereço não encontrado");
 
             address.ZipCode = request.ZipCode;
             address.State = request.State;
@@ -84,31 +84,31 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
             context.Addresses.Update(address);
             await context.SaveChangesAsync();
 
-            return new Response<Addresses?>(address);
+            return new Response<Address?>(address);
         }
         catch
         {
-            return new Response<Addresses?>(null, 500, "Não foi possível alterar o endereço");
+            return new Response<Address?>(null, 500, "Não foi possível alterar o endereço");
         }
     }
 
-    public async Task<Response<Addresses?>> GetByIdAsync(GetAddressByIdRequest request)
+    public async Task<Response<Address?>> GetByIdAsync(GetAddressByIdRequest request)
     {
         try
         {
             var address = await context.Addresses.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
             return address is null
-                ? new Response<Addresses?>(null, 404, "Endereço não encontrado")
-                : new Response<Addresses?>(address);
+                ? new Response<Address?>(null, 404, "Endereço não encontrado")
+                : new Response<Address?>(address);
         }
         catch
         {
-            return new Response<Addresses?>(null, 500, "Não foi possível recuperar o endereço");
+            return new Response<Address?>(null, 500, "Não foi possível recuperar o endereço");
         }
     }
 
-    public Task<PagedResponse<List<Addresses>>> GetByCompanyOrClientIdAsync(GetAddressByCompanyOrClientRequest request)
+    public Task<PagedResponse<List<Address>>> GetByCompanyOrClientIdAsync(GetAddressByCompanyOrClientRequest request)
     {
         throw new NotImplementedException();
     }

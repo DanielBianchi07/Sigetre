@@ -29,7 +29,7 @@ public class ClientMapping : IEntityTypeConfiguration<Client>
             .IsRequired();
         builder.HasOne(x => x.ClientAddress)
             .WithOne(x => x.Clt)
-            .HasForeignKey<Addresses>(x=>x.ClientId)
+            .HasForeignKey<Address>(x=>x.ClientId)
             .IsRequired();
         
         

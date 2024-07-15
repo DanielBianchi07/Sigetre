@@ -11,7 +11,7 @@ public class Client : BaseClass
     
     // relationship
     public long ClientAddressId { get; set; }
-    public Addresses ClientAddress { get; set; } = null!;
+    public Address ClientAddress { get; set; } = null!;
     
     public ICollection<Phones> Telephone { get; set; } = null!;
 }

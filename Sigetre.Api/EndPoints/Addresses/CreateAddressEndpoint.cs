@@ -1,24 +1,24 @@
 ﻿using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
-using Sigetre.Core.Requests.CompanyAddress;
+using Sigetre.Core.Requests.Address;
 using Sigetre.Core.Responses;
 
-namespace Sigetre.Api.EndPoints.CompanyAddresses;
+namespace Sigetre.Api.EndPoints.Addresses;
 
-public class CreateCompanyAddressEndpoint : IEndpoint
+public class CreateAddressEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
         => app.MapPost("/", HandleAsync)
-            .WithName("CompanyAddresses: Create")
+            .WithName("Address: Create")
             .WithSummary("Create a new address")
             .WithDescription("Create a new address")
             .WithOrder(1)
-            .Produces<Response<CompanyAddress?>>();
+            .Produces<Response<Address?>>();
 
     private static async Task<IResult> HandleAsync(
-            ICompanyAddressHandler handler,
-            CreateCompanyAddressRequest request)
+            IAddressHandler handler,
+            CreateAddressRequest request)
         //long clientId)
     {
         request.ClientId = 2;

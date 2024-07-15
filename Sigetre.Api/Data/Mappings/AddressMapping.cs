@@ -4,11 +4,11 @@ using Sigetre.Core.Models;
 
 namespace Sigetre.Api.Data.Mappings;
 
-public class AddressMapping : IEntityTypeConfiguration<Addresses>
+public class AddressMapping : IEntityTypeConfiguration<Address>
 {
-    public void Configure(EntityTypeBuilder<Addresses> builder)
+    public void Configure(EntityTypeBuilder<Address> builder)
     {
-        builder.ToTable("Addresses");
+        builder.ToTable("Address");
 
         builder.HasKey(x => x.Id);
 

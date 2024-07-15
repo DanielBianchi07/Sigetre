@@ -29,7 +29,7 @@ public class CompanyMapping : IEntityTypeConfiguration<Company>
             .IsRequired();
         builder.HasOne(x => x.CompanyAddress)
             .WithOne(x => x.Company)
-            .HasForeignKey<Addresses>(x=>x.ClientId)
+            .HasForeignKey<Address>(x=>x.ClientId)
             .IsRequired();
         
         builder.Property(x => x.Status)

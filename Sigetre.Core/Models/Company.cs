@@ -11,7 +11,7 @@ public class Company : BaseClass
     
     // relationship
     public long CompanyAddressId { get; set; }
-    public Addresses CompanyAddress { get; set; } = null!;
+    public Address CompanyAddress { get; set; } = null!;
     
     public ICollection<Phones> Telephone { get; set; } = null!;
     public ICollection<Student> Students { get; set; } = null!;
