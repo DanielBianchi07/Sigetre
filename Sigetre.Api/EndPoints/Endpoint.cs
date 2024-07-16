@@ -58,8 +58,8 @@ public static class Endpoint
       
       endpoints.MapGroup("v1/clients")
             .WithTags("Clients")
-            //.RequireAuthorization()
             .MapEndpoint<CreateClientEndpoint>()
+            //.RequireAuthorization()
             .MapEndpoint<UpdateClientEndpoint>()
             .MapEndpoint<DeleteClientEndpoint>()
             .MapEndpoint<GetClientByIdEndpoint>()
