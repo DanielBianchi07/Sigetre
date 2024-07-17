@@ -10,5 +10,5 @@ public interface IAttendanceListHandler
     Task<Response<AttendanceList?>> DeleteAsync(DeleteAttendanceListRequest request);
     Task<Response<AttendanceList?>> UpdateAsync(UpdateAttendanceListRequest request);
     Task<Response<AttendanceList?>> GetByIdAsync(GetAttendanceListByIdRequest request);
-    Task<PagedResponse<List<AttendanceList>>> GetByQuestionAsync(GetAllAttendanceListRequest request);
+    Task<PagedResponse<List<AttendanceList>>> GetAllAsync(GetAllAttendanceListRequest request);
 }
