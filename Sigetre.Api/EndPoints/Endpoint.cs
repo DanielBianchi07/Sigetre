@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Sigetre.Api.Common.Api;
 
@@ -7,8 +7,10 @@ using Sigetre.Api.EndPoints.Clients;
 using Sigetre.Api.EndPoints.Companies;
 using Sigetre.Api.EndPoints.Instructors;
 using Sigetre.Api.EndPoints.Courses;
-using Sigetre.Api.EndPoints.Identity;
 using Sigetre.Api.Models;
+
+using Sigetre.Api.EndPoints.Identity;
+
 
 namespace Sigetre.Api.EndPoints;
 
@@ -53,7 +55,17 @@ public static class Endpoint
             .MapEndpoint<GetInstructorBySpecializationEndpoint>()
             .MapEndpoint<GetAllInstructorEndpoint>();
         
-        endpoints.MapGroup("v1/clients")
+        endpoints.MapGroup("v1/instructors")
+            .WithTags("Instructors")
+            //.RequireAuthorization()
+            .MapEndpoint<CreateInstructorEndpoint>()
+            .MapEndpoint<UpdateInstructorEndpoint>()
+            .MapEndpoint<DeleteInstructorEndpoint>()
+            .MapEndpoint<GetInstructorByIdEndpoint>()
+            .MapEndpoint<GetInstructorBySpecializationEndpoint>()
+            .MapEndpoint<GetAllInstructorEndpoint>();
+      
+      endpoints.MapGroup("v1/clients")
             .WithTags("Clients")
             //.RequireAuthorization()
             .MapEndpoint<CreateClientEndpoint>()
