@@ -18,7 +18,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
                 ZipCode = request.ZipCode,
                 State = request.State,
                 City = request.City,
-                District = request.District,
+                Neighborhood = request.Neighborhood,
                 StreetName = request.StreetName,
                 Number = request.Number,
                 Complement = request.Complement,
@@ -72,7 +72,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
             address.ZipCode = request.ZipCode;
             address.State = request.State;
             address.City = request.City;
-            address.District = request.District;
+            address.Neighborhood = request.Neighborhood;
             address.StreetName = request.StreetName;
             address.Number = request.Number;
             address.Complement = request.Complement;

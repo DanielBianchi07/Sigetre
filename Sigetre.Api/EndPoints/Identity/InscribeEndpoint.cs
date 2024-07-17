@@ -4,7 +4,7 @@ using Sigetre.Api.Models;
 
 namespace Sigetre.Api.EndPoints.Identity;
 
-public class RegisterEndpoint : IEndpoint
+public class InscribeEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
         => app.MapPost("/inscribe", HandleAsync)

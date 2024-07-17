@@ -24,13 +24,14 @@ public class CompanyMapping : IEntityTypeConfiguration<Company>
             .HasColumnType("VARCHAR")
             .HasMaxLength(160);
         
-        builder.Property(x => x.CompanyAddressId)
-            .HasColumnType("BIGINT")
-            .IsRequired();
-        builder.HasOne(x => x.CompanyAddress)
+        builder.HasOne(e => e.Address)
+            .WithOne(a => a.Company)
+            .HasForeignKey<Address>(a => a.CompanyId)
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasMany(x => x.Telephones)
             .WithOne(x => x.Company)
-            .HasForeignKey<Address>(x=>x.ClientId)
-            .IsRequired();
+            .HasForeignKey(x => x.CompanyId);
         
         builder.Property(x => x.Status)
             .IsRequired(true)
@@ -42,7 +43,7 @@ public class CompanyMapping : IEntityTypeConfiguration<Company>
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)
-            .IsRequired(true)
+            .IsRequired(false)
             .HasColumnType("BIGINT");
     }
 }

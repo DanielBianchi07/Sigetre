@@ -23,7 +23,6 @@ public class IdentityUserMapping : IEntityTypeConfiguration<User>
         builder.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
         builder.Property(u => u.Name).HasColumnType("NVARCHAR").HasMaxLength(32).IsRequired();
         builder.Property(u => u.ClientId)
-            .IsRequired()
             .HasColumnType("BIGINT");
 
         builder.HasMany<IdentityUserClaim<long>>().WithOne().HasForeignKey(uc => uc.UserId).IsRequired();

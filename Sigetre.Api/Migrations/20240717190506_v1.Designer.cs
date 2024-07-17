@@ -12,7 +12,7 @@ using Sigetre.Api.Data;
 namespace Sigetre.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240715200827_v1")]
+    [Migration("20240717190506_v1")]
     partial class v1
     {
         /// <inheritdoc />
@@ -223,7 +223,7 @@ namespace Sigetre.Api.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -306,6 +306,9 @@ namespace Sigetre.Api.Migrations
                     b.Property<long?>("ClientId")
                         .HasColumnType("BIGINT");
 
+                    b.Property<long?>("CompanyId")
+                        .HasColumnType("BIGINT");
+
                     b.Property<string>("Complement")
                         .HasMaxLength(64)
                         .HasColumnType("NVARCHAR");
@@ -316,9 +319,9 @@ namespace Sigetre.Api.Migrations
                     b.Property<long>("CreatedBy")
                         .HasColumnType("BIGINT");
 
-                    b.Property<string>("District")
+                    b.Property<string>("Neighborhood")
                         .IsRequired()
-                        .HasMaxLength(2)
+                        .HasMaxLength(48)
                         .HasColumnType("VARCHAR");
 
                     b.Property<string>("Number")
@@ -343,7 +346,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("ZipCode")
@@ -356,6 +358,10 @@ namespace Sigetre.Api.Migrations
                     b.HasIndex("ClientId")
                         .IsUnique()
                         .HasFilter("[ClientId] IS NOT NULL");
+
+                    b.HasIndex("CompanyId")
+                        .IsUnique()
+                        .HasFilter("[CompanyId] IS NOT NULL");
 
                     b.ToTable("Address", (string)null);
                 });
@@ -395,7 +401,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -443,7 +448,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<byte[]>("Watermark")
@@ -494,7 +498,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<byte[]>("Watermark")
@@ -515,12 +518,6 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientAddressId")
-                        .HasColumnType("BIGINT");
-
-                    b.Property<long>("ClientId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -547,7 +544,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -566,9 +562,6 @@ namespace Sigetre.Api.Migrations
                     b.Property<long>("ClientId")
                         .HasColumnType("BIGINT");
 
-                    b.Property<long>("CompanyAddressId")
-                        .HasColumnType("BIGINT");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -595,7 +588,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -644,7 +636,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<short>("Validity")
@@ -709,7 +700,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -727,11 +717,11 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
                         .HasColumnType("BIGINT");
 
                     b.Property<long?>("CompanyId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -751,7 +741,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -760,7 +749,7 @@ namespace Sigetre.Api.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.ToTable("CompanyPhones", (string)null);
+                    b.ToTable("Phones", (string)null);
                 });
 
             modelBuilder.Entity("Sigetre.Core.Models.ProgramContent", b =>
@@ -795,7 +784,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<short?>("Workload")
@@ -843,7 +831,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -882,7 +869,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -938,7 +924,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -975,7 +960,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -1016,7 +1000,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<long?>("UpdatedBy")
-                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.HasKey("Id");
@@ -1131,19 +1114,17 @@ namespace Sigetre.Api.Migrations
 
             modelBuilder.Entity("Sigetre.Core.Models.Address", b =>
                 {
-                    b.HasOne("Sigetre.Core.Models.Client", "Clt")
-                        .WithOne("ClientAddress")
+                    b.HasOne("Sigetre.Core.Models.Client", "Client")
+                        .WithOne("Address")
                         .HasForeignKey("Sigetre.Core.Models.Address", "ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Sigetre.Core.Models.Company", "Company")
-                        .WithOne("CompanyAddress")
-                        .HasForeignKey("Sigetre.Core.Models.Address", "ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("Address")
+                        .HasForeignKey("Sigetre.Core.Models.Address", "CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.Navigation("Clt");
+                    b.Navigation("Client");
 
                     b.Navigation("Company");
                 });
@@ -1194,15 +1175,17 @@ namespace Sigetre.Api.Migrations
 
             modelBuilder.Entity("Sigetre.Core.Models.Phones", b =>
                 {
-                    b.HasOne("Sigetre.Core.Models.Client", null)
-                        .WithMany("Telephone")
-                        .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Sigetre.Core.Models.Client", "Client")
+                        .WithMany("Telephones")
+                        .HasForeignKey("ClientId");
 
-                    b.HasOne("Sigetre.Core.Models.Company", null)
-                        .WithMany("Telephone")
+                    b.HasOne("Sigetre.Core.Models.Company", "Company")
+                        .WithMany("Telephones")
                         .HasForeignKey("CompanyId");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Sigetre.Core.Models.ProgramContent", b =>
@@ -1260,18 +1243,18 @@ namespace Sigetre.Api.Migrations
 
             modelBuilder.Entity("Sigetre.Core.Models.Client", b =>
                 {
-                    b.Navigation("ClientAddress")
+                    b.Navigation("Address")
                         .IsRequired();
 
-                    b.Navigation("Telephone");
+                    b.Navigation("Telephones");
                 });
 
             modelBuilder.Entity("Sigetre.Core.Models.Company", b =>
                 {
-                    b.Navigation("CompanyAddress")
+                    b.Navigation("Address")
                         .IsRequired();
 
-                    b.Navigation("Telephone");
+                    b.Navigation("Telephones");
                 });
 
             modelBuilder.Entity("Sigetre.Core.Models.Course", b =>
