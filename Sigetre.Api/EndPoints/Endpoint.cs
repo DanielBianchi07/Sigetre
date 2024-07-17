@@ -1,6 +1,7 @@
 using Sigetre.Api.Common.Api;
 using Sigetre.Api.EndPoints.Addresses;
 using Sigetre.Api.EndPoints.Alternatives;
+using Sigetre.Api.EndPoints.AttendanceLists;
 using Sigetre.Api.EndPoints.Clients;
 using Sigetre.Api.EndPoints.Companies;
 using Sigetre.Api.EndPoints.Instructors;
@@ -41,6 +42,15 @@ public static class Endpoint
             .MapEndpoint<DeleteAlternativeEndpoint>()
             .MapEndpoint<GetAlternativeByIdEndpoint>()
             .MapEndpoint<GetAlternativeByQuestionEndpoint>();
+        
+        endpoints.MapGroup("v1/attendancelists")
+            .WithTags("AttendanceLists")
+            .RequireAuthorization()
+            .MapEndpoint<CreateAttendanceListEndpoint>()
+            .MapEndpoint<UpdateAttendanceListEndpoint>()
+            .MapEndpoint<DeleteAttendanceListEndpoint>()
+            .MapEndpoint<GetAttendanceListByIdEndpoint>()
+            .MapEndpoint<GetAllAttendanceListEndoint>();
 
         endpoints.MapGroup("v1/clients")
             .WithTags("Clients")
