@@ -32,7 +32,7 @@ public static class Endpoint
             .MapEndpoint<UpdateAddressEndpoint>()
             .MapEndpoint<DeleteAddressEndpoint>()
             .MapEndpoint<GetAddressByIdEndpoint>();
-        
+
         endpoints.MapGroup("v1/alternatives")
             .WithTags("Alternatives")
             .RequireAuthorization()
