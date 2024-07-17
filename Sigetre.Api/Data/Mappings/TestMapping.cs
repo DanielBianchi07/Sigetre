@@ -27,7 +27,7 @@ public class TestMapping : IEntityTypeConfiguration<Test>
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)
-            .IsRequired(true)
+            .IsRequired(false)
             .HasColumnType("BIGINT");
     }
 }

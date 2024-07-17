@@ -30,7 +30,7 @@ public class AlternativeMapping : IEntityTypeConfiguration<Alternative>
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)
-            .IsRequired(true)
+            .IsRequired(false)
             .HasColumnType("BIGINT");
     }
 }

@@ -24,10 +24,10 @@ public class AddressMapping : IEntityTypeConfiguration<Address>
             .IsRequired(true)
             .HasColumnType("NVARCHAR")
             .HasMaxLength(32);
-        builder.Property(x => x.District)
+        builder.Property(x => x.Neighborhood)
             .IsRequired(true)
             .HasColumnType("VARCHAR")
-            .HasMaxLength(2);
+            .HasMaxLength(48);
         builder.Property(x => x.StreetName)
             .IsRequired(true)
             .HasColumnType("NVARCHAR")
@@ -44,6 +44,9 @@ public class AddressMapping : IEntityTypeConfiguration<Address>
         builder.Property(x => x.ClientId)
             .IsRequired(false)
             .HasColumnType("BIGINT");
+        builder.Property(x => x.CompanyId)
+            .IsRequired(false)
+            .HasColumnType("BIGINT");
         
         builder.Property(x => x.Status)
             .IsRequired(true)
@@ -52,7 +55,7 @@ public class AddressMapping : IEntityTypeConfiguration<Address>
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)
-            .IsRequired(true)
+            .IsRequired(false)
             .HasColumnType("BIGINT");
     }
 }

@@ -24,14 +24,14 @@ public class ClientMapping : IEntityTypeConfiguration<Client>
             .HasColumnType("VARCHAR")
             .HasMaxLength(160);
 
-        builder.Property(x => x.ClientAddressId)
-            .HasColumnType("BIGINT")
-            .IsRequired();
-        builder.HasOne(x => x.ClientAddress)
-            .WithOne(x => x.Clt)
-            .HasForeignKey<Address>(x=>x.ClientId)
-            .IsRequired();
-        
+        builder.HasOne(e => e.Address)
+            .WithOne(a => a.Client)
+            .HasForeignKey<Address>(a => a.ClientId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(x => x.Telephones)
+            .WithOne(x => x.Client)
+            .HasForeignKey(x => x.ClientId);
         
         builder.Property(x => x.Status)
             .IsRequired(true)
@@ -40,7 +40,7 @@ public class ClientMapping : IEntityTypeConfiguration<Client>
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)
-            .IsRequired(true)
+            .IsRequired(false)
             .HasColumnType("BIGINT");
     }
 }

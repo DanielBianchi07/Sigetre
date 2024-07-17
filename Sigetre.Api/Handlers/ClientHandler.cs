@@ -19,7 +19,6 @@ public class ClientHandler(AppDbContext context) : IClientHandler
                 Name = request.Name,
                 Ein = request.Ein,
                 Email = request.Email,
-                ClientId = request.ClientId,
                 CreatedBy = request.CreateBy,
                 CreatedAt = request.CreatedAt,
                 Status = request.Status
@@ -41,7 +40,7 @@ public class ClientHandler(AppDbContext context) : IClientHandler
         try
         {
             var client =
-                await context.Clients.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.Clients.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (client == null)
                 return new Response<Client?>(null, 404, "Cliente não encontrado");
@@ -62,14 +61,13 @@ public class ClientHandler(AppDbContext context) : IClientHandler
         try
         {
             var client =
-                await context.Clients.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.Clients.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (client == null)
                 return new Response<Client?>(null, 404, "Cliente não encontrado");
             client.Name = request.Name;
             client.Ein = request.Ein;
             client.Email = request.Email;
-            client.ClientId = request.ClientId;
             client.UpdatedBy = request.UpdatedBy;
             client.UpdatedAt = request.UpdatedAt;
             client.Status = request.Status;
@@ -90,7 +88,7 @@ public class ClientHandler(AppDbContext context) : IClientHandler
         try
         {
             var client = await context.Clients.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
             return client is null
                 ? new Response<Client?>(null, 404, "Cliente não encontrado")
                 : new Response<Client?>(client);
@@ -107,7 +105,6 @@ public class ClientHandler(AppDbContext context) : IClientHandler
         {
             var query = context.Clients
                 .AsNoTracking()
-                .Where(x => x.ClientId == request.ClientId)
                 .OrderBy(x=>x.Name);
 
             var clients = await query

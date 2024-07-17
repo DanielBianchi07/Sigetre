@@ -12,6 +12,6 @@ public class UpdateClientRequest : Request
     public string Ein { get; set; } = String.Empty;
     [Required]
     public string Email { get; set; } = String.Empty;
-    [Required]
-    public long ClientAddressId { get; set; }
+    
+    public new long? ClientId { get; set; }
 }

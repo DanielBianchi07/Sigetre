@@ -4,11 +4,11 @@ using Sigetre.Core.Models;
 
 namespace Sigetre.Api.Data.Mappings;
 
-public class CompanyPhoneMapping : IEntityTypeConfiguration<Phones>
+public class PhoneMapping : IEntityTypeConfiguration<Phones>
 {
     public void Configure(EntityTypeBuilder<Phones> builder)
     {
-        builder.ToTable("CompanyPhones");
+        builder.ToTable("Phones");
 
         builder.HasKey(x => x.Id);
 
@@ -17,17 +17,29 @@ public class CompanyPhoneMapping : IEntityTypeConfiguration<Phones>
             .HasColumnType("VARCHAR")
             .HasMaxLength(16);
         
+        builder.HasOne(s => s.Client)
+            .WithMany(c => c.Telephones)
+            .HasForeignKey(s => s.ClientId);
+        
+        builder.HasOne(s => s.Company)
+            .WithMany(c => c.Telephones)
+            .HasForeignKey(s => s.CompanyId);
+        
+        builder.Property(x => x.ClientId)
+            .IsRequired(false)
+            .HasColumnType("BIGINT");
+        builder.Property(x => x.CompanyId)
+            .IsRequired(false)
+            .HasColumnType("BIGINT");
+        
         builder.Property(x => x.Status)
             .IsRequired(true)
             .HasColumnType("SMALLINT");
-        builder.Property(x => x.ClientId)
-            .IsRequired(true)
-            .HasColumnType("BIGINT");
         builder.Property(x => x.CreatedBy)
             .IsRequired(true)
             .HasColumnType("BIGINT");
         builder.Property(x => x.UpdatedBy)
-            .IsRequired(true)
+            .IsRequired(false)
             .HasColumnType("BIGINT");
     }
 }

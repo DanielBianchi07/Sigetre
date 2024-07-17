@@ -90,7 +90,7 @@ public static class Endpoint
             .WithTags("Identity")
             .MapEndpoint<LogoutEndpoint>()
             .MapEndpoint<GetRolesEndpoint>()
-            .MapEndpoint<RegisterEndpoint>();
+            .MapEndpoint<InscribeEndpoint>();
         
         endpoints.MapGroup("v1/instructors")
             .WithTags("Instructors")
