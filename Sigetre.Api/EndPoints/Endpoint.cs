@@ -1,7 +1,5 @@
-using System.Security.Claims;
-using Microsoft.AspNetCore.Identity;
 using Sigetre.Api.Common.Api;
-
+using Sigetre.Api.EndPoints.Addresses;
 using Sigetre.Api.EndPoints.Alternatives;
 using Sigetre.Api.EndPoints.Clients;
 using Sigetre.Api.EndPoints.Companies;
@@ -27,56 +25,47 @@ public static class Endpoint
             .MapGet("/", () => new { message = "OK" });
         
 
+        endpoints.MapGroup("v1/addresses")
+            .WithTags("Addresses")
+            .RequireAuthorization()
+            .MapEndpoint<CreateAddressEndpoint>()
+            .MapEndpoint<UpdateAddressEndpoint>()
+            .MapEndpoint<DeleteAddressEndpoint>()
+            .MapEndpoint<GetAddressByIdEndpoint>();
+        
         endpoints.MapGroup("v1/alternatives")
             .WithTags("Alternatives")
-            //.RequireAuthorization()
+            .RequireAuthorization()
             .MapEndpoint<CreateAlternativeEndpoint>()
             .MapEndpoint<UpdateAlternativeEndpoint>()
             .MapEndpoint<DeleteAlternativeEndpoint>()
             .MapEndpoint<GetAlternativeByIdEndpoint>()
             .MapEndpoint<GetAlternativeByQuestionEndpoint>();
+
+        endpoints.MapGroup("v1/clients")
+            .WithTags("Clients")
+            .MapEndpoint<CreateClientEndpoint>();
+            
+        endpoints.MapGroup("v1/clients")
+            .WithTags("Clients")
+            .RequireAuthorization()
+            .MapEndpoint<UpdateClientEndpoint>()
+            .MapEndpoint<DeleteClientEndpoint>()
+            .MapEndpoint<GetClientByIdEndpoint>()
+            .MapEndpoint<GetAllClientEndpoint>();
         
         endpoints.MapGroup("v1/companies")
             .WithTags("Companies")
-            //.RequireAuthorization()
+            .RequireAuthorization()
             .MapEndpoint<CreateCompanyEndpoint>()
             .MapEndpoint<UpdateCompanyEndpoint>()
             .MapEndpoint<DeleteCompanyEndpoint>()
             .MapEndpoint<GetCompanyByIdEndpoint>()
             .MapEndpoint<GetAllCompanyEndpoint>();
 
-        endpoints.MapGroup("v1/instructors")
-            .WithTags("Instructors")
-            //.RequireAuthorization()
-            .MapEndpoint<CreateInstructorEndpoint>()
-            .MapEndpoint<UpdateInstructorEndpoint>()
-            .MapEndpoint<DeleteInstructorEndpoint>()
-            .MapEndpoint<GetInstructorByIdEndpoint>()
-            .MapEndpoint<GetInstructorBySpecializationEndpoint>()
-            .MapEndpoint<GetAllInstructorEndpoint>();
-        
-        endpoints.MapGroup("v1/instructors")
-            .WithTags("Instructors")
-            //.RequireAuthorization()
-            .MapEndpoint<CreateInstructorEndpoint>()
-            .MapEndpoint<UpdateInstructorEndpoint>()
-            .MapEndpoint<DeleteInstructorEndpoint>()
-            .MapEndpoint<GetInstructorByIdEndpoint>()
-            .MapEndpoint<GetInstructorBySpecializationEndpoint>()
-            .MapEndpoint<GetAllInstructorEndpoint>();
-      
-      endpoints.MapGroup("v1/clients")
-            .WithTags("Clients")
-            //.RequireAuthorization()
-            .MapEndpoint<CreateClientEndpoint>()
-            .MapEndpoint<UpdateClientEndpoint>()
-            .MapEndpoint<DeleteClientEndpoint>()
-            .MapEndpoint<GetClientByIdEndpoint>()
-            .MapEndpoint<GetAllClientEndpoint>();
-        
         endpoints.MapGroup("v1/courses")
             .WithTags("Courses")
-            //.RequireAuthorization()
+            .RequireAuthorization()
             .MapEndpoint<CreateCourseEndpoint>()
             .MapEndpoint<UpdateCourseEndpoint>()
             .MapEndpoint<DeleteCourseEndpoint>()
@@ -92,6 +81,17 @@ public static class Endpoint
             .MapEndpoint<LogoutEndpoint>()
             .MapEndpoint<GetRolesEndpoint>()
             .MapEndpoint<RegisterEndpoint>();
+        
+        endpoints.MapGroup("v1/instructors")
+            .WithTags("Instructors")
+            .RequireAuthorization()
+            .MapEndpoint<CreateInstructorEndpoint>()
+            .MapEndpoint<UpdateInstructorEndpoint>()
+            .MapEndpoint<DeleteInstructorEndpoint>()
+            .MapEndpoint<GetInstructorByIdEndpoint>()
+            .MapEndpoint<GetInstructorBySpecializationEndpoint>()
+            .MapEndpoint<GetAllInstructorEndpoint>();
+        
     }
     
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
