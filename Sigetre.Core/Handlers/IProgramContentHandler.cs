@@ -10,5 +10,5 @@ public interface IProgramContentHandler
     Task<Response<ProgramContent?>> DeleteAsync(DeleteProgramContentRequest request);
     Task<Response<ProgramContent?>> UpdateAsync(UpdateProgramContentRequest request);
     Task<Response<ProgramContent?>> GetByIdAsync(GetProgramContentByIdRequest request);
-    Task<PagedResponse<List<ProgramContent>>> GetByQuestionAsync(GetProgramContentByCourseRequest request);
+    Task<PagedResponse<List<ProgramContent>>> GetByCourseAsync(GetProgramContentByCourseRequest request);
 }

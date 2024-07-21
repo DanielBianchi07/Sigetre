@@ -18,5 +18,5 @@ public class Client
     
     // relationship
     public Address Address { get; set; } = null!;
-    public ICollection<Phones> Telephones { get; set; } = null!;
+    public ICollection<Phone> Telephones { get; set; } = null!;
 }

@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using Sigetre.Core.Enums;
 
 namespace Sigetre.Core.Requests.Client;
 
-public class CreateClientRequest : Request
+public class CreateClientRequest
 {
     [Required]
     public string Name { get; set; } = String.Empty;
@@ -11,5 +12,10 @@ public class CreateClientRequest : Request
     [Required]
     public string Email { get; set; } = String.Empty;
     
-    public new long? ClientId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    [Required]
+    public EStatus Status { get; set; }
+    public long CreateBy { get; set; }
+    public long? UpdatedBy { get; set; }
 }

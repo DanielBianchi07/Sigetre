@@ -10,5 +10,5 @@ public interface IStudentHandler
     Task<Response<Student?>> DeleteAsync(DeleteStudentRequest request);
     Task<Response<Student?>> UpdateAsync(UpdateStudentRequest request);
     Task<Response<Student?>> GetByIdAsync(GetStudentByIdRequest request);
-    Task<PagedResponse<List<Student>>> GetByQuestionAsync(GetAllStudentRequest request);
+    Task<PagedResponse<List<Student>>> GetAllAsync(GetAllStudentRequest request);
 }

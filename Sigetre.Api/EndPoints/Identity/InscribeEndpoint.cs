@@ -14,8 +14,7 @@ public class InscribeEndpoint : IEndpoint
 
     public static async Task<IResult> HandleAsync(RegisterModel model, UserManager<User> userManager)
     {
-        if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password) ||
-            string.IsNullOrEmpty(model.Name) || string.IsNullOrEmpty(model.PhoneNumber))
+        if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.PhoneNumber))
         {
             return Results.BadRequest("Todos os campos são obrigatórios.");
         }
@@ -24,7 +23,6 @@ public class InscribeEndpoint : IEndpoint
         {
             UserName = model.Email,
             Email = model.Email,
-            Name = model.Name,
             PhoneNumber = model.PhoneNumber,
             ClientId = model.ClientId
             // Mapeie outros campos conforme necessário

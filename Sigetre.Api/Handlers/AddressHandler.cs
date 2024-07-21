@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Sigetre.Api.Data;
 using Sigetre.Core.Handlers;
@@ -23,6 +24,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
                 Number = request.Number,
                 Complement = request.Complement,
                 ClientId = request.ClientId,
+                CompanyId = request.CompanyId,
                 CreatedBy = request.CreateBy,
                 CreatedAt = request.CreatedAt,
                 Status = request.Status
@@ -44,7 +46,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
         try
         {
             var address =
-                await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (address == null)
                 return new Response<Address?>(null, 404, "Endereço não encontrado");
@@ -64,7 +66,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
         try
         {
             var address =
-                await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (address == null)
                 return new Response<Address?>(null, 404, "Endereço não encontrado");
@@ -77,6 +79,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
             address.Number = request.Number;
             address.Complement = request.Complement;
             address.ClientId = request.ClientId;
+            address.CompanyId = request.CompanyId;
             address.UpdatedBy = request.UpdatedBy;
             address.UpdatedAt = request.UpdatedAt;
             address.Status = request.Status;
@@ -97,7 +100,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
         try
         {
             var address = await context.Addresses.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
             return address is null
                 ? new Response<Address?>(null, 404, "Endereço não encontrado")
                 : new Response<Address?>(address);

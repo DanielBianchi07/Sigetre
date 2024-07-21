@@ -1,4 +1,8 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Sigetre.Api.Common.Api;
+using Sigetre.Api.Models;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Instructor;

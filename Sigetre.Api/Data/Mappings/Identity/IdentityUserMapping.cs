@@ -21,7 +21,6 @@ public class IdentityUserMapping : IEntityTypeConfiguration<User>
         builder.Property(u => u.NormalizedUserName).HasMaxLength(180);
         builder.Property(u => u.PhoneNumber).HasMaxLength(16);
         builder.Property(u => u.ConcurrencyStamp).IsConcurrencyToken();
-        builder.Property(u => u.Name).HasColumnType("NVARCHAR").HasMaxLength(32).IsRequired();
         builder.Property(u => u.ClientId)
             .HasColumnType("BIGINT");
 

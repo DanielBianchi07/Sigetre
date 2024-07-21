@@ -10,5 +10,5 @@ public interface ITrainingHandler
     Task<Response<Training?>> DeleteAsync(DeleteTrainingRequest request);
     Task<Response<Training?>> UpdateAsync(UpdateTrainingRequest request);
     Task<Response<Training?>> GetByIdAsync(GetTrainingByIdRequest request);
-    Task<PagedResponse<List<Training>>> GetByQuestionAsync(GetAllTrainingRequest request);
+    Task<PagedResponse<List<Training>>> GetAllAsync(GetAllTrainingRequest request);
 }

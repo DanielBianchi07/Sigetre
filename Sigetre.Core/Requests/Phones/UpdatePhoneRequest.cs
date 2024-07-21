@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Sigetre.Core.Requests.CompanyPhone;
+namespace Sigetre.Core.Requests.Phones;
 
-public class CreateCompanyPhoneRequest : Request
+public class UpdatePhoneRequest : Request
 {
     [Required]
+    public long Id { get; set; }
+    [Required]
     public string Number { get; set; } = String.Empty;
-    // relationship
     [Required]
     public long CompanyId { get; set; }
 }

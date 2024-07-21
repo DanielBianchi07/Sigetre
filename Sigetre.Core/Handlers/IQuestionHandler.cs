@@ -10,5 +10,5 @@ public interface IQuestionHandler
     Task<Response<Question?>> DeleteAsync(DeleteQuestionRequest request);
     Task<Response<Question?>> UpdateAsync(UpdateQuestionRequest request);
     Task<Response<Question?>> GetByIdAsync(GetQuestionByIdRequest request);
-    Task<PagedResponse<List<Question>>> GetByQuestionAsync(GetQuestionByCourseRequest request);
+    Task<PagedResponse<List<Question>>> GetByCourseAsync(GetQuestionByCourseRequest request);
 }

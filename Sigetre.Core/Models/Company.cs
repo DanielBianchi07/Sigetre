@@ -12,6 +12,6 @@ public class Company : BaseClass
     // relationship
     public Address Address { get; set; } = null!;
     
-    public ICollection<Phones> Telephones { get; set; } = null!;
+    public ICollection<Phone> Telephones { get; set; } = null!;
     public ICollection<Student> Students { get; set; } = null!;
 }

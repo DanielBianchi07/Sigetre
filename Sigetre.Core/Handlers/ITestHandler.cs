@@ -4,11 +4,10 @@ using Sigetre.Core.Responses;
 
 namespace Sigetre.Core.Handlers;
 
-public interface ITesteHandler
+public interface ITestHandler
 {
     Task<Response<Test?>> CreateAsync(CreateTestRequest request);
     Task<Response<Test?>> DeleteAsync(DeleteTestRequest request);
     Task<Response<Test?>> UpdateAsync(UpdateTestRequest request);
     Task<Response<Test?>> GetByIdAsync(GetTestByIdRequest request);
-    Task<PagedResponse<List<Test>>> GetByQuestionAsync(GetTestByCourseRequest request);
 }
