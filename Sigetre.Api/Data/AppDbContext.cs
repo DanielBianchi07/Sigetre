@@ -26,7 +26,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Client> Clients { get; set; } = null!;
     public DbSet<Company> Companies { get; set; } = null!;
     public DbSet<Address> Addresses { get; set; } = null!;
-    public DbSet<Phones> CompanyPhones { get; set; } = null!;
+    public DbSet<Phone> Phones { get; set; } = null!;
     public DbSet<Course> Courses { get; set; } = null!;
     public DbSet<Instructor> Instructors { get; set; } = null!;
     public DbSet<ProgramContent> ProgramContents { get; set; } = null!;

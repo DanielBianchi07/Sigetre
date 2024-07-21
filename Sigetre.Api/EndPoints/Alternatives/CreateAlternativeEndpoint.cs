@@ -1,4 +1,6 @@
-﻿using Sigetre.Api.Common.Api;
+﻿using System.Security.Claims;
+using Sigetre.Api.Common.Api;
+using Sigetre.Api.Data;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Alternative;
@@ -17,6 +19,8 @@ public class CreateAlternativeEndpoint : IEndpoint
             .Produces<Response<Alternative?>>();
 
     private static async Task<IResult> HandleAsync(
+            AppDbContext context,
+            ClaimsPrincipal user,
         IAlternativeHandler handler,
         CreateAlternativeRequest request)
         //long clientId)

@@ -2,7 +2,7 @@ using Sigetre.Core.Enums;
 
 namespace Sigetre.Core.Models;
 
-public class Phones
+public class Phone
 {
     // fields
     public long Id { get; set; }

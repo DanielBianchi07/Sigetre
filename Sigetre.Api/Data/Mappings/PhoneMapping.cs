@@ -4,9 +4,9 @@ using Sigetre.Core.Models;
 
 namespace Sigetre.Api.Data.Mappings;
 
-public class PhoneMapping : IEntityTypeConfiguration<Phones>
+public class PhoneMapping : IEntityTypeConfiguration<Phone>
 {
-    public void Configure(EntityTypeBuilder<Phones> builder)
+    public void Configure(EntityTypeBuilder<Phone> builder)
     {
         builder.ToTable("Phones");
 

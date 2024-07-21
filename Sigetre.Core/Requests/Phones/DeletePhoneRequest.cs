@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Sigetre.Core.Requests.CompanyPhone;
+namespace Sigetre.Core.Requests.Phones;
 
-public class DeleteCompanyPhoneRequest : Request
+public class DeletePhoneRequest : Request
 {
     [Required] 
     public long Id { get; set; }

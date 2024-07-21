@@ -3,6 +3,7 @@ using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Address;
 using Sigetre.Core.Responses;
+using System.Security.Claims;
 
 namespace Sigetre.Api.EndPoints.Addresses;
 

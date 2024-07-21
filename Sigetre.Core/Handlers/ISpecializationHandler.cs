@@ -10,5 +10,5 @@ public interface ISpecializationHandler
     Task<Response<Specialization?>> DeleteAsync(DeleteSpecializationRequest request);
     Task<Response<Specialization?>> UpdateAsync(UpdateSpecializationRequest request);
     Task<Response<Specialization?>> GetByIdAsync(GetSpecializationByIdRequest request);
-    Task<PagedResponse<List<Specialization>>> GetByQuestionAsync(GetAllSpecializationRequest request);
+    Task<PagedResponse<List<Specialization>>> GetAllAsync(GetAllSpecializationRequest request);
 }

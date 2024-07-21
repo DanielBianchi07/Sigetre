@@ -7,4 +7,7 @@ public class CreateQuestionRequest : Request
     [Required]
     public string Content { get; set; } = String.Empty;
     public long? CorrectAnswer { get; set; }
+    
+    [Required] 
+    public long CourseId { get; set; }
 }

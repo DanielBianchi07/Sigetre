@@ -26,7 +26,7 @@ public static class BuildExtension
     public static void AddSecurity(this WebApplicationBuilder builder)
     {
         builder.Services
-            .AddAuthentication(o=>
+            .AddAuthentication(o =>
             {
                 o.DefaultScheme = IdentityConstants.ApplicationScheme;
                 o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
@@ -69,9 +69,9 @@ public static class BuildExtension
 
     public static void AddServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddTransient<ICompanyHandler, CompanyHandler>();
-        builder.Services.AddTransient<IAlternativeHandler, AlternativeHandler>();
         builder.Services.AddTransient<IAddressHandler, AddressesHandler>();
+        builder.Services.AddTransient<IAlternativeHandler, AlternativeHandler>();
+        builder.Services.AddTransient<ICompanyHandler, CompanyHandler>();
         builder.Services.AddTransient<IClientHandler, ClientHandler>();
         builder.Services.AddTransient<ICourseHandler, CourseHandler>();
         builder.Services.AddTransient<IInstructorHandler, InstructorHandler>();
