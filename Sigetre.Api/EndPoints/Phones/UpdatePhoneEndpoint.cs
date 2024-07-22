@@ -1,24 +1,24 @@
-using Sigetre.Api.Common.Api;
+﻿using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
-using Sigetre.Core.Requests.Instructor;
+using Sigetre.Core.Requests.Phones;
 using Sigetre.Core.Responses;
 
-namespace Sigetre.Api.EndPoints.Instructors;
+namespace Sigetre.Api.EndPoints.Phones;
 
-public class UpdateInstructorEndpoint : IEndpoint
+public class UpdatePhoneEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
         => app.MapPut("/{id}", HandleAsync)
-            .WithName("Instructor: Update")
-            .WithSummary("Update an instructor")
-            .WithDescription("Update an instructor")
+            .WithName("Phone: Update")
+            .WithSummary("Update a phone number")
+            .WithDescription("Update a phone number")
             .WithOrder(2)
-            .Produces<Response<Instructor?>>();
+            .Produces<Response<Phone?>>();
 
     private static async Task<IResult> HandleAsync(
-        IInstructorHandler handler,
-        UpdateInstructorRequest request,
+        IPhoneHandler handler,
+        UpdatePhoneRequest request,
         long id)//, long clientId)
     {
         request.ClientId = 2;

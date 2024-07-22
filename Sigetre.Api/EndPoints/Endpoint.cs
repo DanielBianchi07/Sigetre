@@ -9,6 +9,7 @@ using Sigetre.Api.EndPoints.Courses;
 using Sigetre.Api.Models;
 
 using Sigetre.Api.EndPoints.Identity;
+using Sigetre.Api.EndPoints.Phones;
 
 
 namespace Sigetre.Api.EndPoints;
@@ -101,6 +102,15 @@ public static class Endpoint
             .MapEndpoint<GetInstructorByIdEndpoint>()
             .MapEndpoint<GetInstructorBySpecializationEndpoint>()
             .MapEndpoint<GetAllInstructorEndpoint>();
+        
+        endpoints.MapGroup("v1/instructors")
+            .WithTags("Instructors")
+            .RequireAuthorization()
+            .MapEndpoint<CreatePhoneEndpoint>()
+            .MapEndpoint<UpdatePhoneEndpoint>()
+            .MapEndpoint<DeletePhoneEndpoint>()
+            .MapEndpoint<GetPhoneByCompanyEndpoint>()
+            .MapEndpoint<GetAllPhoneEndpoint>();
         
     }
     
