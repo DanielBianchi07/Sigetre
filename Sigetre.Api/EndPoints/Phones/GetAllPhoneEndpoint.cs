@@ -1,29 +1,29 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
-using Sigetre.Core.Requests.Instructor;
+using Sigetre.Core.Requests.Phones;
 using Sigetre.Core.Responses;
 
-namespace Sigetre.Api.EndPoints.Instructors;
+namespace Sigetre.Api.EndPoints.Phones;
 
-public class GetAllInstructorEndpoint : IEndpoint
+public class GetAllPhoneEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
-                 => app.MapGet("/", HandleAsync)
-                     .WithName("Instructors: Get All")
-                     .WithSummary("Show all instructor")
-                     .WithDescription("Show all instructor")
-                     .WithOrder(4)
-            .Produces<PagedResponse<List<Instructor>?>>();
+        => app.MapGet("/", HandleAsync)
+            .WithName("Phones: Get All")
+            .WithSummary("Show all phones")
+            .WithDescription("Show all phones")
+            .WithOrder(4)
+            .Produces<PagedResponse<List<Phone>?>>();
 
     private static async Task<IResult> HandleAsync(
-        IInstructorHandler handler,
+        IPhoneHandler handler,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery] int pageSize = Configuration.DefaultPageSize)//, long clientId)
     {
-        var request = new GetAllInstructorRequest
+        var request = new GetAllPhoneRequest
         {
             ClientId = 2,
             PageNumber = pageNumber,
