@@ -10,6 +10,7 @@ using Sigetre.Api.Models;
 
 using Sigetre.Api.EndPoints.Identity;
 using Sigetre.Api.EndPoints.Phones;
+using Sigetre.Api.EndPoints.ProgramContents;
 
 
 namespace Sigetre.Api.EndPoints;
@@ -103,15 +104,24 @@ public static class Endpoint
             .MapEndpoint<GetInstructorBySpecializationEndpoint>()
             .MapEndpoint<GetAllInstructorEndpoint>();
         
-        endpoints.MapGroup("v1/instructors")
-            .WithTags("Instructors")
+        endpoints.MapGroup("v1/phones")
+            .WithTags("Phones")
             .RequireAuthorization()
             .MapEndpoint<CreatePhoneEndpoint>()
             .MapEndpoint<UpdatePhoneEndpoint>()
             .MapEndpoint<DeletePhoneEndpoint>()
             .MapEndpoint<GetPhoneByCompanyEndpoint>()
             .MapEndpoint<GetAllPhoneEndpoint>();
-        
+
+        endpoints.MapGroup("v1/programContents")
+            .WithTags("ProgramContents")
+            .RequireAuthorization()
+            .MapEndpoint<CreateProgramContentEndpoint>()
+            .MapEndpoint<UpdateProgramContentEndpoint>()
+            .MapEndpoint<DeleteProgramContentEndpoint>()
+            .MapEndpoint<GetProgramContentByIdEndpoint>()
+            .MapEndpoint<GetProgramContentByCourseEndpoint>();
+
     }
     
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
