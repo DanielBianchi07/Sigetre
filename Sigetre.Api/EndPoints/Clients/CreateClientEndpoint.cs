@@ -18,9 +18,9 @@ public class CreateClientEndpoint : IEndpoint
             .Produces<Response<Client?>>();
 
     private static async Task<IResult> HandleAsync(
+            ClaimsPrincipal user,
             IClientHandler handler,
             CreateClientRequest request)
-        //long clientId)
     {
         var result = await handler.CreateAsync(request);
         return result.IsSuccess

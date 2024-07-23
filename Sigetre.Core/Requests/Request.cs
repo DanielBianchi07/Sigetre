@@ -9,7 +9,8 @@ public abstract class Request
     public DateTime? UpdatedAt { get; set; }
     [Required]
     public EStatus Status { get; set; }
-    [Required]
+
+    [Required] 
     public long ClientId { get; set; }
     public long CreateBy { get; set; }
     public long? UpdatedBy { get; set; }

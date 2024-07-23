@@ -17,11 +17,16 @@ public class CreateCompanyEndpoint : IEndpoint
             .Produces<Response<Company?>>();
 
     private static async Task<IResult> HandleAsync(
+            HttpContext httpContext,
             ICompanyHandler handler,
             CreateCompanyRequest request)
         //long clientId)
-    {
-        request.ClientId = 2;
+    { 
+        var user = httpContext.User;
+        var clientId = user.FindFirst("ClientId")?.Value;
+        
+        
+        request.ClientId = long.Parse(clientId);
         var result = await handler.CreateAsync(request);
         return result.IsSuccess
             ? TypedResults.Created($"/{result.Data?.Id}", result)

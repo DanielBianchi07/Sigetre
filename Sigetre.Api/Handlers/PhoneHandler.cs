@@ -106,13 +106,36 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
         }
     }
 
+    public async Task<PagedResponse<List<Phone>>> GetByClientAsync(GetPhoneByClientRequest request)
+    {
+        try
+        {
+            var query = context.Phones
+                .AsNoTracking()
+                .Where(x => x.ClientId == request.ClientId && x.CompanyId == null)
+                .OrderBy(x => x.Client.Name);
+
+            var phones = await query
+                .Skip(request.PageSize * (request.PageNumber - 1))
+                .Take(request.PageSize)
+                .ToListAsync();
+            var count = await query.CountAsync();
+                
+            return new PagedResponse<List<Phone>>(phones, count, request.PageNumber, request.PageSize);
+        }
+        catch
+        {
+            return new PagedResponse<List<Phone>>(null, 500, "Não foi possivel consultar os telefones");
+        }
+    }
+
     public async Task<PagedResponse<List<Phone>>> GetAllAsync(GetAllPhoneRequest request)
     {
         try
         {
             var query = context.Phones
                 .AsNoTracking()
-                .Where(x => x.ClientId == request.ClientId)
+                .Where(x => x.ClientId == request.ClientId && x.CompanyId == null)
                 .OrderBy(x => x.Company.Name);
 
             var phones = await query

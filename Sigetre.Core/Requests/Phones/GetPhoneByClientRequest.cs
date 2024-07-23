@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using Sigetre.Core.Responses;
 
 namespace Sigetre.Core.Requests.Phones;
 
-public class GetAllPhoneRequest : PagedRequest
+public class GetPhoneByClientRequest : PagedRequest
 {
-    public long? CompanyId { get; set; }
+    [Required]
     public new long? ClientId { get; set; }
 }

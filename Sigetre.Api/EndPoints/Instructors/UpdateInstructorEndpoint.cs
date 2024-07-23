@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
@@ -17,13 +18,17 @@ public class UpdateInstructorEndpoint : IEndpoint
             .Produces<Response<Instructor?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         IInstructorHandler handler,
         UpdateInstructorRequest request,
-        long id)//, long clientId)
+        long id)
     {
-        request.ClientId = 2;
-        request.Id = id;
-        
+        var clientId = user.FindFirst("ClientId")?.Value;
+        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        {
+            request.ClientId = clientIdClaim;
+            request.Id = id;
+        };
         var result = await handler.UpdateAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

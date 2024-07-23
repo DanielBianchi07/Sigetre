@@ -43,7 +43,8 @@ public class AddressMapping : IEntityTypeConfiguration<Address>
         
         builder.Property(x => x.ClientId)
             .IsRequired(false)
-            .HasColumnType("BIGINT");
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(32);
         builder.Property(x => x.CompanyId)
             .IsRequired(false)
             .HasColumnType("BIGINT");

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
@@ -17,14 +18,16 @@ public class DeleteInstructorEndpoint : IEndpoint
             .Produces<Response<Instructor?>>();
 
     private static async Task<IResult> HandleAsync(
+            ClaimsPrincipal user,
             IInstructorHandler handler,
             long id)
-        //long clientId)
     {
-        var request = new DeleteInstructorRequest
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new DeleteInstructorRequest();
+        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            Id = id
+            request.ClientId = clientIdClaim;
+            request.Id = id;
         };
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess

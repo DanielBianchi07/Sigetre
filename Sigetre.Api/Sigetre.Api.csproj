@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Sigetre.Core\Sigetre.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Common\Api\AppUserClaimPrincipalFactory.cs" />
+  </ItemGroup>
+
 </Project>

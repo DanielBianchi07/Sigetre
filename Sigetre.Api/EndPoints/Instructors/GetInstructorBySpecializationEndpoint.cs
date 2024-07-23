@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core;
@@ -19,17 +20,20 @@ public class GetInstructorBySpecializationEndpoint : IEndpoint
             .Produces<PagedResponse<List<Instructor>?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         IInstructorHandler handler,
         long specializationId, //long clientId,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
-        var request = new GetInstructorBySpecialityRequest()
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new GetInstructorBySpecialityRequest();
+        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            SpecialityId = specializationId,
-            PageNumber = pageNumber,
-            PageSize = pageSize
+            request.ClientId = clientIdClaim;
+            request.SpecialityId = specializationId;
+            request.PageNumber = pageNumber;
+            request.PageSize = pageSize;
         };
         var result = await handler.GetBySpecializationAsync(request);
         return result.IsSuccess

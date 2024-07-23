@@ -19,13 +19,16 @@ public class CreateAlternativeEndpoint : IEndpoint
             .Produces<Response<Alternative?>>();
 
     private static async Task<IResult> HandleAsync(
-            AppDbContext context,
             ClaimsPrincipal user,
-        IAlternativeHandler handler,
-        CreateAlternativeRequest request)
+            IAlternativeHandler handler,
+            CreateAlternativeRequest request)
         //long clientId)
     {
-        request.ClientId = 2;
+        var clientId = user.FindFirst("ClientId")?.Value;
+
+        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+            request.ClientId = clientIdClaim;
+        
         var result = await handler.CreateAsync(request);
         return result.IsSuccess
             ? TypedResults.Created($"/{result.Data?.Id}", result)

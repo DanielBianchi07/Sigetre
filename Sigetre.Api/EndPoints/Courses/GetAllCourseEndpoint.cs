@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core;
 using Sigetre.Core.Handlers;
@@ -19,15 +20,18 @@ public class GetAllCourseEndpoint : IEndpoint
             .Produces<PagedResponse<List<Course>?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         ICourseHandler handler,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery] int pageSize = Configuration.DefaultPageSize)//, long clientId)
     {
-        var request = new GetAllCourseRequest
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new GetAllCourseRequest();
+        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            PageNumber = pageNumber,
-            PageSize = pageSize
+            request.ClientId = clientIdClaim;
+            request.PageNumber = pageNumber;
+            request.PageSize = pageSize;
         };
         var result = await handler.GetAllCourseAsync(request);
         return result.IsSuccess
