@@ -1,4 +1,5 @@
-﻿using Sigetre.Api.Common.Api;
+﻿using System.Security.Claims;
+using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Question;
@@ -17,15 +18,17 @@ public class DeleteQuestionEndpoint : IEndpoint
             .Produces<Response<Question?>>();
 
     private static async Task<IResult> HandleAsync(
-            IQuestionHandler handler,
-            long id)
-        //long clientId)
+        ClaimsPrincipal user,
+        IQuestionHandler handler,
+        long id)
     {
-        var request = new DeleteQuestionRequest
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new DeleteQuestionRequest();
+        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            Id = id
-        };
+            request.ClientId = clientIdClaim;
+            request.Id = id;
+        }
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

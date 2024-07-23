@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core;
 using Sigetre.Core.Handlers;
@@ -19,18 +20,28 @@ public class GetPhoneByCompanyEndpoint : IEndpoint
             .Produces<PagedResponse<List<Phone>?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         IPhoneHandler handler,
-        long specializationId, //long clientId,
+        long companyId,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
-        var request = new GetPhoneByCompanyRequest()
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new GetPhoneByCompanyRequest();
+        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            CompanyId = specializationId,
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        };
+            request.ClientId = clientIdClaim;
+            request.CompanyId = companyId;
+            request.PageNumber = pageNumber;
+            request.PageSize = pageSize;
+        }
+        else
+        {
+            request.ClientId = null;
+            request.CompanyId = companyId;
+            request.PageNumber = pageNumber;
+            request.PageSize = pageSize;
+        }
         var result = await handler.GetByCompanyAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)
