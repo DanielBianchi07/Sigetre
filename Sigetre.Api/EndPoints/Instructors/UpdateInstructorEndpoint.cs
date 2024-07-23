@@ -12,8 +12,8 @@ public class UpdateInstructorEndpoint : IEndpoint
     public static void Map(IEndpointRouteBuilder app)
         => app.MapPut("/{id}", HandleAsync)
             .WithName("Instructor: Update")
-            .WithSummary("Update a instructor")
-            .WithDescription("Update a instructor")
+            .WithSummary("Update an instructor")
+            .WithDescription("Update an instructor")
             .WithOrder(2)
             .Produces<Response<Instructor?>>();
 

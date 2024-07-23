@@ -12,11 +12,11 @@ namespace Sigetre.Api.EndPoints.Instructors;
 public class GetAllInstructorEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
-        => app.MapGet("/", HandleAsync)
-            .WithName("Instructors: Get All")
-            .WithSummary("Show all instructor")
-            .WithDescription("Show all instructor")
-            .WithOrder(4)
+                 => app.MapGet("/", HandleAsync)
+                     .WithName("Instructors: Get All")
+                     .WithSummary("Show all instructor")
+                     .WithDescription("Show all instructor")
+                     .WithOrder(4)
             .Produces<PagedResponse<List<Instructor>?>>();
 
     private static async Task<IResult> HandleAsync(

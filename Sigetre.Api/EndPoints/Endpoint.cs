@@ -10,6 +10,10 @@ using Sigetre.Api.EndPoints.Courses;
 using Sigetre.Api.Models;
 
 using Sigetre.Api.EndPoints.Identity;
+using Sigetre.Api.EndPoints.Phones;
+using Sigetre.Api.EndPoints.ProgramContents;
+using Sigetre.Api.EndPoints.Questions;
+using Sigetre.Api.EndPoints.Specializations;
 
 
 namespace Sigetre.Api.EndPoints;
@@ -104,6 +108,42 @@ public static class Endpoint
             .MapEndpoint<GetInstructorBySpecializationEndpoint>()
             .MapEndpoint<GetAllInstructorEndpoint>();
         
+        endpoints.MapGroup("v1/phones")
+            .WithTags("Phones")
+            .RequireAuthorization()
+            .MapEndpoint<CreatePhoneEndpoint>()
+            .MapEndpoint<UpdatePhoneEndpoint>()
+            .MapEndpoint<DeletePhoneEndpoint>()
+            .MapEndpoint<GetPhoneByCompanyEndpoint>()
+            .MapEndpoint<GetAllPhoneEndpoint>();
+
+        endpoints.MapGroup("v1/programContents")
+            .WithTags("ProgramContents")
+            .RequireAuthorization()
+            .MapEndpoint<CreateProgramContentEndpoint>()
+            .MapEndpoint<UpdateProgramContentEndpoint>()
+            .MapEndpoint<DeleteProgramContentEndpoint>()
+            .MapEndpoint<GetProgramContentByIdEndpoint>()
+            .MapEndpoint<GetProgramContentByCourseEndpoint>();
+        
+        endpoints.MapGroup("v1/questions")
+            .WithTags("Questions")
+            .RequireAuthorization()
+            .MapEndpoint<CreateQuestionEndpoint>()
+            .MapEndpoint<UpdateQuestionEndpoint>()
+            .MapEndpoint<DeleteQuestionEndpoint>()
+            .MapEndpoint<GetQuestionByIdEndpoint>()
+            .MapEndpoint<GetQuestionByCourseEndpoint>();
+        
+        endpoints.MapGroup("v1/specializations")
+            .WithTags("Specializations")
+            .RequireAuthorization()
+            .MapEndpoint<CreateSpecializationEndpoint>()
+            .MapEndpoint<UpdateSpecializationEndpoint>()
+            .MapEndpoint<DeleteSpecializationEndpoint>()
+            .MapEndpoint<GetSpecializationByIdEndpoint>()
+            .MapEndpoint<GetAllSpecializationEndpoint>();
+
     }
     
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)
