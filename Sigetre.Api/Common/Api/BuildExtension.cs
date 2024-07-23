@@ -13,7 +13,7 @@ public static class BuildExtension
 {
     public static void AddConfiguration(this WebApplicationBuilder builder)
     {
-        Configuration.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+        Configuration.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection2") ?? string.Empty;
         Configuration.BackendUrl = builder.Configuration.GetValue<string>("BackendUrl") ?? string.Empty;
         Configuration.FrontendUrl = builder.Configuration.GetValue<string>("FrontendUrl") ?? string.Empty;
     }
@@ -92,9 +92,17 @@ public static class BuildExtension
     {
         builder.Services.AddTransient<IAddressHandler, AddressesHandler>();
         builder.Services.AddTransient<IAlternativeHandler, AlternativeHandler>();
+        builder.Services.AddTransient<IAttendanceListHandler, AttendanceListHandler>();
         builder.Services.AddTransient<ICompanyHandler, CompanyHandler>();
         builder.Services.AddTransient<IClientHandler, ClientHandler>();
         builder.Services.AddTransient<ICourseHandler, CourseHandler>();
         builder.Services.AddTransient<IInstructorHandler, InstructorHandler>();
+        builder.Services.AddTransient<IPhoneHandler, PhoneHandler>();
+        builder.Services.AddTransient<IProgramContentHandler, ProgramContentHandler>();
+        builder.Services.AddTransient<IQuestionHandler, QuestionHandler>();
+        builder.Services.AddTransient<ISpecializationHandler, SpecializationHandler>();
+        builder.Services.AddTransient<IStudentHandler, StudentHandler>();
+        builder.Services.AddTransient<ITestHandler, TestHandler>();
+        builder.Services.AddTransient<ITrainingHandler, TrainingHandler>();
     }
 }
