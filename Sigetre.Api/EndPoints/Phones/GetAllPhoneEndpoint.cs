@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core;
 using Sigetre.Core.Handlers;
@@ -19,16 +20,25 @@ public class GetAllPhoneEndpoint : IEndpoint
             .Produces<PagedResponse<List<Phone>?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         IPhoneHandler handler,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
-        [FromQuery] int pageSize = Configuration.DefaultPageSize)//, long clientId)
+        [FromQuery] int pageSize = Configuration.DefaultPageSize)
     {
-        var request = new GetAllPhoneRequest
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new GetAllPhoneRequest();
+        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        };
+            request.ClientId = clientIdClaim;
+            request.PageNumber = pageNumber;
+            request.PageSize = pageSize;
+        }
+        else
+        {
+            request.ClientId = null;
+            request.PageNumber = pageNumber;
+            request.PageSize = pageSize;
+        }
         var result = await handler.GetAllAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

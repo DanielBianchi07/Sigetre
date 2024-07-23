@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core;
 using Sigetre.Core.Handlers;
@@ -19,18 +20,21 @@ public class GetProgramContentByCourseEndpoint : IEndpoint
             .Produces<PagedResponse<List<ProgramContent>?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         IProgramContentHandler handler,
-        long specializationId, //long clientId,
+        long courseId,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
-        var request = new GetProgramContentByCourseRequest()
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new GetProgramContentByCourseRequest();
+        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            CourseId = specializationId,
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        };
+            request.ClientId = clientIdClaim;
+            request.CourseId = courseId;
+            request.PageNumber = pageNumber;
+            request.PageSize = pageSize;
+        }
         var result = await handler.GetByCourseAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

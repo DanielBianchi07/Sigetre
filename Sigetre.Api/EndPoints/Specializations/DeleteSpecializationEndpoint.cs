@@ -1,4 +1,5 @@
-﻿using Sigetre.Api.Common.Api;
+﻿using System.Security.Claims;
+using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Specialization;
@@ -17,15 +18,17 @@ public class DeleteSpecializationEndpoint : IEndpoint
             .Produces<Response<Specialization?>>();
 
     private static async Task<IResult> HandleAsync(
-            ISpecializationHandler handler,
-            long id)
-        //long clientId)
+        ClaimsPrincipal user,
+        ISpecializationHandler handler,
+        long id)
     {
-        var request = new DeleteSpecializationRequest
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new DeleteSpecializationRequest();
+        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            Id = id
-        };
+            request.ClientId = clientIdClaim;
+            request.Id = id;
+        }
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)
