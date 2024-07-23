@@ -170,6 +170,8 @@ namespace Sigetre.Api.Migrations
 
                     b.HasKey("UserId", "RoleId");
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("IdentityUserRole", (string)null);
                 });
 
@@ -242,8 +244,7 @@ namespace Sigetre.Api.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("NVARCHAR");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(180)
@@ -522,6 +523,7 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("Ein")
+                        .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("VARCHAR");
 
@@ -706,7 +708,7 @@ namespace Sigetre.Api.Migrations
                     b.ToTable("Instructors", (string)null);
                 });
 
-            modelBuilder.Entity("Sigetre.Core.Models.Phones", b =>
+            modelBuilder.Entity("Sigetre.Core.Models.Phone", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -1078,6 +1080,12 @@ namespace Sigetre.Api.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<long>", b =>
                 {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<long>", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Sigetre.Api.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -1170,7 +1178,7 @@ namespace Sigetre.Api.Migrations
                     b.Navigation("Specialization");
                 });
 
-            modelBuilder.Entity("Sigetre.Core.Models.Phones", b =>
+            modelBuilder.Entity("Sigetre.Core.Models.Phone", b =>
                 {
                     b.HasOne("Sigetre.Core.Models.Client", "Client")
                         .WithMany("Telephones")

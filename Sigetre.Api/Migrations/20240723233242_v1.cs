@@ -18,7 +18,7 @@ namespace Sigetre.Api.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
-                    Ein = table.Column<string>(type: "VARCHAR(32)", maxLength: 32, nullable: true),
+                    Ein = table.Column<string>(type: "VARCHAR(32)", maxLength: 32, nullable: false),
                     Email = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -98,7 +98,7 @@ namespace Sigetre.Api.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<long>(type: "BIGINT", nullable: true),
-                    Name = table.Column<string>(type: "NVARCHAR(32)", maxLength: 32, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
@@ -393,24 +393,6 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IdentityUserRole",
-                columns: table => new
-                {
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
-                    RoleId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityUserRole", x => new { x.UserId, x.RoleId });
-                    table.ForeignKey(
-                        name: "FK_IdentityUserRole_IdentityUser_UserId",
-                        column: x => x.UserId,
-                        principalTable: "IdentityUser",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "IdentityUserToken",
                 columns: table => new
                 {
@@ -619,6 +601,30 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "IdentityUserRole",
+                columns: table => new
+                {
+                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    RoleId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IdentityUserRole", x => new { x.UserId, x.RoleId });
+                    table.ForeignKey(
+                        name: "FK_IdentityUserRole_IdentityRole_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "IdentityRole",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_IdentityUserRole_IdentityUser_UserId",
+                        column: x => x.UserId,
+                        principalTable: "IdentityUser",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "InstructorTraining",
                 columns: table => new
                 {
@@ -713,6 +719,11 @@ namespace Sigetre.Api.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_IdentityUserRole_RoleId",
+                table: "IdentityUserRole",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Instructors_SpecializationId",
                 table: "Instructors",
                 column: "SpecializationId");
@@ -780,9 +791,6 @@ namespace Sigetre.Api.Migrations
                 name: "IdentityClaim");
 
             migrationBuilder.DropTable(
-                name: "IdentityRole");
-
-            migrationBuilder.DropTable(
                 name: "IdentityRoleClaim");
 
             migrationBuilder.DropTable(
@@ -810,7 +818,7 @@ namespace Sigetre.Api.Migrations
                 name: "StudentTraining");
 
             migrationBuilder.DropTable(
-                name: "IdentityUser");
+                name: "IdentityRole");
 
             migrationBuilder.DropTable(
                 name: "Instructors");
@@ -832,6 +840,9 @@ namespace Sigetre.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Trainings");
+
+            migrationBuilder.DropTable(
+                name: "IdentityUser");
 
             migrationBuilder.DropTable(
                 name: "Specializations");

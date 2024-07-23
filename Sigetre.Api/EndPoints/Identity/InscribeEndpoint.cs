@@ -21,6 +21,7 @@ public class InscribeEndpoint : IEndpoint
 
         var user = new User
         {
+            Name = model.Name,
             UserName = model.Email,
             Email = model.Email,
             PhoneNumber = model.PhoneNumber,
