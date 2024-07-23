@@ -1,4 +1,5 @@
-﻿using Sigetre.Api.Common.Api;
+﻿using System.Security.Claims;
+using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.AttendanceList;
@@ -17,14 +18,18 @@ public class DeleteAttendanceListEndpoint : IEndpoint
             .Produces<Response<AttendanceList?>>();
 
     private static async Task<IResult> HandleAsync(
+            ClaimsPrincipal user,
             IAttendanceListHandler handler,
             long id)
         //long clientId)
     {
-        var request = new DeleteAttendanceListRequest()
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new DeleteAttendanceListRequest();
+
+        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            Id = id
+            request.ClientId = clientIdClaim;
+            request.Id = id;
         };
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess

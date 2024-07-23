@@ -9,16 +9,17 @@ public class ClientMapping : IEntityTypeConfiguration<Client>
     public void Configure(EntityTypeBuilder<Client> builder)
     {
         builder.ToTable("Clients");
-        builder.HasKey(x => x.Id);
+        builder.HasKey(x => x.Ein);
 
         builder.Property(x => x.Name)
             .IsRequired(true)
             .HasColumnType("NVARCHAR")
             .HasMaxLength(128);
         builder.Property(x => x.Ein)
-            .IsRequired(false)
+            .IsRequired()
             .HasColumnType("VARCHAR")
-            .HasMaxLength(32);
+            .HasMaxLength(32)
+            .IsRequired();
         builder.Property(x => x.Email)
             .IsRequired(false)
             .HasColumnType("VARCHAR")

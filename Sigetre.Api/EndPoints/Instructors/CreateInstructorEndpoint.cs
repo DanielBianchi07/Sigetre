@@ -21,11 +21,15 @@ public class CreateInstructorEndpoint : IEndpoint
             .Produces<Response<Instructor?>>();
 
     private static async Task<IResult> HandleAsync(
+            ClaimsPrincipal user,
             IInstructorHandler handler,
             CreateInstructorRequest request)
-        //long clientId)
     {
-        request.ClientId = 2;
+        var clientId = user.FindFirst("ClientId")?.Value;
+        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        {
+            request.ClientId = clientIdClaim;
+        };
         var result = await handler.CreateAsync(request);
         return result.IsSuccess
             ? TypedResults.Created($"/{result.Data?.Id}", result)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core;
 using Sigetre.Core.Handlers;
@@ -19,13 +20,13 @@ public class GetAllClientEndpoint : IEndpoint
             .Produces<PagedResponse<List<Client>?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         IClientHandler handler,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery] int pageSize = Configuration.DefaultPageSize)//, long clientId)
     {
         var request = new GetAllClientRequest
         {
-            ClientId = 2,
             PageNumber = pageNumber,
             PageSize = pageSize
         };

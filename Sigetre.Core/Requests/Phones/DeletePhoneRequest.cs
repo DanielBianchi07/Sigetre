@@ -6,4 +6,6 @@ public class DeletePhoneRequest : Request
 {
     [Required] 
     public long Id { get; set; }
+    public long? CompanyId { get; set; }
+    public new long? ClientId { get; set; }
 }

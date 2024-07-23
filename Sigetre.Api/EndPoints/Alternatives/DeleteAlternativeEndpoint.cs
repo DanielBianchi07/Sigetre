@@ -1,4 +1,5 @@
-﻿using Sigetre.Api.Common.Api;
+﻿using System.Security.Claims;
+using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Alternative;
@@ -17,14 +18,18 @@ public class DeleteAlternativeEndpoint : IEndpoint
             .Produces<Response<Alternative?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         IAlternativeHandler handler,
         long id)//, long clientId)
     {
-        var request = new DeleteAlternativeRequest
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new DeleteAlternativeRequest();
+
+        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            Id = id
-        };
+            request.ClientId = clientIdClaim;
+            request.Id = id;
+        }
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

@@ -15,5 +15,7 @@ public class IdentityRoleMapping : IEntityTypeConfiguration<IdentityRole<long>>
         builder.Property(r => r.ConcurrencyStamp).IsConcurrencyToken();
         builder.Property(u => u.Name).HasMaxLength(256);
         builder.Property(u => u.NormalizedName).HasMaxLength(256);
+        
+        builder.HasMany<IdentityUserRole<long>>().WithOne().HasForeignKey(ur => ur.RoleId).IsRequired();
     }
 }

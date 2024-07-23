@@ -21,7 +21,6 @@ public class UpdateClientEndpoint : IEndpoint
         UpdateClientRequest request,
         long id)//, long clientId)
     {
-        request.ClientId = 2;
         request.Id = id;
         
         var result = await handler.UpdateAsync(request);
