@@ -40,11 +40,10 @@ public class AddressMapping : IEntityTypeConfiguration<Address>
             .IsRequired(false)
             .HasColumnType("NVARCHAR")
             .HasMaxLength(64);
-        
+
         builder.Property(x => x.ClientId)
             .IsRequired(false)
-            .HasColumnType("VARCHAR")
-            .HasMaxLength(32);
+            .HasColumnType("BIGINT");
         builder.Property(x => x.CompanyId)
             .IsRequired(false)
             .HasColumnType("BIGINT");

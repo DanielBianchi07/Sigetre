@@ -9,7 +9,7 @@ public class ClientMapping : IEntityTypeConfiguration<Client>
     public void Configure(EntityTypeBuilder<Client> builder)
     {
         builder.ToTable("Clients");
-        builder.HasKey(x => x.Ein);
+        builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Name)
             .IsRequired(true)
