@@ -11,6 +11,8 @@ using Sigetre.Api.Models;
 using Sigetre.Api.EndPoints.Identity;
 using Sigetre.Api.EndPoints.Phones;
 using Sigetre.Api.EndPoints.ProgramContents;
+using Sigetre.Api.EndPoints.Questions;
+using Sigetre.Api.EndPoints.Specializations;
 
 
 namespace Sigetre.Api.EndPoints;
@@ -121,6 +123,24 @@ public static class Endpoint
             .MapEndpoint<DeleteProgramContentEndpoint>()
             .MapEndpoint<GetProgramContentByIdEndpoint>()
             .MapEndpoint<GetProgramContentByCourseEndpoint>();
+        
+        endpoints.MapGroup("v1/questions")
+            .WithTags("Questions")
+            .RequireAuthorization()
+            .MapEndpoint<CreateQuestionEndpoint>()
+            .MapEndpoint<UpdateQuestionEndpoint>()
+            .MapEndpoint<DeleteQuestionEndpoint>()
+            .MapEndpoint<GetQuestionByIdEndpoint>()
+            .MapEndpoint<GetQuestionByCourseEndpoint>();
+        
+        endpoints.MapGroup("v1/specializations")
+            .WithTags("Specializations")
+            .RequireAuthorization()
+            .MapEndpoint<CreateSpecializationEndpoint>()
+            .MapEndpoint<UpdateSpecializationEndpoint>()
+            .MapEndpoint<DeleteSpecializationEndpoint>()
+            .MapEndpoint<GetSpecializationByIdEndpoint>()
+            .MapEndpoint<GetAllSpecializationEndpoint>();
 
     }
     
