@@ -14,6 +14,9 @@ using Sigetre.Api.EndPoints.Phones;
 using Sigetre.Api.EndPoints.ProgramContents;
 using Sigetre.Api.EndPoints.Questions;
 using Sigetre.Api.EndPoints.Specializations;
+using Sigetre.Api.EndPoints.Students;
+using Sigetre.Api.EndPoints.Tests;
+using Sigetre.Api.EndPoints.Trainings;
 
 
 namespace Sigetre.Api.EndPoints;
@@ -143,6 +146,32 @@ public static class Endpoint
             .MapEndpoint<DeleteSpecializationEndpoint>()
             .MapEndpoint<GetSpecializationByIdEndpoint>()
             .MapEndpoint<GetAllSpecializationEndpoint>();
+        
+        endpoints.MapGroup("v1/students")
+            .WithTags("Students")
+            .RequireAuthorization()
+            .MapEndpoint<CreateStudentEndpoint>()
+            .MapEndpoint<UpdateStudentEndpoint>()
+            .MapEndpoint<DeleteStudentEndpoint>()
+            .MapEndpoint<GetStudentByIdEndpoint>()
+            .MapEndpoint<GetAllStudentEndpoint>();
+
+        endpoints.MapGroup("v1/tests")
+            .WithTags("Tests")
+            .RequireAuthorization()
+            .MapEndpoint<CreateTestEndpoint>()
+            .MapEndpoint<UpdateTestEndpoint>()
+            .MapEndpoint<DeleteTestEndpoint>()
+            .MapEndpoint<GetTestByIdEndpoint>();
+        
+        endpoints.MapGroup("v1/trainings")
+            .WithTags("Trainings")
+            .RequireAuthorization()
+            .MapEndpoint<CreateTrainingEndpoint>()
+            .MapEndpoint<UpdateTrainingEndpoint>()
+            .MapEndpoint<DeleteTrainingEndpoint>()
+            .MapEndpoint<GetTrainingByIdEndpoint>()
+            .MapEndpoint<GetAllTrainingEndpoint>();
 
     }
     
