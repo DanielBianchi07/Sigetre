@@ -17,7 +17,6 @@ public class CreateAddressRequest : Request
     [Required]
     public string Number { get; set; } = String.Empty;
     public string? Complement { get; set; }
-    
-    public long? CompanyId { get; set; }
     public new long? ClientId { get; set; }
+    public long? CompanyId { get; set; }
 }

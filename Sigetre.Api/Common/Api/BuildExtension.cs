@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sigetre.Api.Data;
@@ -32,8 +33,23 @@ public static class BuildExtension
                 o.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
             .AddIdentityCookies(o => { });
+
+        builder.Services.AddIdentityCore<User>(o =>
+            {
+                o.Stores.MaxLengthForKeys = 128;
+                o.SignIn.RequireConfirmedAccount = true;
+            })
+            .AddDefaultTokenProviders();
         
-        builder.Services.AddAuthorization();
+        builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddAuthorization(o =>
+        {
+            o.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+            o.AddPolicy("RequireAdministratorRole", 
+                x=>x.RequireRole("Administrator"));
+        });
+        
     }
     
     public static void AddDataContexts(this WebApplicationBuilder builder)
@@ -44,7 +60,12 @@ public static class BuildExtension
                 x.UseSqlServer(Configuration.ConnectionString);
             });
         builder.Services
-            .AddIdentityCore<User>()
+            .AddIdentityCore<User>(o =>
+            {
+                o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                o.Lockout.MaxFailedAccessAttempts = 5;
+                o.Lockout.AllowedForNewUsers = true;
+            })
             .AddRoles<IdentityRole<long>>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddApiEndpoints();

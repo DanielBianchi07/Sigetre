@@ -95,12 +95,28 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
         }
     }
 
-    public async Task<Response<Address?>> GetByIdAsync(GetAddressByIdRequest request)
+    public async Task<Response<Address?>> GetByCompanyAsync(GetAddressByCompanyRequest request)
     {
         try
         {
             var address = await context.Addresses.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id);
+                .FirstOrDefaultAsync(x => x.ClientId == request.ClientId && x.CompanyId == null);
+            return address is null
+                ? new Response<Address?>(null, 404, "Endereço não encontrado")
+                : new Response<Address?>(address);
+        }
+        catch
+        {
+            return new Response<Address?>(null, 500, "Não foi possível recuperar o endereço");
+        }
+    }
+
+    public async Task<Response<Address?>> GetByClientAsync(GetAddressByClientRequest request)
+    {
+        try
+        {
+            var address = await context.Addresses.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.ClientId == request.ClientId && x.CompanyId == null);
             return address is null
                 ? new Response<Address?>(null, 404, "Endereço não encontrado")
                 : new Response<Address?>(address);

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity.Data;
 using Sigetre.Api.Common.Api;
 using Sigetre.Api.EndPoints.Addresses;
 using Sigetre.Api.EndPoints.Alternatives;
@@ -36,7 +37,7 @@ public static class Endpoint
             .MapEndpoint<CreateAddressEndpoint>()
             .MapEndpoint<UpdateAddressEndpoint>()
             .MapEndpoint<DeleteAddressEndpoint>()
-            .MapEndpoint<GetAddressByIdEndpoint>();
+            .MapEndpoint<GetAddressByCompanyEndpoint>();
 
         endpoints.MapGroup("v1/alternatives")
             .WithTags("Alternatives")
@@ -92,6 +93,7 @@ public static class Endpoint
 
         endpoints.MapGroup("v1/identity")
             .WithTags("Identity")
+            .MapEndpoint<LoginEndpoint>()
             .MapEndpoint<LogoutEndpoint>()
             .MapEndpoint<GetRolesEndpoint>()
             .MapEndpoint<InscribeEndpoint>();

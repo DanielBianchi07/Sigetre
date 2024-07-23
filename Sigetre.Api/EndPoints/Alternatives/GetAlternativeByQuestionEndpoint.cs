@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core;
 using Sigetre.Core.Handlers;
@@ -19,17 +20,20 @@ public class GetAlternativeByQuestionEndpoint : IEndpoint
             .Produces<PagedResponse<List<Alternative>?>>();
 
     private static async Task<IResult> HandleAsync(
+        ClaimsPrincipal user,
         IAlternativeHandler handler,
         long questionId, //long clientId,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
-        var request = new GetAlternativeByQuestionRequest()
+        var clientId = user.FindFirst("ClientId")?.Value;
+        var request = new GetAlternativeByQuestionRequest();
+        if(clientId != null & long.TryParse(clientId, out var clientIdClaim))
         {
-            ClientId = 2,
-            QuestionId = questionId,
-            PageNumber = pageNumber,
-            PageSize = pageSize
+            request.ClientId = clientIdClaim;
+            request.QuestionId = questionId;
+            request.PageNumber = pageNumber;
+            request.PageSize = pageSize;
         };
         var result = await handler.GetByQuestionAsync(request);
         return result.IsSuccess
