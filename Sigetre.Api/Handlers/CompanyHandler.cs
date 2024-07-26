@@ -14,21 +14,27 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
     {
         try
         {
-            var company = new Company
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
             {
-                Name = request.Name,
-                Ein = request.Ein,
-                Email = request.Email,
-                ClientId = request.ClientId,
-                CreatedBy = request.CreateBy,
-                CreatedAt = request.CreatedAt,
-                Status = request.Status
-            };
+                var company = new Company
+                {
+                    Name = request.Name,
+                    Ein = request.Ein,
+                    Email = request.Email,
+                    ClientId = user.ClientId,
+                    CreatedBy = request.CreateBy,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status
+                };
 
-            await context.Companies.AddAsync(company);
-            await context.SaveChangesAsync();
+                await context.Companies.AddAsync(company);
+                await context.SaveChangesAsync();
 
-            return new Response<Company?>(company, 201, "Empresa criada com sucesso");
+                return new Response<Company?>(company, 201, "Empresa criada com sucesso");
+            }
+            else
+                return new Response<Company?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -41,7 +47,7 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
         try
         {
             var company =
-                await context.Companies.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.Companies.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (company == null)
                 return new Response<Company?>(null, 404, "Empresa não encontrada");
@@ -61,23 +67,28 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
     {
         try
         {
-            var company =
-                await context.Companies.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var company = await context.Companies.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (company == null)
-                return new Response<Company?>(null, 404, "Empresa não encontrada");
-            company.Name = request.Name;
-            company.Ein = request.Ein;
-            company.Email = request.Email;
-            company.ClientId = request.ClientId;
-            company.UpdatedBy = request.UpdatedBy;
-            company.UpdatedAt = request.UpdatedAt;
-            company.Status = request.Status;
+                if (company == null)
+                    return new Response<Company?>(null, 404, "Empresa não encontrada");
+                company.Name = request.Name;
+                company.Ein = request.Ein;
+                company.Email = request.Email;
+                company.ClientId = request.ClientId;
+                company.UpdatedBy = request.UpdatedBy;
+                company.UpdatedAt = request.UpdatedAt;
+                company.Status = request.Status;
 
-            context.Companies.Update(company);
-            await context.SaveChangesAsync();
+                context.Companies.Update(company);
+                await context.SaveChangesAsync();
 
-            return new Response<Company?>(company);
+                return new Response<Company?>(company);
+            }
+            else
+                return new Response<Company?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -90,7 +101,7 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
         try
         {
             var company = await context.Companies.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
             return company is null
                 ? new Response<Company?>(null, 404, "Empresa não encontrada")
                 : new Response<Company?>(company);

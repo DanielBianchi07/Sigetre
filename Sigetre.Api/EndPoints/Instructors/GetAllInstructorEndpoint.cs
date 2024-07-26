@@ -25,13 +25,11 @@ public class GetAllInstructorEndpoint : IEndpoint
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery] int pageSize = Configuration.DefaultPageSize)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetAllInstructorRequest();
-        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetAllInstructorRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.PageNumber = pageNumber;
-            request.PageSize = pageSize;
+            User = user.Identity?.Name ?? string.Empty,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
         var result = await handler.GetAllAsync(request);
         return result.IsSuccess

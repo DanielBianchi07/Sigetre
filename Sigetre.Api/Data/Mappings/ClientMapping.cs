@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Sigetre.Api.Models;
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 
 namespace Sigetre.Api.Data.Mappings;
 
@@ -39,9 +41,11 @@ public class ClientMapping : IEntityTypeConfiguration<Client>
             .HasColumnType("SMALLINT");
         builder.Property(x => x.CreatedBy)
             .IsRequired(true)
-            .HasColumnType("BIGINT");
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(160);
         builder.Property(x => x.UpdatedBy)
             .IsRequired(false)
-            .HasColumnType("BIGINT");
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(160);;
     }
 }

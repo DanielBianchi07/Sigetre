@@ -3,14 +3,13 @@ using Sigetre.Core.Enums;
 
 namespace Sigetre.Core.Requests;
 
-public abstract class Request
+public abstract class NullableRequest
 {
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     [Required]
     public EStatus Status { get; set; }
-    [Required]
-    public long ClientId { get; set; }
+    public long? ClientId { get; set; }
     [Required]
 
     public string User = string.Empty;

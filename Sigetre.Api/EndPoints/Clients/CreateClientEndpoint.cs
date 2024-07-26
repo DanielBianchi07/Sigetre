@@ -22,6 +22,7 @@ public class CreateClientEndpoint : IEndpoint
             IClientHandler handler,
             CreateClientRequest request)
     {
+        request.User = user.Identity?.Name ?? string.Empty;
         var result = await handler.CreateAsync(request);
         return result.IsSuccess
             ? TypedResults.Created($"/{result.Data?.Id}", result)

@@ -2,6 +2,7 @@
 using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 using Sigetre.Core.Requests.Phones;
 using Sigetre.Core.Responses;
 
@@ -23,12 +24,8 @@ public class UpdatePhoneEndpoint : IEndpoint
         UpdatePhoneRequest request,
         long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
-        {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+        request.User = user.Identity.Name;
+        request.Id = id;
         var result = await handler.UpdateAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

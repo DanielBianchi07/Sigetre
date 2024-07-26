@@ -1,4 +1,5 @@
 using Sigetre.Core.Enums;
+using Sigetre.Core.Models.Birrelational;
 
 namespace Sigetre.Core.Models;
 

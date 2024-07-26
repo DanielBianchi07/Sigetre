@@ -20,16 +20,13 @@ public class DeleteAlternativeEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         ClaimsPrincipal user,
         IAlternativeHandler handler,
-        long id)//, long clientId)
+        long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new DeleteAlternativeRequest();
-
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new DeleteAlternativeRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+            User = user.Identity?.Name ?? string.Empty,
+            Id = id
+        };
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

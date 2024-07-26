@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Sigetre.Api.Models;
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 
 namespace Sigetre.Api.Data;
 

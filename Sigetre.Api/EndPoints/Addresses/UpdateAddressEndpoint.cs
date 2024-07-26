@@ -2,6 +2,7 @@
 using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 using Sigetre.Core.Requests.Address;
 using Sigetre.Core.Responses;
 
@@ -21,15 +22,10 @@ public class UpdateAddressEndpoint : IEndpoint
         ClaimsPrincipal user,
         IAddressHandler handler,
         UpdateAddressRequest request,
-        long id)//, long clientId)
+        long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
-        {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+        request.User = user.Identity?.Name ?? string.Empty;
+        request.Id = id;
         var result = await handler.UpdateAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

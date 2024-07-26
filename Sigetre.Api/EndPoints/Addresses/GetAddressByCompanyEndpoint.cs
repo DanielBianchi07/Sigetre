@@ -2,6 +2,7 @@
 using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 using Sigetre.Core.Requests.Address;
 using Sigetre.Core.Responses;
 
@@ -23,14 +24,10 @@ public class GetAddressByCompanyEndpoint : IEndpoint
         long id,
         long companyId)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
         var request = new GetAddressByCompanyRequest();
-
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
-        { 
-            request.ClientId = clientIdClaim;
-            request.CompanyId = companyId;
-        }
+    
+        request.User = user.Identity?.Name ?? string.Empty;
+        request.CompanyId = companyId;
         var result = await handler.GetByCompanyAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

@@ -3,19 +3,12 @@ using Sigetre.Core.Enums;
 
 namespace Sigetre.Core.Requests.Client;
 
-public class CreateClientRequest
+public class CreateClientRequest : NullableRequest
 {
     [Required]
-    public string Name { get; set; } = String.Empty;
+    public string Name { get; set; } = string.Empty;
     [Required]
-    public string Ein { get; set; } = String.Empty;
+    public string Ein { get; set; } = string.Empty;
     [Required]
-    public string Email { get; set; } = String.Empty;
-    
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-    [Required]
-    public EStatus Status { get; set; }
-    public long CreateBy { get; set; }
-    public long? UpdatedBy { get; set; }
+    public string Email { get; set; } = string.Empty;
 }

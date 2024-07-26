@@ -1,4 +1,5 @@
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 using Sigetre.Core.Requests.Phones;
 using Sigetre.Core.Responses;
 
@@ -11,5 +12,4 @@ public interface IPhoneHandler
     Task<Response<Phone?>> UpdateAsync(UpdatePhoneRequest request);
     Task<PagedResponse<List<Phone>>> GetByCompanyAsync(GetPhoneByCompanyRequest request);
     Task<PagedResponse<List<Phone>>> GetByClientAsync(GetPhoneByClientRequest request);
-    Task<PagedResponse<List<Phone>>> GetAllAsync(GetAllPhoneRequest request);
 }

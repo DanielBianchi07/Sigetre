@@ -22,12 +22,9 @@ public class CreateAlternativeEndpoint : IEndpoint
             ClaimsPrincipal user,
             IAlternativeHandler handler,
             CreateAlternativeRequest request)
-        //long clientId)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
 
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
-            request.ClientId = clientIdClaim;
+        request.User = user.Identity?.Name ?? string.Empty;
         
         var result = await handler.CreateAsync(request);
         return result.IsSuccess

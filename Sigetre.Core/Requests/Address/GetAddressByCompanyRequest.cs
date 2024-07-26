@@ -2,8 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sigetre.Core.Requests.Address;
 
-public class GetAddressByCompanyRequest : Request
+public class GetAddressByCompanyRequest : NullableRequest
 {
-    [Required]
-    public long CompanyId { get; set; }
+    public long? CompanyId { get; set; }
 }
