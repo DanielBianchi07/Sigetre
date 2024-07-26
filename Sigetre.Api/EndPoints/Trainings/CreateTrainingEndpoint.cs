@@ -20,10 +20,14 @@ public class CreateTrainingEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         ClaimsPrincipal user,
         ITrainingHandler handler,
-        CreateTrainingRequest request)
+        CreateTrainingRequest request,
+        long studentId,
+        long instructorId)
     {
         request.User = user.Identity?.Name ?? string.Empty;
-
+        request.StudentId = studentId;
+        request.InstructorId = instructorId;
+        
         var result = await handler.CreateAsync(request);
         return result.IsSuccess
             ? TypedResults.Created($"/{result.Data?.Id}", result)

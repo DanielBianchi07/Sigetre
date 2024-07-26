@@ -59,10 +59,6 @@ public static class Endpoint
             .MapEndpoint<DeleteAttendanceListEndpoint>()
             .MapEndpoint<GetAttendanceListByIdEndpoint>()
             .MapEndpoint<GetAllAttendanceListEndoint>();
-
-        //endpoints.MapGroup("v1/clients")
-          //   .WithTags("Clients")
-            // .MapEndpoint<CreateClientEndpoint>();
             
         endpoints.MapGroup("v1/clients")
             .WithTags("Clients")

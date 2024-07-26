@@ -12,4 +12,8 @@ public class CreateTrainingRequest : Request
     // relationship
     [Required]
     public long CourseId { get; set; }
+    [Required]
+    public long StudentId { get; set; }
+    [Required]
+    public long InstructorId { get; set; }
 }

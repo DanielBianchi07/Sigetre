@@ -21,10 +21,14 @@ public class UpdateTrainingEndpoint : IEndpoint
         ClaimsPrincipal user,
         ITrainingHandler handler,
         UpdateTrainingRequest request,
-        long id)
+        long id,
+        long studentId,
+        long instructorId)
     {
         request.User = user.Identity?.Name ?? string.Empty;
         request.Id = id;
+        request.StudentId = studentId;
+        request.InstructorId = instructorId;
             
         var result = await handler.UpdateAsync(request);
         return result.IsSuccess

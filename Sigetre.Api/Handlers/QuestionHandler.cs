@@ -115,19 +115,25 @@ public class QuestionHandler(AppDbContext context) : IQuestionHandler
     {
         try
         {
-            var query = context.Questions
-                .AsNoTracking()
-                .Where(x => x.CourseId == request.CourseId && x.ClientId == request.ClientId)
-                .OrderBy(x=>x.Course.Name);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Questions
+                    .AsNoTracking()
+                    .Where(x => x.CourseId == request.CourseId && x.ClientId == user.ClientId)
+                    .OrderBy(x => x.Course.Name);
 
-            var questions = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
+                var questions = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
 
-            var count = await query.CountAsync();
+                var count = await query.CountAsync();
 
-            return new PagedResponse<List<Question>>(questions, count, request.PageNumber, request.PageSize);
+                return new PagedResponse<List<Question>>(questions, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Question>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

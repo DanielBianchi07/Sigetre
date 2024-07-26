@@ -116,19 +116,25 @@ public class CompanyHandler(AppDbContext context) : ICompanyHandler
     {
         try
         {
-            var query = context.Companies
-                .AsNoTracking()
-                .Where(x => x.ClientId == request.ClientId)
-                .OrderBy(x=>x.Name);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Companies
+                    .AsNoTracking()
+                    .Where(x => x.ClientId == user.ClientId)
+                    .OrderBy(x => x.Name);
 
-            var companies = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
+                var companies = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
 
-            var count = await query.CountAsync();
+                var count = await query.CountAsync();
 
-            return new PagedResponse<List<Company>>(companies, count, request.PageNumber, request.PageSize);
+                return new PagedResponse<List<Company>>(companies, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Company>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

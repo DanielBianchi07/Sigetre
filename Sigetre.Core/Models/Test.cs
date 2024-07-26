@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Sigetre.Core.Models;
 
 public class Test : BaseClass
@@ -6,5 +8,6 @@ public class Test : BaseClass
     public long Id { get; set; }
     public string Title { get; set; } = String.Empty;
     // relationship
-    public ICollection<Question> Questions { get; set; } = null!;
+    [JsonIgnore]
+    public ICollection<Question> Questions { get; set; } = new List<Question>();
 }

@@ -121,15 +121,21 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var query = context.Courses.AsNoTracking().OrderBy(x => x.Name);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Courses.AsNoTracking().OrderBy(x => x.Name);
 
-            var courses = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
-            var count = await query.CountAsync();
+                var courses = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
 
-            return new PagedResponse<List<Course>>(courses, count, request.PageNumber, request.PageSize);
+                return new PagedResponse<List<Course>>(courses, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Course>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

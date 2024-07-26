@@ -14,21 +14,38 @@ public class TrainingHandler(AppDbContext context) : ITrainingHandler
     {
         try
         {
-            var training = new Training()
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
             {
-                Type = request.Type,
-                Situation = request.Situation,
-                CourseId = request.CourseId,
-                CreatedAt = request.CreatedAt,
-                Status = request.Status,
-                CreatedBy = request.CreateBy,
-                ClientId = request.ClientId,
-            };
+                var student = await context.Students.FirstOrDefaultAsync(x => x.Id == request.StudentId);
+                if (student == null)
+                    return new Response<Training?>(null, 404, "Não foi possível localizar o aluno");
             
-            await context.Trainings.AddAsync(training);
-            await context.SaveChangesAsync();
-            
-            return new Response<Training?>(training, 201, "Treinamento cadastrado com sucesso");
+                var instructor = await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.InstructorId);
+                if (instructor == null)
+                    return new Response<Training?>(null, 404, "Não foi possível localizar o instrutor");
+
+                var training = new Training()
+                {
+                    Type = request.Type,
+                    Situation = request.Situation,
+                    CourseId = request.CourseId,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status,
+                    CreatedBy = request.CreateBy,
+                    ClientId = user.ClientId
+                };
+                
+                training.Students.Add(student);
+                training.Instructors.Add(instructor);
+
+                await context.Trainings.AddAsync(training);
+                await context.SaveChangesAsync();
+
+                return new Response<Training?>(training, 201, "Treinamento cadastrado com sucesso");
+            }
+            else
+                return new Response<Training?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -63,23 +80,41 @@ public class TrainingHandler(AppDbContext context) : ITrainingHandler
     {
         try
         {
-            var training = await context.Trainings.FirstOrDefaultAsync(x=>x.Id == request.Id && x.ClientId == request.ClientId);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var student = await context.Students.FirstOrDefaultAsync(x => x.Id == request.StudentId);
+                if (student == null)
+                    return new Response<Training?>(null, 404, "Não foi possível localizar o aluno");
 
-            if (training == null)
-                return new Response<Training?>(null, 404, "Treinamento não encontrado");
-            
-            training.Type = request.Type;
-            training.Situation = request.Situation;
-            training.CourseId = request.CourseId;
-            training.CreatedAt = request.CreatedAt;
-            training.Status = request.Status;
-            training.CreatedBy = request.CreateBy;
-            training.ClientId = request.ClientId;
+                var instructor = await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.InstructorId);
+                if (instructor == null)
+                    return new Response<Training?>(null, 404, "Não foi possível localizar o instrutor");
 
-            context.Trainings.Update(training);
-            await context.SaveChangesAsync();
+                var training = await context.Trainings.FirstOrDefaultAsync(x =>
+                        x.Id == request.Id && x.ClientId == request.ClientId);
 
-            return new Response<Training?>(training);
+                if (training == null)
+                    return new Response<Training?>(null, 404, "Treinamento não encontrado");
+
+                training.Type = request.Type;
+                training.Situation = request.Situation;
+                training.CourseId = request.CourseId;
+                training.CreatedAt = request.CreatedAt;
+                training.Status = request.Status;
+                training.CreatedBy = request.CreateBy;
+                training.ClientId = user.ClientId;
+
+                training.Students.Add(student);
+                training.Instructors.Add(instructor);
+
+                context.Trainings.Update(training);
+                await context.SaveChangesAsync();
+
+                return new Response<Training?>(training);
+            }
+            else
+                return new Response<Training?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -92,7 +127,12 @@ public class TrainingHandler(AppDbContext context) : ITrainingHandler
         try
         {
             var training =
-                await context.Trainings.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.Trainings
+                    .Include(x=>x.Course)
+                    .Include(x=>x.Instructors)
+                    .Include(x=>x.Students)
+                    .ThenInclude(x=>x.Companies)
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
             return training is null
                 ? new Response<Training?>(null, 404, "Treinamento não encontrado")
                 : new Response<Training?>(training);
@@ -107,18 +147,28 @@ public class TrainingHandler(AppDbContext context) : ITrainingHandler
     {
         try
         {
-            var query = context.Trainings
-                .AsNoTracking()
-                .Where(x => x.ClientId == request.ClientId)
-                .OrderByDescending(x => x.CreatedAt);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Trainings
+                    .AsNoTracking()
+                    .Include(x=>x.Course)
+                    .Include(x=>x.Instructors)
+                    .Include(x=>x.Students)
+                    .ThenInclude(x=>x.Companies)
+                    .Where(x => x.ClientId == user.ClientId)
+                    .OrderByDescending(x => x.CreatedAt);
 
-            var trainings = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
-            var count = await query.CountAsync();
+                var trainings = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
 
-            return new PagedResponse<List<Training>>(trainings, count, request.PageNumber, request.PageSize);
+                return new PagedResponse<List<Training>>(trainings, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Training>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
