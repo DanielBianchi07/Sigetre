@@ -23,12 +23,9 @@ public class UpdateSpecializationEndpoint : IEndpoint
         UpdateSpecializationRequest request,
         long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
-        {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+        request.User = user.Identity?.Name ?? string.Empty;
+        request.Id = id;
+            
         var result = await handler.UpdateAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

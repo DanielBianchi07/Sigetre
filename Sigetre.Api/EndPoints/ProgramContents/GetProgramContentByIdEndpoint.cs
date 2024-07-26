@@ -22,13 +22,11 @@ public class GetProgramContentByIdEndpoint : IEndpoint
         IProgramContentHandler handler,
         long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetProgramContentByIdRequest();
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetProgramContentByIdRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+            User = user.Identity?.Name ?? string.Empty,
+            Id = id
+        };
         var result = await handler.GetByIdAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

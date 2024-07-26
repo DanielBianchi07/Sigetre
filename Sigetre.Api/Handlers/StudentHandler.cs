@@ -13,24 +13,30 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
     {
         try
         {
-            var student = new Student()
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
             {
-                Name = request.Name,
-                Ssn = request.Ssn,
-                Ic = request.Ic,
-                Email = request.Email,
-                Telephone = request.Telephone,
-                Signature = request.Signature,
-                CreatedAt = request.CreatedAt,
-                Status = request.Status,
-                ClientId = request.ClientId,
-                CreatedBy = request.CreateBy,
-            };
+                var student = new Student()
+                {
+                    Name = request.Name,
+                    Ssn = request.Ssn,
+                    Ic = request.Ic,
+                    Email = request.Email,
+                    Telephone = request.Telephone,
+                    Signature = request.Signature,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status,
+                    ClientId = user.ClientId,
+                    CreatedBy = request.CreateBy,
+                };
 
-            await context.Students.AddAsync(student);
-            await context.SaveChangesAsync();
+                await context.Students.AddAsync(student);
+                await context.SaveChangesAsync();
 
-            return new Response<Student?>(student, 201, "Aluno cadastrado com sucesso");
+                return new Response<Student?>(student, 201, "Aluno cadastrado com sucesso");
+            }
+            else
+                return new Response<Student?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -42,7 +48,7 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
     {
         try
         {
-            var student = await context.Students.FirstOrDefaultAsync(x=>x.Id == request.Id && x.ClientId == request.ClientId);
+            var student = await context.Students.FirstOrDefaultAsync(x=>x.Id == request.Id);
 
             if (student == null)
                 return new Response<Student?>(null, 404, "Aluno não encontrado");
@@ -62,26 +68,32 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
     {
         try
         {
-            var student = await context.Students.FirstOrDefaultAsync(x=>x.Id == request.Id && x.ClientId == request.ClientId);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var student = await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (student == null)
-                return new Response<Student?>(null, 404, "Aluno não encontrado");
-            
-            student.Name = request.Name;
-            student.Ssn = request.Ssn;
-            student.Ic = request.Ic;
-            student.Email = request.Email;
-            student.Telephone = request.Telephone;
-            student.Signature = request.Signature;
-            student.CreatedAt = request.CreatedAt;
-            student.Status = request.Status;
-            student.ClientId = request.ClientId;
-            student.CreatedBy = request.CreateBy;
+                if (student == null)
+                    return new Response<Student?>(null, 404, "Aluno não encontrado");
 
-            context.Students.Update(student);
-            await context.SaveChangesAsync();
+                student.Name = request.Name;
+                student.Ssn = request.Ssn;
+                student.Ic = request.Ic;
+                student.Email = request.Email;
+                student.Telephone = request.Telephone;
+                student.Signature = request.Signature;
+                student.CreatedAt = request.CreatedAt;
+                student.Status = request.Status;
+                student.ClientId = user.ClientId;
+                student.CreatedBy = request.CreateBy;
 
-            return new Response<Student?>(student);
+                context.Students.Update(student);
+                await context.SaveChangesAsync();
+
+                return new Response<Student?>(student);
+            }
+            else
+                return new Response<Student?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -93,8 +105,7 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
     {
         try
         {
-            var student =
-                await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+            var student = await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id);
             return student is null
                 ? new Response<Student?>(null, 404, "Aluno não encontrado")
                 : new Response<Student?>(student);

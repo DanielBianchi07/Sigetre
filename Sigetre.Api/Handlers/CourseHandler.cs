@@ -94,7 +94,7 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
             }
             else
                 return new Response<Course?>(null, 404, "Nenhum usuário autenticado");
-    }
+        }
         catch
         {
             return new Response<Course?>(null, 500, "Não foi possível alterar o curso");

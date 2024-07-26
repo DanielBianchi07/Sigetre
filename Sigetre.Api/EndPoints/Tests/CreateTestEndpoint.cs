@@ -22,10 +22,8 @@ public class CreateTestEndpoint : IEndpoint
         ITestHandler handler,
         CreateTestRequest request)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
+        request.User = user.Identity?.Name ?? string.Empty;
 
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
-            request.ClientId = clientIdClaim;
         var result = await handler.CreateAsync(request);
         return result.IsSuccess
             ? TypedResults.Created($"/{result.Data?.Id}", result)

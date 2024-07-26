@@ -13,21 +13,28 @@ public class ProgramContentHandler(AppDbContext context) : IProgramContentHandle
     {
         try
         {
-            var programContent = new ProgramContent()
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
             {
-                Subject = request.Subject,
-                Workload = request.Workload,
-                CourseId = request.CourseId,
-                CreatedAt = request.CreatedAt,
-                Status = request.Status,
-                CreatedBy = request.CreateBy,
-                ClientId = request.ClientId,
-            };
-            
-            await context.ProgramContents.AddAsync(programContent);
-            await context.SaveChangesAsync();
-            
-            return new Response<ProgramContent?>(programContent, 201, "Conteúdo programático cadastrado com sucesso");
+                var programContent = new ProgramContent()
+                {
+                    Subject = request.Subject,
+                    Workload = request.Workload,
+                    CourseId = request.CourseId,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status,
+                    CreatedBy = request.CreateBy,
+                    ClientId = user.ClientId,
+                };
+
+                await context.ProgramContents.AddAsync(programContent);
+                await context.SaveChangesAsync();
+
+                return new Response<ProgramContent?>(programContent, 201,
+                    "Conteúdo programático cadastrado com sucesso");
+            }
+            else
+                return new Response<ProgramContent?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -40,7 +47,7 @@ public class ProgramContentHandler(AppDbContext context) : IProgramContentHandle
         try
         {
             var programContent =
-                await context.ProgramContents.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.ProgramContents.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (programContent == null)
                 return new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado");
@@ -59,24 +66,29 @@ public class ProgramContentHandler(AppDbContext context) : IProgramContentHandle
     {
         try
         {
-            var programContent =
-                await context.ProgramContents.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var programContent = await context.ProgramContents.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (programContent == null)
-                return new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado");
-            
-            programContent.Subject = request.Subject;
-            programContent.Workload = request.Workload;
-            programContent.CourseId = request.CourseId;
-            programContent.UpdatedAt = request.UpdatedAt;
-            programContent.Status = request.Status;
-            programContent.UpdatedBy = request.UpdatedBy;
-            programContent.ClientId = request.ClientId;
+                if (programContent == null)
+                    return new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado");
 
-            context.ProgramContents.Update(programContent);
-            await context.SaveChangesAsync();
+                programContent.Subject = request.Subject;
+                programContent.Workload = request.Workload;
+                programContent.CourseId = request.CourseId;
+                programContent.UpdatedAt = request.UpdatedAt;
+                programContent.Status = request.Status;
+                programContent.UpdatedBy = request.UpdatedBy;
+                programContent.ClientId = user.ClientId;
 
-            return new Response<ProgramContent?>(programContent);
+                context.ProgramContents.Update(programContent);
+                await context.SaveChangesAsync();
+
+                return new Response<ProgramContent?>(programContent);
+            }
+            else
+                return new Response<ProgramContent?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -89,7 +101,7 @@ public class ProgramContentHandler(AppDbContext context) : IProgramContentHandle
         try
         {
             var programContent = await context.ProgramContents.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
             return programContent is null
                 ? new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado")
                 : new Response<ProgramContent?>(programContent);
