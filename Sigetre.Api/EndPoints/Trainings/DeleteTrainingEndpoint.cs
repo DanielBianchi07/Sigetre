@@ -22,13 +22,11 @@ public class DeleteTrainingEndpoint : IEndpoint
         ITrainingHandler handler,
         long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new DeleteTrainingRequest();
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new DeleteTrainingRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+            User = user.Identity?.Name ?? string.Empty,
+            Id = id
+        };
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

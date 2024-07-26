@@ -25,14 +25,11 @@ public class GetAllAttendanceListEndoint : IEndpoint
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery] int pageSize = Configuration.DefaultPageSize)//, long clientId)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetAllAttendanceListRequest();
-
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetAllAttendanceListRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.PageNumber = pageNumber;
-            request.PageSize = pageSize;
+            User = user.Identity?.Name ?? string.Empty,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
         var result = await handler.GetAllAsync(request);
         return result.IsSuccess

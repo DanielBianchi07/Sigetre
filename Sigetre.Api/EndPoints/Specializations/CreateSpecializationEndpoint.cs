@@ -22,10 +22,8 @@ public class CreateSpecializationEndpoint : IEndpoint
         ISpecializationHandler handler,
         CreateSpecializationRequest request)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
-            request.ClientId = clientIdClaim;
+        request.User = user.Identity?.Name ?? string.Empty;
+        
         var result = await handler.CreateAsync(request);
         return result.IsSuccess
             ? TypedResults.Created($"/{result.Data?.Id}", result)

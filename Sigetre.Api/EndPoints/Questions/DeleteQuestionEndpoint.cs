@@ -22,13 +22,11 @@ public class DeleteQuestionEndpoint : IEndpoint
         IQuestionHandler handler,
         long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new DeleteQuestionRequest();
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new DeleteQuestionRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+            User = user.Identity?.Name ?? string.Empty,
+            Id = id
+        };
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

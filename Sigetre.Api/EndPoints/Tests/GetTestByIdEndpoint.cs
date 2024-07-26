@@ -22,13 +22,11 @@ public class GetTestByIdEndpoint : IEndpoint
         ITestHandler handler,
         long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetTestByIdRequest();
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetTestByIdRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+            User = user.Identity?.Name ?? string.Empty,
+            Id = id
+        };
         var result = await handler.GetByIdAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

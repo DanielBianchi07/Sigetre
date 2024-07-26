@@ -12,7 +12,7 @@ using Sigetre.Api.Data;
 namespace Sigetre.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240725210333_v1")]
+    [Migration("20240726004251_v1")]
     partial class v1
     {
         /// <inheritdoc />
@@ -302,7 +302,8 @@ namespace Sigetre.Api.Migrations
                     b.Property<short>("Answer")
                         .HasColumnType("SMALLINT");
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("Content")
@@ -346,7 +347,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("Code")
@@ -524,7 +526,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("Code")
@@ -622,7 +625,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -669,7 +673,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -723,7 +728,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -789,7 +795,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<long>("CourseId")
@@ -836,7 +843,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("Content")
@@ -883,7 +891,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -922,7 +931,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -980,7 +990,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -1019,7 +1030,8 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("ClientId")
+                    b.Property<long?>("ClientId")
+                        .IsRequired()
                         .HasColumnType("BIGINT");
 
                     b.Property<long>("CourseId")

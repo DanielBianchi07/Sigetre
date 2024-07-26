@@ -13,19 +13,25 @@ public class SpecializationHandler(AppDbContext context) : ISpecializationHandle
     {
         try
         {
-            var specialization = new Specialization
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
             {
-                Name = request.Name,
-                CreatedAt = request.CreatedAt,
-                Status = request.Status,
-                ClientId = request.ClientId,
-                CreatedBy = request.CreateBy,
-            };
+                var specialization = new Specialization
+                {
+                    Name = request.Name,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status,
+                    ClientId = user.ClientId,
+                    CreatedBy = request.CreateBy,
+                };
 
-            await context.Specializations.AddAsync(specialization);
-            await context.SaveChangesAsync();
+                await context.Specializations.AddAsync(specialization);
+                await context.SaveChangesAsync();
 
-            return new Response<Specialization?>(specialization, 201, "Especialização cadastrada com sucesso");
+                return new Response<Specialization?>(specialization, 201, "Especialização cadastrada com sucesso");
+            }
+            else
+                return new Response<Specialization?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -38,7 +44,7 @@ public class SpecializationHandler(AppDbContext context) : ISpecializationHandle
         try
         {
             var specialization =
-                await context.Specializations.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.Specializations.FirstOrDefaultAsync(x => x.Id == request.Id);
 
             if (specialization == null)
                 return new Response<Specialization?>(null, 404, "Especialização não encontrada");
@@ -57,22 +63,27 @@ public class SpecializationHandler(AppDbContext context) : ISpecializationHandle
     {
         try
         {
-            var specialization =
-                await context.Specializations.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var specialization = await context.Specializations.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (specialization == null)
-                return new Response<Specialization?>(null, 404, "Especialização não encontrada");
-            
-            specialization.Name = request.Name;
-            specialization.UpdatedAt = request.UpdatedAt;
-            specialization.Status = request.Status;
-            specialization.ClientId = request.ClientId;
-            specialization.UpdatedBy = request.UpdatedBy;
+                if (specialization == null)
+                    return new Response<Specialization?>(null, 404, "Especialização não encontrada");
 
-            context.Specializations.Update(specialization);
-            await context.SaveChangesAsync();
+                specialization.Name = request.Name;
+                specialization.UpdatedAt = request.UpdatedAt;
+                specialization.Status = request.Status;
+                specialization.ClientId = user.ClientId;
+                specialization.UpdatedBy = request.UpdatedBy;
 
-            return new Response<Specialization?>(specialization);
+                context.Specializations.Update(specialization);
+                await context.SaveChangesAsync();
+
+                return new Response<Specialization?>(specialization);
+            }
+            else
+                return new Response<Specialization?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -85,7 +96,7 @@ public class SpecializationHandler(AppDbContext context) : ISpecializationHandle
         try
         {
             var specialization = await context.Specializations.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                .FirstOrDefaultAsync(x => x.Id == request.Id);
             return specialization is null
                 ? new Response<Specialization?>(null, 404, "Especialização não encontrada")
                 : new Response<Specialization?>(specialization);

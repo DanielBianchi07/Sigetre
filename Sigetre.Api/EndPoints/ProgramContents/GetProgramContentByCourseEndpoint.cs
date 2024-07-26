@@ -26,15 +26,13 @@ public class GetProgramContentByCourseEndpoint : IEndpoint
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetProgramContentByCourseRequest();
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetProgramContentByCourseRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.CourseId = courseId;
-            request.PageNumber = pageNumber;
-            request.PageSize = pageSize;
-        }
+            User = user.Identity?.Name ?? string.Empty,
+            CourseId = courseId,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
         var result = await handler.GetByCourseAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

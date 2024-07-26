@@ -22,13 +22,11 @@ public class DeleteProgramContentEndpoint : IEndpoint
         IProgramContentHandler handler,
         long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new DeleteProgramContentRequest();
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new DeleteProgramContentRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
+            User = user.Identity?.Name ?? string.Empty,
+            Id = id
+        };
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)
