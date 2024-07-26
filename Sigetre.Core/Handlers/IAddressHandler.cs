@@ -1,4 +1,5 @@
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 using Sigetre.Core.Requests.Address;
 using Sigetre.Core.Responses;
 

@@ -26,14 +26,12 @@ public class GetInstructorBySpecializationEndpoint : IEndpoint
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetInstructorBySpecialityRequest();
-        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetInstructorBySpecialityRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.SpecialityId = specializationId;
-            request.PageNumber = pageNumber;
-            request.PageSize = pageSize;
+            User = user.Identity?.Name ?? string.Empty,
+            SpecialityId = specializationId,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
         var result = await handler.GetBySpecializationAsync(request);
         return result.IsSuccess

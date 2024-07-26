@@ -34,12 +34,7 @@ public static class BuildExtension
             })
             .AddIdentityCookies(o => { });
 
-        builder.Services.AddIdentityCore<User>(o =>
-            {
-                o.Stores.MaxLengthForKeys = 128;
-                o.SignIn.RequireConfirmedAccount = true;
-            })
-            .AddDefaultTokenProviders();
+        builder.Services.AddIdentityCore<User>().AddDefaultTokenProviders();
         
         builder.Services.AddAuthorization();
     }
@@ -52,12 +47,10 @@ public static class BuildExtension
                 x.UseSqlServer(Configuration.ConnectionString);
             });
         builder.Services
-            .AddIdentityCore<User>(o =>
-            {
-                o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                o.Lockout.MaxFailedAccessAttempts = 5;
-                o.Lockout.AllowedForNewUsers = true;
-            })
+            .AddIdentityCore<User>()
+                //o.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                //o.Lockout.MaxFailedAccessAttempts = 5;
+                //o.Lockout.AllowedForNewUsers = true;
             .AddRoles<IdentityRole<long>>()
             .AddEntityFrameworkStores<AppDbContext>()
             .AddApiEndpoints();

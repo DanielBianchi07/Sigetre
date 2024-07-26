@@ -13,24 +13,30 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var course = new Course
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
             {
-                Name = request.Name,
-                InitialWorkload = request.InitialWorkload,
-                PeriodicWorkload = request.PeriodicWorkload,
-                Validity = request.Validity,
-                Logo = request.Logo,
-                SpecializationId = request.SpecializationId,
-                CreatedAt = request.CreatedAt,
-                Status = request.Status,
-                ClientId = request.ClientId,
-                CreatedBy = request.CreateBy,
-            };
+                var course = new Course
+                {
+                    Name = request.Name,
+                    InitialWorkload = request.InitialWorkload,
+                    PeriodicWorkload = request.PeriodicWorkload,
+                    Validity = request.Validity,
+                    Logo = request.Logo,
+                    SpecializationId = request.SpecializationId,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status,
+                    ClientId = user.ClientId,
+                    CreatedBy = request.CreateBy,
+                };
 
-            await context.Courses.AddAsync(course);
-            await context.SaveChangesAsync();
+                await context.Courses.AddAsync(course);
+                await context.SaveChangesAsync();
 
-            return new Response<Course?>(course, 201, "Curso cadastrado com sucesso");
+                return new Response<Course?>(course, 201, "Curso cadastrado com sucesso");
+            }
+            else
+                return new Response<Course?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -42,7 +48,7 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var course = await context.Courses.FirstOrDefaultAsync(x=>x.Id == request.Id && x.ClientId == request.ClientId);
+            var course = await context.Courses.FirstOrDefaultAsync(x=>x.Id == request.Id);
 
             if (course == null)
                 return new Response<Course?>(null, 404, "Curso não encontrado");
@@ -62,27 +68,33 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var course = await context.Courses.FirstOrDefaultAsync(x=>x.Id == request.Id && x.ClientId == request.ClientId);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var course = await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (course == null)
-                return new Response<Course?>(null, 404, "Curso não encontrado");
-            
-            course.Name = request.Name;
-            course.InitialWorkload = request.InitialWorkload;
-            course.PeriodicWorkload = request.PeriodicWorkload;
-            course.Validity = request.Validity;
-            course.Logo = request.Logo;
-            course.SpecializationId = request.SpecializationId;
-            course.UpdatedAt = request.UpdatedAt;
-            course.Status = request.Status;
-            course.ClientId = request.ClientId;
-            course.UpdatedBy = request.UpdatedBy;
+                if (course == null)
+                    return new Response<Course?>(null, 404, "Curso não encontrado");
 
-            context.Courses.Update(course);
-            await context.SaveChangesAsync();
+                course.Name = request.Name;
+                course.InitialWorkload = request.InitialWorkload;
+                course.PeriodicWorkload = request.PeriodicWorkload;
+                course.Validity = request.Validity;
+                course.Logo = request.Logo;
+                course.SpecializationId = request.SpecializationId;
+                course.UpdatedAt = request.UpdatedAt;
+                course.Status = request.Status;
+                course.ClientId = request.ClientId;
+                course.UpdatedBy = request.UpdatedBy;
 
-            return new Response<Course?>(course);
-        }
+                context.Courses.Update(course);
+                await context.SaveChangesAsync();
+
+                return new Response<Course?>(course);
+            }
+            else
+                return new Response<Course?>(null, 404, "Nenhum usuário autenticado");
+    }
         catch
         {
             return new Response<Course?>(null, 500, "Não foi possível alterar o curso");
@@ -94,7 +106,7 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
         try
         {
             var course =
-                await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+                await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id);
             return course is null
                 ? new Response<Course?>(null, 404, "Curso não encontrado")
                 : new Response<Course?>(course);

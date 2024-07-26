@@ -22,12 +22,10 @@ public class GetCompanyByIdEndpoint : IEndpoint
         ICompanyHandler handler,
         long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetCompanyByIdRequest();
-        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetCompanyByIdRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
+            User = user.Identity?.Name ?? string.Empty,
+            Id = id
         };
         var result = await handler.GetByIdAsync(request);
         return result.IsSuccess

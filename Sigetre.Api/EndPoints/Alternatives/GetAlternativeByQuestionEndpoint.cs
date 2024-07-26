@@ -22,18 +22,16 @@ public class GetAlternativeByQuestionEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         ClaimsPrincipal user,
         IAlternativeHandler handler,
-        long questionId, //long clientId,
+        long questionId,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetAlternativeByQuestionRequest();
-        if(clientId != null & long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetAlternativeByQuestionRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.QuestionId = questionId;
-            request.PageNumber = pageNumber;
-            request.PageSize = pageSize;
+            User = user.Identity?.Name ?? string.Empty,
+            QuestionId = questionId,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
         var result = await handler.GetByQuestionAsync(request);
         return result.IsSuccess

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Sigetre.Api.Models;
+using Sigetre.Core.Models;
 
 namespace Sigetre.Api.Data.Mappings.Identity;
 

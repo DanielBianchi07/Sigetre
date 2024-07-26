@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
+using Azure.Core;
 using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 using Sigetre.Core.Requests.Phones;
 using Sigetre.Core.Responses;
 
@@ -22,18 +24,11 @@ public class DeletePhoneEndpoint : IEndpoint
             IPhoneHandler handler,
             long id)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new DeletePhoneRequest();
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new DeletePhoneRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
-        else
-        {
-            request.ClientId = null;
-            request.Id = id;
-        }
+            User = user.Identity.Name,
+            Id = id
+        };
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

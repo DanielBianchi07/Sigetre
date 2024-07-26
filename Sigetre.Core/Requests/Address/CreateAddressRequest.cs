@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sigetre.Core.Requests.Address;
 
-public class CreateAddressRequest : Request
+public class CreateAddressRequest : NullableRequest
 {
     [Required]
     public string ZipCode { get; set; } = String.Empty;
@@ -17,6 +17,6 @@ public class CreateAddressRequest : Request
     [Required]
     public string Number { get; set; } = String.Empty;
     public string? Complement { get; set; }
-    public new long? ClientId { get; set; }
     public long? CompanyId { get; set; }
+    
 }

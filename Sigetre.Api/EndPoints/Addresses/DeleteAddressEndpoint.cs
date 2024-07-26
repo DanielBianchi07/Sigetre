@@ -2,6 +2,7 @@
 using Sigetre.Api.Common.Api;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
+using Sigetre.Core.Models.Birrelational;
 using Sigetre.Core.Requests.Address;
 using Sigetre.Core.Responses;
 
@@ -18,24 +19,15 @@ public class DeleteAddressEndpoint : IEndpoint
             .Produces<Response<Address?>>();
 
     private static async Task<IResult> HandleAsync(
-            HttpContext httpContext,
+            ClaimsPrincipal user,
             IAddressHandler handler,
             long id)
-        //long clientId)
     {
-        var user = httpContext.User;
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new DeleteAddressRequest();
-        if (clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new DeleteAddressRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.Id = id;
-        }
-        else
-        {
-            request.ClientId = null;
-            request.Id = id;
-        }
+            User = user.Identity?.Name ?? string.Empty,
+            Id = id
+        };
         var result = await handler.DeleteAsync(request);
         return result.IsSuccess
             ? TypedResults.Ok(result)

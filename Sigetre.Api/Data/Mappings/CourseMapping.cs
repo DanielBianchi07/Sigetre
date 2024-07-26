@@ -40,9 +40,11 @@ public class CourseMapping : IEntityTypeConfiguration<Course>
             .HasColumnType("BIGINT");
         builder.Property(x => x.CreatedBy)
             .IsRequired(true)
-            .HasColumnType("BIGINT");
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(160);
         builder.Property(x => x.UpdatedBy)
             .IsRequired(false)
-            .HasColumnType("BIGINT");
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(160);;
     }
 }

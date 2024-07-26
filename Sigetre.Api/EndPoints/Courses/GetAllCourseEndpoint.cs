@@ -23,15 +23,13 @@ public class GetAllCourseEndpoint : IEndpoint
         ClaimsPrincipal user,
         ICourseHandler handler,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
-        [FromQuery] int pageSize = Configuration.DefaultPageSize)//, long clientId)
+        [FromQuery] int pageSize = Configuration.DefaultPageSize)
     {
-        var clientId = user.FindFirst("ClientId")?.Value;
-        var request = new GetAllCourseRequest();
-        if(clientId != null && long.TryParse(clientId, out var clientIdClaim))
+        var request = new GetAllCourseRequest()
         {
-            request.ClientId = clientIdClaim;
-            request.PageNumber = pageNumber;
-            request.PageSize = pageSize;
+            User = user.Identity?.Name ?? string.Empty,
+            PageNumber = pageNumber,
+            PageSize = pageSize
         };
         var result = await handler.GetAllCourseAsync(request);
         return result.IsSuccess

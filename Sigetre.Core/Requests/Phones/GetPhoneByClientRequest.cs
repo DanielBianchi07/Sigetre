@@ -2,8 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Sigetre.Core.Requests.Phones;
 
-public class GetPhoneByClientRequest : PagedRequest
+public class GetPhoneByClientRequest : PagedNullableRequest
 {
-    [Required]
-    public new long? ClientId { get; set; }
+    public long? CompanyId { get; set; }
 }

@@ -3,8 +3,6 @@ using Sigetre.Core.Responses;
 
 namespace Sigetre.Core.Requests.Phones;
 
-public class GetAllPhoneRequest : PagedRequest
+public class GetAllPhoneRequest : PagedNullableRequest
 {
-    public long? CompanyId { get; set; }
-    public new long? ClientId { get; set; }
 }

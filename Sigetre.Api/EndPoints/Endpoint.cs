@@ -60,13 +60,14 @@ public static class Endpoint
             .MapEndpoint<GetAttendanceListByIdEndpoint>()
             .MapEndpoint<GetAllAttendanceListEndoint>();
 
-        endpoints.MapGroup("v1/clients")
-            .WithTags("Clients")
-            .MapEndpoint<CreateClientEndpoint>();
+        //endpoints.MapGroup("v1/clients")
+          //   .WithTags("Clients")
+            // .MapEndpoint<CreateClientEndpoint>();
             
         endpoints.MapGroup("v1/clients")
             .WithTags("Clients")
             .RequireAuthorization()
+            .MapEndpoint<CreateClientEndpoint>()
             .MapEndpoint<UpdateClientEndpoint>()
             .MapEndpoint<DeleteClientEndpoint>()
             .MapEndpoint<GetClientByIdEndpoint>()
@@ -96,7 +97,6 @@ public static class Endpoint
 
         endpoints.MapGroup("v1/identity")
             .WithTags("Identity")
-            .MapEndpoint<LoginEndpoint>()
             .MapEndpoint<LogoutEndpoint>()
             .MapEndpoint<GetRolesEndpoint>()
             .MapEndpoint<InscribeEndpoint>();
@@ -118,7 +118,7 @@ public static class Endpoint
             .MapEndpoint<UpdatePhoneEndpoint>()
             .MapEndpoint<DeletePhoneEndpoint>()
             .MapEndpoint<GetPhoneByCompanyEndpoint>()
-            .MapEndpoint<GetAllPhoneEndpoint>();
+            .MapEndpoint<GetPhoneByClientEndpoint>();
 
         endpoints.MapGroup("v1/programContents")
             .WithTags("ProgramContents")

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Sigetre.Api.Data;
+using Sigetre.Api.Models;
 using Sigetre.Core.Enums;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
@@ -14,20 +15,26 @@ public class ClientHandler(AppDbContext context) : IClientHandler
     {
         try
         {
-            var client = new Client
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user.ClientId == null)
             {
-                Name = request.Name,
-                Ein = request.Ein,
-                Email = request.Email,
-                CreatedBy = request.CreateBy,
-                CreatedAt = request.CreatedAt,
-                Status = request.Status
-            };
+                var client = new Client
+                {
+                    Name = request.Name,
+                    Ein = request.Ein,
+                    Email = request.Email,
+                    CreatedBy = request.CreateBy,
+                    CreatedAt = request.CreatedAt,
+                    Status = request.Status
+                };
 
-            await context.Clients.AddAsync(client);
-            await context.SaveChangesAsync();
+                await context.Clients.AddAsync(client);
+                await context.SaveChangesAsync();
 
-            return new Response<Client?>(client, 201, "Cliente criado com sucesso");
+                return new Response<Client?>(client, 201, "Cliente criado com sucesso");
+            }
+            else
+                return new Response<Client?>(null, 500, "Apenas um administrador pode cadastrar um novo cliente");
         }
         catch
         {
@@ -68,7 +75,7 @@ public class ClientHandler(AppDbContext context) : IClientHandler
             client.Name = request.Name;
             client.Ein = request.Ein;
             client.Email = request.Email;
-            client.UpdatedBy = request.UpdatedBy;
+            client.CreatedBy = request.CreateBy;
             client.UpdatedAt = request.UpdatedAt;
             client.Status = request.Status;
 
