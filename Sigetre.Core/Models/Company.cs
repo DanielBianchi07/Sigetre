@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Sigetre.Core.Enums;
 using Sigetre.Core.Models.Birrelational;
 
@@ -12,7 +13,8 @@ public class Company : BaseClass
     
     // relationship
     public Address Address { get; set; } = null!;
-    
-    public ICollection<Phone> Telephones { get; set; } = null!;
-    public ICollection<Student> Students { get; set; } = null!;
+    [JsonIgnore]
+    public ICollection<Phone> Telephones { get; set; } = new List<Phone>();
+    [JsonIgnore]
+    public ICollection<Student> Students { get; set; } = new List<Student>();
 }

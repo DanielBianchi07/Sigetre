@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Sigetre.Core.Models;
 
 public class Course : BaseClass
@@ -11,8 +13,11 @@ public class Course : BaseClass
     public Byte[]? Logo { get; set; }
     public long SpecializationId { get; set; }
     // relationship
-    public ICollection<Training> Trainings { get; set; } = null!;
-    public ICollection<ProgramContent> ProgramContents { get; set; } = null!;
-    public ICollection<Question> Questions { get; set; } = null!;
+    [JsonIgnore]
+    public ICollection<Training> Trainings { get; set; } = new List<Training>();
+    [JsonIgnore]
+    public ICollection<ProgramContent> ProgramContents { get; set; } = new List<ProgramContent>();
+    [JsonIgnore]
+    public ICollection<Question> Questions { get; set; } = new List<Question>();
 
 }

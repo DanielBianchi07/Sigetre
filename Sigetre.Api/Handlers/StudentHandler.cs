@@ -16,6 +16,9 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
             var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
             if (user != null)
             {
+                var company = await context.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId);
+                if(company == null)
+                    return new Response<Student?>(null, 404, "Não foi possível localizar a empresa");
                 var student = new Student()
                 {
                     Name = request.Name,
@@ -29,7 +32,9 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
                     ClientId = user.ClientId,
                     CreatedBy = request.CreateBy,
                 };
-
+                
+                student.Companies.Add(company);
+                
                 await context.Students.AddAsync(student);
                 await context.SaveChangesAsync();
 
@@ -71,8 +76,11 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
             var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
             if (user != null)
             {
+                var company = await context.Companies.FirstOrDefaultAsync(x => x.Id == request.CompanyId);
+                if(company == null)
+                    return new Response<Student?>(null, 404, "Não foi possível localizar a empresa");
+                
                 var student = await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id);
-
                 if (student == null)
                     return new Response<Student?>(null, 404, "Aluno não encontrado");
 
@@ -87,6 +95,8 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
                 student.ClientId = user.ClientId;
                 student.CreatedBy = request.CreateBy;
 
+                student.Companies.Add(company);
+                
                 context.Students.Update(student);
                 await context.SaveChangesAsync();
 
@@ -120,18 +130,24 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
     {
         try
         {
-            var query = context.Students
-                .AsNoTracking()
-                .Where(x=> x.ClientId == request.ClientId)
-                .OrderBy(x => x.Name);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Students
+                    .AsNoTracking()
+                    .Where(x => x.ClientId == user.ClientId)
+                    .OrderBy(x => x.Name);
 
-            var students = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
-            var count = await query.CountAsync();
+                var students = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
 
-            return new PagedResponse<List<Student>>(students, count, request.PageNumber, request.PageSize);
+                return new PagedResponse<List<Student>>(students, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Student>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Sigetre.Core.Models;
 
 public class Student : BaseClass
@@ -11,6 +13,8 @@ public class Student : BaseClass
     public string Telephone { get; set; } = string.Empty;
     public Byte[]? Signature { get; set; }
     // relationship
-    public ICollection<Company> Companies { get; set; } = null!;
-    public ICollection<Training> Trainings { get; set; } = null!;
+    [JsonIgnore]
+    public ICollection<Company> Companies { get; set; } = new List<Company>();
+    [JsonIgnore]
+    public ICollection<Training> Trainings { get; set; } = new List<Training>();
 }

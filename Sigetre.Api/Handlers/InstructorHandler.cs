@@ -123,18 +123,24 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
     {
         try
         {
-            var query = context.Instructors
-                .AsNoTracking()
-                .Where(x=> x.ClientId == request.ClientId)
-                .OrderBy(x => x.Name);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Instructors
+                    .AsNoTracking()
+                    .Where(x => x.ClientId == request.ClientId)
+                    .OrderBy(x => x.Name);
 
-            var instructors = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
-            var count = await query.CountAsync();
+                var instructors = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
 
-            return new PagedResponse<List<Instructor>>(instructors, count, request.PageNumber, request.PageSize);
+                return new PagedResponse<List<Instructor>>(instructors, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Instructor>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

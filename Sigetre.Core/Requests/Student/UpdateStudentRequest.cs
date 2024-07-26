@@ -13,4 +13,6 @@ public class UpdateStudentRequest : Request
     public string Email { get; set; } = string.Empty;
     public string Telephone { get; set; } = string.Empty;
     public Byte[]? Signature { get; set; }
+    [Required]
+    public long CompanyId { get; set; }
 }
