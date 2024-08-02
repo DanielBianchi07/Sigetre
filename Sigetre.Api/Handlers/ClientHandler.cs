@@ -46,16 +46,22 @@ public class ClientHandler(AppDbContext context) : IClientHandler
     {
         try
         {
-            var client =
-                await context.Clients.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user.ClientId == null)
+            {
+                var client =
+                    await context.Clients.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (client == null)
-                return new Response<Client?>(null, 404, "Cliente não encontrado");
-            client.Status = EStatus.Inactive;
-            context.Clients.Update(client);
-            await context.SaveChangesAsync();
-            
-            return new Response<Client?>(client, message:"Cliente excluido com sucesso");
+                if (client == null)
+                    return new Response<Client?>(null, 404, "Cliente não encontrado");
+                client.Status = EStatus.Inactive;
+                context.Clients.Update(client);
+                await context.SaveChangesAsync();
+
+                return new Response<Client?>(client, message: "Cliente excluido com sucesso");
+            }
+            else
+                return new Response<Client?>(null, 500, "Apenas um administrador pode cadastrar um novo cliente");
         }
         catch
         {
@@ -67,22 +73,28 @@ public class ClientHandler(AppDbContext context) : IClientHandler
     {
         try
         {
-            var client =
-                await context.Clients.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user.ClientId == null)
+            {
+                var client =
+                    await context.Clients.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            if (client == null)
-                return new Response<Client?>(null, 404, "Cliente não encontrado");
-            client.Name = request.Name;
-            client.Ein = request.Ein;
-            client.Email = request.Email;
-            client.CreatedBy = request.CreateBy;
-            client.UpdatedAt = request.UpdatedAt;
-            client.Status = request.Status;
+                if (client == null)
+                    return new Response<Client?>(null, 404, "Cliente não encontrado");
+                client.Name = request.Name;
+                client.Ein = request.Ein;
+                client.Email = request.Email;
+                client.CreatedBy = request.CreateBy;
+                client.UpdatedAt = request.UpdatedAt;
+                client.Status = request.Status;
 
-            context.Clients.Update(client);
-            await context.SaveChangesAsync();
+                context.Clients.Update(client);
+                await context.SaveChangesAsync();
 
-            return new Response<Client?>(client);
+                return new Response<Client?>(client);
+            }
+            else
+                return new Response<Client?>(null, 500, "Apenas um administrador pode cadastrar um novo cliente");
         }
         catch
         {
@@ -94,11 +106,17 @@ public class ClientHandler(AppDbContext context) : IClientHandler
     {
         try
         {
-            var client = await context.Clients.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id);
-            return client is null
-                ? new Response<Client?>(null, 404, "Cliente não encontrado")
-                : new Response<Client?>(client);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user.ClientId == null)
+            {
+                var client = await context.Clients.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.Id);
+                return client is null
+                    ? new Response<Client?>(null, 404, "Cliente não encontrado")
+                    : new Response<Client?>(client);
+            }
+            else
+                return new Response<Client?>(null, 500, "Apenas um administrador pode cadastrar um novo cliente");
         }
         catch
         {
@@ -110,18 +128,24 @@ public class ClientHandler(AppDbContext context) : IClientHandler
     {
         try
         {
-            var query = context.Clients
-                .AsNoTracking()
-                .OrderBy(x=>x.Name);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user.ClientId == null)
+            {
+                var query = context.Clients
+                    .AsNoTracking()
+                    .OrderBy(x => x.Name);
 
-            var clients = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
+                var clients = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
 
-            var count = await query.CountAsync();
+                var count = await query.CountAsync();
 
-            return new PagedResponse<List<Client>>(clients, count, request.PageNumber, request.PageSize);
+                return new PagedResponse<List<Client>>(clients, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Client>>(null, 500, "Apenas um administrador pode cadastrar um novo cliente");
         }
         catch
         {

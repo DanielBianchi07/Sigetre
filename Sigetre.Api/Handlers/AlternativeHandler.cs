@@ -14,6 +14,7 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
         try
         {
             var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            
             if (user != null)
             {
                 var alternative = new Alternative
@@ -26,7 +27,6 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
                     CreatedAt = request.CreatedAt,
                     Status = request.Status
                 };
-
                 await context.Alternatives.AddAsync(alternative);
                 await context.SaveChangesAsync();
 
@@ -45,15 +45,21 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
     {
         try
         {
-            var alternative =
-                await context.Alternatives.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var alternative =
+                    await context.Alternatives.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (alternative == null)
-                return new Response<Alternative?>(null, 404, "Alternativa não encontrada");
-            context.Alternatives.Remove(alternative);
-            await context.SaveChangesAsync();
-            
-            return new Response<Alternative?>(alternative, message:"Alternativa excluida com sucesso");
+                if (alternative == null)
+                    return new Response<Alternative?>(null, 404, "Alternativa não encontrada");
+                context.Alternatives.Remove(alternative);
+                await context.SaveChangesAsync();
+
+                return new Response<Alternative?>(alternative, message: "Alternativa excluida com sucesso");
+            }
+            else
+                return new Response<Alternative?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -70,14 +76,14 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
             {
                 var alternative =
                     await context.Alternatives.FirstOrDefaultAsync(x =>
-                        x.Id == request.Id);
+                        x.Id == request.Id && x.ClientId == user.ClientId);
 
                 if (alternative == null)
                     return new Response<Alternative?>(null, 404, "Alternativa não encontrada");
                 alternative.Content = request.Content;
                 alternative.Answer = request.Answer;
                 alternative.QuestionId = request.QuestionId;
-                alternative.ClientId = request.ClientId;
+                alternative.ClientId = user.ClientId;
                 alternative.UpdatedBy = request.UpdatedBy;
                 alternative.UpdatedAt = request.UpdatedAt;
                 alternative.Status = request.Status;
@@ -100,11 +106,17 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
     {
         try
         {
-            var alternative = await context.Alternatives.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id);
-            return alternative is null
-                ? new Response<Alternative?>(null, 404, "Alternativa não encontrada")
-                : new Response<Alternative?>(alternative);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var alternative = await context.Alternatives.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                return alternative is null
+                    ? new Response<Alternative?>(null, 404, "Alternativa não encontrada")
+                    : new Response<Alternative?>(alternative);
+            }
+            else
+                return new Response<Alternative?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -116,19 +128,25 @@ public class AlternativeHandler(AppDbContext context) : IAlternativeHandler
     {
         try
         {
-            var query = context.Alternatives
-                .AsNoTracking()
-                .Where(x => x.QuestionId == request.QuestionId && x.ClientId == request.ClientId)
-                .OrderBy(x=>x.Question.Content);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Alternatives
+                    .AsNoTracking()
+                    .Where(x => x.QuestionId == request.QuestionId && x.ClientId == user.ClientId)
+                    .OrderBy(x => x.Question.Content);
 
-            var alternatives = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
+                var alternatives = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
 
-            var count = await query.CountAsync();
+                var count = await query.CountAsync();
 
-            return new PagedResponse<List<Alternative>>(alternatives, count, request.PageNumber, request.PageSize);
+                return new PagedResponse<List<Alternative>>(alternatives, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Alternative>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

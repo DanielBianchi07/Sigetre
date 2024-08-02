@@ -52,15 +52,21 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
     {
         try
         {
-            var address =
-                await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var address =
+                    await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (address == null)
-                return new Response<Address?>(null, 404, "Endereço não encontrado");
-            context.Addresses.Remove(address);
-            await context.SaveChangesAsync();
-            
-            return new Response<Address?>(address, message:"Endereço excluído com sucesso");
+                if (address == null)
+                    return new Response<Address?>(null, 404, "Endereço não encontrado");
+                context.Addresses.Remove(address);
+                await context.SaveChangesAsync();
+
+                return new Response<Address?>(address, message: "Endereço excluído com sucesso");
+            }
+            else
+                return new Response<Address?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -75,7 +81,7 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
             var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
             if (user != null)
             {
-                var address = await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var address = await context.Addresses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
                 if (address == null)
                     return new Response<Address?>(null, 404, "Endereço não encontrado");
@@ -111,12 +117,18 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
     {
         try
         {
-            var address = await context.Addresses
-                .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.CompanyId == request.CompanyId && x.ClientId == request.ClientId);
-            return address is null
-                ? new Response<Address?>(null, 404, "Endereço não encontrado")
-                : new Response<Address?>(address);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var address = await context.Addresses
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.CompanyId == request.CompanyId && x.ClientId == user.ClientId);
+                return address is null
+                    ? new Response<Address?>(null, 404, "Endereço não encontrado")
+                    : new Response<Address?>(address);
+            }
+            else
+                return new Response<Address?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -128,11 +140,17 @@ public class AddressesHandler(AppDbContext context) : IAddressHandler
     {
         try
         {
-            var address = await context.Addresses.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.ClientId == request.ClientId && x.CompanyId == null);
-            return address is null
-                ? new Response<Address?>(null, 404, "Endereço não encontrado")
-                : new Response<Address?>(address);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var address = await context.Addresses.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.ClientId == user.ClientId && x.CompanyId == null);
+                return address is null
+                    ? new Response<Address?>(null, 404, "Endereço não encontrado")
+                    : new Response<Address?>(address);
+            }
+            else
+                return new Response<Address?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

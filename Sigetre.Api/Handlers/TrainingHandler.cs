@@ -57,18 +57,26 @@ public class TrainingHandler(AppDbContext context) : ITrainingHandler
     {
         try
         {
-            var training = await context.Trainings.FirstOrDefaultAsync(x=>x.Id == request.Id && x.ClientId == request.ClientId);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var training =
+                    await context.Trainings.FirstOrDefaultAsync(x =>
+                        x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (training == null)
-                return new Response<Training?>(null, 404, "Treinamento não encontrado");
+                if (training == null)
+                    return new Response<Training?>(null, 404, "Treinamento não encontrado");
 
-            training.Situation = ETrainingSituation.Canceled;
-            training.Status = EStatus.Inactive;
-            
-            context.Trainings.Update(training);
-            await context.SaveChangesAsync();
+                training.Situation = ETrainingSituation.Canceled;
+                training.Status = EStatus.Inactive;
 
-            return new Response<Training?>(training, 200, "Treinamento inativado com sucesso");
+                context.Trainings.Update(training);
+                await context.SaveChangesAsync();
+
+                return new Response<Training?>(training, 200, "Treinamento inativado com sucesso");
+            }
+            else
+                return new Response<Training?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -92,7 +100,7 @@ public class TrainingHandler(AppDbContext context) : ITrainingHandler
                     return new Response<Training?>(null, 404, "Não foi possível localizar o instrutor");
 
                 var training = await context.Trainings.FirstOrDefaultAsync(x =>
-                        x.Id == request.Id && x.ClientId == request.ClientId);
+                        x.Id == request.Id && x.ClientId == user.ClientId);
 
                 if (training == null)
                     return new Response<Training?>(null, 404, "Treinamento não encontrado");
@@ -126,16 +134,22 @@ public class TrainingHandler(AppDbContext context) : ITrainingHandler
     {
         try
         {
-            var training =
-                await context.Trainings
-                    .Include(x=>x.Course)
-                    .Include(x=>x.Instructors)
-                    .Include(x=>x.Students)
-                    .ThenInclude(x=>x.Companies)
-                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
-            return training is null
-                ? new Response<Training?>(null, 404, "Treinamento não encontrado")
-                : new Response<Training?>(training);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var training =
+                    await context.Trainings
+                        .Include(x => x.Course)
+                        .Include(x => x.Instructors)
+                        .Include(x => x.Students)
+                        .ThenInclude(x => x.Companies)
+                        .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                return training is null
+                    ? new Response<Training?>(null, 404, "Treinamento não encontrado")
+                    : new Response<Training?>(training);
+            }
+            else
+                return new Response<Training?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -173,6 +187,138 @@ public class TrainingHandler(AppDbContext context) : ITrainingHandler
         catch
         {
             return new PagedResponse<List<Training>>(null, 500, "Não foi possível consultar os treinamentos");
+        }
+    }
+
+    public async Task<PagedResponse<List<Training>>> GetByCourseAsync(GetTrainingByCourseRequest request)
+    {
+        try
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Trainings
+                    .AsNoTracking()
+                    .Include(x=>x.Course)
+                    .Include(x=>x.Instructors)
+                    .Include(x=>x.Students)
+                    .ThenInclude(x=>x.Companies)
+                    .Where(x => x.ClientId == user.ClientId && x.CourseId == request.CourseId)
+                    .OrderByDescending(x => x.CreatedAt);
+
+                var trainings = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
+
+                return new PagedResponse<List<Training>>(trainings, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Training>>(null, 404, "Nenhum usuário autenticado");
+        }
+        catch
+        {
+            return new PagedResponse<List<Training>>(null, 404, "Não foi possível recuperar o treinamento");
+        }
+    }
+
+    public async Task<PagedResponse<List<Training>>> GetByInstructorAsync(GetTrainingByInstructorRequest request)
+    {
+        try
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Trainings
+                    .AsNoTracking()
+                    .Include(x=>x.Course)
+                    .Include(x=>x.Instructors)
+                    .Include(x=>x.Students)
+                    .ThenInclude(x=>x.Companies)
+                    .Where(x => x.ClientId == user.ClientId && (x.Instructors.Any(i=>i.Id == request.InstructorId)))
+                    .OrderByDescending(x => x.CreatedAt);
+
+                var trainings = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
+
+                return new PagedResponse<List<Training>>(trainings, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Training>>(null, 404, "Nenhum usuário autenticado");
+        }
+        catch
+        {
+            return new PagedResponse<List<Training>>(null, 404, "Não foi possível recuperar o treinamento");
+        }
+    }
+
+    public async Task<PagedResponse<List<Training>>> GetByStudentAsync(GetTrainingByStudentRequest request)
+    {
+        try
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Trainings
+                    .AsNoTracking()
+                    .Include(x=>x.Course)
+                    .Include(x=>x.Instructors)
+                    .Include(x=>x.Students)
+                    .ThenInclude(x=>x.Companies)
+                    .Where(x => x.ClientId == user.ClientId && (x.Students.Any(i=>i.Id == request.StudentId)))
+                    .OrderByDescending(x => x.CreatedAt);
+
+                var trainings = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
+
+                return new PagedResponse<List<Training>>(trainings, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Training>>(null, 404, "Nenhum usuário autenticado");
+        }
+        catch
+        {
+            return new PagedResponse<List<Training>>(null, 404, "Não foi possível recuperar o treinamento");
+        }
+    }
+
+    public async Task<PagedResponse<List<Training>>> GetByDateAsync(GetTrainingByDateRequest request)
+    {
+        try
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Trainings
+                    .AsNoTracking()
+                    .Include(x=>x.Course)
+                    .Include(x=>x.Instructors)
+                    .Include(x=>x.Students)
+                    .ThenInclude(x=>x.Companies)
+                    .Where(x => x.ClientId == user.ClientId && x.CreatedAt.Date == request.Date.Date)
+                    .OrderByDescending(x => x.CreatedAt);
+
+                var trainings = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
+
+                return new PagedResponse<List<Training>>(trainings, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Training>>(null, 404, "Nenhum usuário autenticado");
+        }
+        catch
+        {
+            return new PagedResponse<List<Training>>(null, 404, "Não foi possível recuperar o treinamento");
         }
     }
 }

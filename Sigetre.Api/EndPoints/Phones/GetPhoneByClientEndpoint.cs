@@ -22,14 +22,12 @@ public class GetPhoneByClientEndpoint : IEndpoint
     private static async Task<IResult> HandleAsync(
         ClaimsPrincipal user,
         IPhoneHandler handler,
-        long clientId,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
         var request = new GetPhoneByClientRequest();
         {
             request.User = user.Identity.Name;
-            request.ClientId = clientId;
             request.CompanyId = null;
             request.PageNumber = pageNumber;
             request.PageSize = pageSize;
