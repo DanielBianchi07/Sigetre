@@ -66,7 +66,6 @@ public static class BuildExtension
                     Configuration.BackendUrl, 
                     Configuration.FrontendUrl
                     ])
-                    .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials()

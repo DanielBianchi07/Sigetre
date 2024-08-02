@@ -47,16 +47,23 @@ public class AttendanceListHandler(AppDbContext context) : IAttendanceListHandle
     {
         try
         {
-            var attendanceList =
-                await context.AttendanceLists.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var attendanceList =
+                    await context.AttendanceLists.FirstOrDefaultAsync(x =>
+                        x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (attendanceList == null)
-                return new Response<AttendanceList?>(null, 404, "Lista de presença não encontrada");
-            attendanceList.Status = EStatus.Inactive;
-            context.AttendanceLists.Update(attendanceList);
-            await context.SaveChangesAsync();
-            
-            return new Response<AttendanceList?>(attendanceList, message:"Lista de presença excluida com sucesso");
+                if (attendanceList == null)
+                    return new Response<AttendanceList?>(null, 404, "Lista de presença não encontrada");
+                attendanceList.Status = EStatus.Inactive;
+                context.AttendanceLists.Update(attendanceList);
+                await context.SaveChangesAsync();
+
+                return new Response<AttendanceList?>(attendanceList, message: "Lista de presença excluida com sucesso");
+            }
+            else
+                return new Response<AttendanceList?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -73,7 +80,7 @@ public class AttendanceListHandler(AppDbContext context) : IAttendanceListHandle
             {
                 var attendanceList =
                     await context.AttendanceLists.FirstOrDefaultAsync(x =>
-                        x.Id == request.Id && x.ClientId == request.ClientId);
+                        x.Id == request.Id && x.ClientId == user.ClientId);
 
                 if (attendanceList == null)
                     return new Response<AttendanceList?>(null, 404, "Lista de presença não encontrada");
@@ -104,11 +111,17 @@ public class AttendanceListHandler(AppDbContext context) : IAttendanceListHandle
     {
         try
         {
-            var attendanceList = await context.AttendanceLists.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == request.ClientId);
-            return attendanceList is null
-                ? new Response<AttendanceList?>(null, 404, "Lista de presença não encontrada")
-                : new Response<AttendanceList?>(attendanceList);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var attendanceList = await context.AttendanceLists.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                return attendanceList is null
+                    ? new Response<AttendanceList?>(null, 404, "Lista de presença não encontrada")
+                    : new Response<AttendanceList?>(attendanceList);
+            }
+            else
+                return new Response<AttendanceList?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

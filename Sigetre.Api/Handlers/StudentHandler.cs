@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Sigetre.Api.Data;
+using Sigetre.Api.Models;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Student;
@@ -53,15 +54,22 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
     {
         try
         {
-            var student = await context.Students.FirstOrDefaultAsync(x=>x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var student =
+                    await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (student == null)
-                return new Response<Student?>(null, 404, "Aluno não encontrado");
+                if (student == null)
+                    return new Response<Student?>(null, 404, "Aluno não encontrado");
 
-            context.Students.Remove(student);
-            await context.SaveChangesAsync();
+                context.Students.Remove(student);
+                await context.SaveChangesAsync();
 
-            return new Response<Student?>(student, 200, "Aluno removido com sucesso");
+                return new Response<Student?>(student, 200, "Aluno removido com sucesso");
+            }
+            else
+                return new Response<Student?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -80,7 +88,7 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
                 if(company == null)
                     return new Response<Student?>(null, 404, "Não foi possível localizar a empresa");
                 
-                var student = await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var student = await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
                 if (student == null)
                     return new Response<Student?>(null, 404, "Aluno não encontrado");
 
@@ -115,10 +123,17 @@ public class StudentHandler(AppDbContext context) : IStudentHandler
     {
         try
         {
-            var student = await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id);
-            return student is null
-                ? new Response<Student?>(null, 404, "Aluno não encontrado")
-                : new Response<Student?>(student);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var student =
+                    await context.Students.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                return student is null
+                    ? new Response<Student?>(null, 404, "Aluno não encontrado")
+                    : new Response<Student?>(student);
+            }
+            else
+                return new Response<Student?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

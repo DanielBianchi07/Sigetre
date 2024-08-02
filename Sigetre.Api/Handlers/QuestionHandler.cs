@@ -45,15 +45,21 @@ public class QuestionHandler(AppDbContext context) : IQuestionHandler
     {
         try
         {
-            var question =
-                await context.Questions.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var question =
+                    await context.Questions.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (question == null)
-                return new Response<Question?>(null, 404, "Questão não encontrada");
-            context.Questions.Remove(question);
-            await context.SaveChangesAsync();
-            
-            return new Response<Question?>(question, message:"Questão excluída com sucesso");
+                if (question == null)
+                    return new Response<Question?>(null, 404, "Questão não encontrada");
+                context.Questions.Remove(question);
+                await context.SaveChangesAsync();
+
+                return new Response<Question?>(question, message: "Questão excluída com sucesso");
+            }
+            else
+                return new Response<Question?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -68,7 +74,7 @@ public class QuestionHandler(AppDbContext context) : IQuestionHandler
             var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
             if (user != null)
             {
-                var question = await context.Questions.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var question = await context.Questions.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
                 if (question == null)
                     return new Response<Question?>(null, 404, "Questão não encontrada");
@@ -99,11 +105,17 @@ public class QuestionHandler(AppDbContext context) : IQuestionHandler
     {
         try
         {
-            var question = await context.Questions.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id);
-            return question is null
-                ? new Response<Question?>(null, 404, "Questão não encontrada")
-                : new Response<Question?>(question);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var question = await context.Questions.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                return question is null
+                    ? new Response<Question?>(null, 404, "Questão não encontrada")
+                    : new Response<Question?>(question);
+            }
+            else
+                return new Response<Question?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

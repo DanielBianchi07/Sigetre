@@ -159,7 +159,7 @@ public static class Endpoint
             .MapEndpoint<UpdateTestEndpoint>()
             .MapEndpoint<DeleteTestEndpoint>()
             .MapEndpoint<GetTestByIdEndpoint>();
-        
+
         endpoints.MapGroup("v1/trainings")
             .WithTags("Trainings")
             .RequireAuthorization()
@@ -167,8 +167,11 @@ public static class Endpoint
             .MapEndpoint<UpdateTrainingEndpoint>()
             .MapEndpoint<DeleteTrainingEndpoint>()
             .MapEndpoint<GetTrainingByIdEndpoint>()
-            .MapEndpoint<GetAllTrainingEndpoint>();
-
+            .MapEndpoint<GetAllTrainingEndpoint>()
+            .MapEndpoint<GetTrainingByCourseEndpoint>()
+            .MapEndpoint<GetTrainingByDateEndpoint>()
+            .MapEndpoint<GetTrainingByInstructorEndpoint>()
+            .MapEndpoint<GetTrainingByStudentEndpoint>();
     }
     
     private static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app)

@@ -47,15 +47,21 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
     {
         try
         {
-            var phone =
-                await context.Phones.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var phone =
+                    await context.Phones.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (phone == null)
-                return new Response<Phone?>(null, 404, "Telefone não encontrado");
-            context.Phones.Remove(phone);
-            await context.SaveChangesAsync();
-            
-            return new Response<Phone?>(phone, message:"Telefone excluído com sucesso");
+                if (phone == null)
+                    return new Response<Phone?>(null, 404, "Telefone não encontrado");
+                context.Phones.Remove(phone);
+                await context.SaveChangesAsync();
+
+                return new Response<Phone?>(phone, message: "Telefone excluído com sucesso");
+            }
+            else
+                return new Response<Phone?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -70,7 +76,7 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
             var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
             if (user != null)
             {
-                var phone = await context.Phones.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var phone = await context.Phones.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
                 if (phone == null)
                     return new Response<Phone?>(null, 404, "Telefone não encontrado");
@@ -100,18 +106,24 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
     {
         try
         {
-            var query = context.Phones
-                .AsNoTracking()
-                .Where(x => x.CompanyId == request.CompanyId && x.ClientId == request.ClientId)
-                .OrderBy(x => x.Company.Name);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Phones
+                    .AsNoTracking()
+                    .Where(x => x.CompanyId == request.CompanyId && x.ClientId == user.ClientId)
+                    .OrderBy(x => x.Company.Name);
 
-            var phones = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
-            var count = await query.CountAsync();
-                
+                var phones = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
+
                 return new PagedResponse<List<Phone>>(phones, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Phone>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -123,18 +135,24 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
     {
         try
         {
-            var query = context.Phones
-                .AsNoTracking()
-                .Where(x => x.ClientId == request.ClientId && x.CompanyId == null)
-                .OrderBy(x => x.Client.Name);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var query = context.Phones
+                    .AsNoTracking()
+                    .Where(x => x.ClientId == user.ClientId && x.CompanyId == null)
+                    .OrderBy(x => x.Client.Name);
 
-            var phones = await query
-                .Skip(request.PageSize * (request.PageNumber - 1))
-                .Take(request.PageSize)
-                .ToListAsync();
-            var count = await query.CountAsync();
-                
-            return new PagedResponse<List<Phone>>(phones, count, request.PageNumber, request.PageSize);
+                var phones = await query
+                    .Skip(request.PageSize * (request.PageNumber - 1))
+                    .Take(request.PageSize)
+                    .ToListAsync();
+                var count = await query.CountAsync();
+                    
+                return new PagedResponse<List<Phone>>(phones, count, request.PageNumber, request.PageSize);
+            }
+            else
+                return new PagedResponse<List<Phone>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

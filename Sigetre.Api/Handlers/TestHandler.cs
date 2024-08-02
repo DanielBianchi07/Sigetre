@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Sigetre.Api.Data;
+using Sigetre.Api.Models;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Models;
 using Sigetre.Core.Requests.Test;
@@ -43,15 +44,21 @@ public class TestHandler(AppDbContext context) : ITestHandler
     {
         try
         {
-            var test =
-                await context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var test =
+                    await context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (test == null)
-                return new Response<Test?>(null, 404, "Prova não encontrada");
-            context.Tests.Remove(test);
-            await context.SaveChangesAsync();
-            
-            return new Response<Test?>(test, message:"Prova excluída com sucesso");
+                if (test == null)
+                    return new Response<Test?>(null, 404, "Prova não encontrada");
+                context.Tests.Remove(test);
+                await context.SaveChangesAsync();
+
+                return new Response<Test?>(test, message: "Prova excluída com sucesso");
+            }
+            else
+                return new Response<Test?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -66,7 +73,7 @@ public class TestHandler(AppDbContext context) : ITestHandler
             var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
             if (user != null)
             {
-                var test = await context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var test = await context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
                 if (test == null)
                     return new Response<Test?>(null, 404, "Prova não encontrada");
@@ -95,11 +102,17 @@ public class TestHandler(AppDbContext context) : ITestHandler
     {
         try
         {
-            var test = await context.Tests.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id);
-            return test is null
-                ? new Response<Test?>(null, 404, "Prova não encontrada")
-                : new Response<Test?>(test);
+            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
+            if (user != null)
+            {
+                var test = await context.Tests.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                return test is null
+                    ? new Response<Test?>(null, 404, "Prova não encontrada")
+                    : new Response<Test?>(test);
+            }
+            else
+                return new Response<Test?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

@@ -24,7 +24,6 @@ public class GetPhoneByCompanyEndpoint : IEndpoint
         ClaimsPrincipal user,
         IPhoneHandler handler,
         long companyId,
-        long clientId,
         [FromQuery]int pageNumber = Configuration.DefaultPageNumber,
         [FromQuery]int pageSize = Configuration.DefaultPageSize)
     {
@@ -32,7 +31,6 @@ public class GetPhoneByCompanyEndpoint : IEndpoint
         {
             request.User = user.Identity.Name;
             request.CompanyId = companyId;
-            request.ClientId = clientId;
             request.PageNumber = pageNumber;
             request.PageSize = pageSize;
         }

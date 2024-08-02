@@ -1,10 +1,10 @@
 @page "/login"
 @layout HeadlessLayout
 
-<PageTitle>Sigetre - Enter</PageTitle>
+<PageTitle>Sigetre - Login</PageTitle>
 
 <MudGrid Justify="Justify.FlexStart">
-    <MudItem xs="12" sm="12" md="8" lg="6" xl="6" xxl="6">
+    <MudItem xs="12" sm="12" md="10" lg="8" xl="8" xxl="8">
         <MudPaper Class="mud-width-full pa-5">
             <div class="d-flex justify-center pb-6 pt-6">
                 <MudImage Src="images/icon-192.png" Alt="Sigetre - Treinamentos" Width="250" Height="250"/>
@@ -17,6 +17,8 @@
                     Placeholder="exemple@exemple.com"
                     Required="true"
                     RequiredError="Informe o E-mail"
+                    Variant="Variant.Outlined"
+                    Class="mb-3"
                     Validation="@(new EmailAddressAttribute{ErrorMessage="E-mail Inválido"})" />
                 <MudTextField
                     T="string"
@@ -24,7 +26,9 @@
                     InputType="InputType.Password"
                     Placeholder="Senha"
                     Required="true"
-                    RequiredError="Senha Inválida" />
+                    RequiredError="Senha Inválida"
+                    Variant="Variant.Outlined"
+                    Class="mb-3"/>
             </MudForm>
             
             <div class="d-flex mt-8">

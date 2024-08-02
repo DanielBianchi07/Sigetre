@@ -46,15 +46,22 @@ public class ProgramContentHandler(AppDbContext context) : IProgramContentHandle
     {
         try
         {
-            var programContent =
-                await context.ProgramContents.FirstOrDefaultAsync(x => x.Id == request.Id);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var programContent =
+                    await context.ProgramContents.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
-            if (programContent == null)
-                return new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado");
-            context.ProgramContents.Remove(programContent);
-            await context.SaveChangesAsync();
-            
-            return new Response<ProgramContent?>(programContent, message:"Conteúdo programático excluído com sucesso");
+                if (programContent == null)
+                    return new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado");
+                context.ProgramContents.Remove(programContent);
+                await context.SaveChangesAsync();
+
+                return new Response<ProgramContent?>(programContent,
+                    message: "Conteúdo programático excluído com sucesso");
+            }
+            else
+                return new Response<ProgramContent?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -69,7 +76,7 @@ public class ProgramContentHandler(AppDbContext context) : IProgramContentHandle
             var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
             if (user != null)
             {
-                var programContent = await context.ProgramContents.FirstOrDefaultAsync(x => x.Id == request.Id);
+                var programContent = await context.ProgramContents.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
 
                 if (programContent == null)
                     return new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado");
@@ -100,11 +107,17 @@ public class ProgramContentHandler(AppDbContext context) : IProgramContentHandle
     {
         try
         {
-            var programContent = await context.ProgramContents.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == request.Id);
-            return programContent is null
-                ? new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado")
-                : new Response<ProgramContent?>(programContent);
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
+            if (user != null)
+            {
+                var programContent = await context.ProgramContents.AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                return programContent is null
+                    ? new Response<ProgramContent?>(null, 404, "Conteúdo programático não encontrado")
+                    : new Response<ProgramContent?>(programContent);
+            }
+            else
+                return new Response<ProgramContent?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
