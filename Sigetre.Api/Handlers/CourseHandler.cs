@@ -13,9 +13,6 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
                 var course = new Course
                 {
                     Name = request.Name,
@@ -26,17 +23,14 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
                     SpecializationId = request.SpecializationId,
                     CreatedAt = request.CreatedAt,
                     Status = request.Status,
-                    ClientId = user.ClientId,
-                    CreatedBy = request.CreateBy,
+                    User = request.User,
+                    CreatedBy = request.User,
                 };
 
                 await context.Courses.AddAsync(course);
                 await context.SaveChangesAsync();
 
                 return new Response<Course?>(course, 201, "Curso cadastrado com sucesso");
-            }
-            else
-                return new Response<Course?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -48,11 +42,8 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
-            if (user != null)
-            {
                 var course =
-                    await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                    await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
 
                 if (course == null)
                     return new Response<Course?>(null, 404, "Curso não encontrado");
@@ -61,9 +52,6 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
                 await context.SaveChangesAsync();
 
                 return new Response<Course?>(course, 200, "Curso removido com sucesso");
-            }
-            else
-                return new Response<Course?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -75,10 +63,7 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
-                var course = await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                var course = await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
 
                 if (course == null)
                     return new Response<Course?>(null, 404, "Curso não encontrado");
@@ -91,16 +76,13 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
                 course.SpecializationId = request.SpecializationId;
                 course.UpdatedAt = request.UpdatedAt;
                 course.Status = request.Status;
-                course.ClientId = user.ClientId;
-                course.UpdatedBy = request.UpdatedBy;
+                course.User = request.User;
+                course.UpdatedBy = request.User;
 
                 context.Courses.Update(course);
                 await context.SaveChangesAsync();
 
                 return new Response<Course?>(course);
-            }
-            else
-                return new Response<Course?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -112,17 +94,11 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
-            if (user != null)
-            {
                 var course =
-                    await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                    await context.Courses.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
                 return course is null
                     ? new Response<Course?>(null, 404, "Curso não encontrado")
                     : new Response<Course?>(course);
-            }
-            else
-                return new Response<Course?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -134,11 +110,8 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
-            if (user != null)
-            {
                 var query = context.Courses.AsNoTracking()
-                    .Where(x=>x.ClientId == user.ClientId)
+                    .Where(x=>x.User == request.User)
                     .OrderBy(x => x.Name);
 
                 var courses = await query
@@ -148,9 +121,6 @@ public class CourseHandler(AppDbContext context) : ICourseHandler
                 var count = await query.CountAsync();
 
                 return new PagedResponse<List<Course>>(courses, count, request.PageNumber, request.PageSize);
-            }
-            else
-                return new PagedResponse<List<Course>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

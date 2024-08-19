@@ -14,25 +14,19 @@ public class TestHandler(AppDbContext context) : ITestHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
                 var test = new Test()
                 {
                     Title = request.Title,
                     CreatedAt = request.CreatedAt,
                     Status = request.Status,
-                    CreatedBy = request.CreateBy,
-                    ClientId = user.ClientId,
+                    CreatedBy = request.User,
+                    User = request.User,
                 };
 
                 await context.Tests.AddAsync(test);
                 await context.SaveChangesAsync();
 
                 return new Response<Test?>(test, 201, "Prova cadastrada com sucesso");
-            }
-            else
-                return new Response<Test?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -44,11 +38,8 @@ public class TestHandler(AppDbContext context) : ITestHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
                 var test =
-                    await context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                    await context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
 
                 if (test == null)
                     return new Response<Test?>(null, 404, "Prova não encontrada");
@@ -56,9 +47,6 @@ public class TestHandler(AppDbContext context) : ITestHandler
                 await context.SaveChangesAsync();
 
                 return new Response<Test?>(test, message: "Prova excluída com sucesso");
-            }
-            else
-                return new Response<Test?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -70,10 +58,7 @@ public class TestHandler(AppDbContext context) : ITestHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
-                var test = await context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                var test = await context.Tests.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
 
                 if (test == null)
                     return new Response<Test?>(null, 404, "Prova não encontrada");
@@ -81,16 +66,13 @@ public class TestHandler(AppDbContext context) : ITestHandler
                 test.Title = request.Title;
                 test.UpdatedAt = request.UpdatedAt;
                 test.Status = request.Status;
-                test.UpdatedBy = request.UpdatedBy;
-                test.ClientId = user.ClientId;
+                test.UpdatedBy = request.User;
+                test.User = request.User;
 
                 context.Tests.Update(test);
                 await context.SaveChangesAsync();
 
                 return new Response<Test?>(test);
-            }
-            else
-                return new Response<Test?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -102,17 +84,11 @@ public class TestHandler(AppDbContext context) : ITestHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
                 var test = await context.Tests.AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                    .FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
                 return test is null
                     ? new Response<Test?>(null, 404, "Prova não encontrada")
                     : new Response<Test?>(test);
-            }
-            else
-                return new Response<Test?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

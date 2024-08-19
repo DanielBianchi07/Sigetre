@@ -1,27 +1,27 @@
+using System.Security.Principal;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor;
 using Sigetre.Core.Handlers;
 using Sigetre.Core.Requests.Identity;
-using Sigetre.Web.Handlers;
+using Sigetre.Web.Security;
 
 namespace Sigetre.Web.Pages.Identity;
 
-public partial class RegisterPage : ComponentBase
+public partial class LoginPage : ComponentBase
 {
-    #region Dependencies
+    #region Injects
 
     [Inject] public ISnackbar Snackbar { get; set; } = null!;
     [Inject] public IIdentityHandler Handler { get; set; } = null!;
     [Inject] public NavigationManager NavigationManager { get; set; } = null!;
-    [Inject] public AuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
+    [Inject] public ICookieAuthenticationStateProvider AuthenticationStateProvider { get; set; } = null!;
 
     #endregion
 
     #region Properties
 
     public bool IsBusy { get; set; } = false;
-    public RegisterRequest InputModel { get; set; } = new();
+    public LoginRequest InputModel { get; set; } = new();
 
     #endregion
 
@@ -31,9 +31,13 @@ public partial class RegisterPage : ComponentBase
     {
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
-        
-        if(user.Identity is { IsAuthenticated : true })
+
+        if (user.Identity is { IsAuthenticated : true })
+        {
+            await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            AuthenticationStateProvider.NotifyAuthenticationStateChanged();
             NavigationManager.NavigateTo("/");
+        }
     }
 
     #endregion
@@ -45,12 +49,11 @@ public partial class RegisterPage : ComponentBase
         IsBusy = true;
         try
         {
-            var result = await Handler.RegisterAsync(InputModel);
+            var result = await Handler.LoginAsync(InputModel);
 
             if (result.IsSuccess)
             {
-                Snackbar.Add(result.Message, Severity.Success);   
-                NavigationManager.NavigateTo("/login");
+                NavigationManager.NavigateTo("/");
             }
             else
                 Snackbar.Add(result.Message, Severity.Error);

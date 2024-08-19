@@ -10,59 +10,47 @@
             <div class="d-flex justify-center pb-6 pt-6">
                 <MudImage Src="images/icon-192.png" Alt="Sigetre - Treinamentos" Width="250" Height="250"/>
             </div>
-            <MudForm @ref="MudForm">
-                <MudTextField
-                    T="string"
-                    Label="Name"
-                    InputType="InputType.Text"
-                    Placeholder="Your name here"
-                    Required="true"
-                    RequiredError="Place your name"
-                    Variant="Variant.Outlined"
-                    Class="mb-3" />
-                <MudTextField
-                    T="string"
-                    Label="Telephone"
-                    InputType="InputType.Telephone"
-                    Placeholder="Your telephone here"
-                    Required="true"
-                    RequiredError="Place your telephone"
-                    Class="mb-3"
-                    Variant="Variant.Outlined" />
+            
+            <EditForm Model="@InputModel" OnValidSubmit="OnValidSubmitAsync">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                
                 <MudTextField
                     T="string"
                     Label="E-mail"
-                    InputType="InputType.Email"
+                    HelperText="Campo obrigatório"
                     Placeholder="exemple@exemple.com"
-                    Required="true"
-                    RequiredError="Place your E-mail"
                     Class="mb-3"
-                    Variant="Variant.Outlined" />
+                    Variant="Variant.Outlined"
+                    InputType="InputType.Email"
+                    For="@(()=> InputModel.Email)"
+                    @bind-Value="InputModel.Email" />
+                
                 <MudTextField
                     T="string"
                     Label="Password"
-                    InputType="InputType.Password"
+                    HelperText="Campo obrigatório"
                     Placeholder="Senha"
-                    Required="true"
-                    RequiredError="Inválida password"
                     Class="mb-3"
-                    Variant="Variant.Outlined" />
-            </MudForm>
-            @*<MudSelect T="" @bind-Value="" Label="Select your client" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" Clearable>
-            </MudSelect>*@
+                    Variant="Variant.Outlined"
+                    InputType="InputType.Password"
+                    For="@(() => InputModel.Password)"
+                    @bind-Value="InputModel.Password"/>
 
-            <div class="d-flex mt-8">
-                <MudButton Variant="Variant.Filled" Color="Color.Success" Class="mx-5">Register</MudButton>
-                <MudSpacer />
-                <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Href="/login" Class="mx-5">Already have an account</MudButton>
-            </div>
-
+                <div class="d-flex mt-8">
+                    @if (IsBusy)
+                    {
+                        <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+                    }
+                    else
+                    {
+                        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Success" Class="mx-5">Register</MudButton>
+                        <MudSpacer />
+                        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" Href="/login" Class="mx-5">Already have an account</MudButton>
+                    }
+                </div>
+                
+            </EditForm>
         </MudPaper>
     </MudItem>
 </MudGrid>
-
-@code {
-    
-    MudForm? _mudForm;
-    
-}

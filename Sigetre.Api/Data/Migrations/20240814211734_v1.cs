@@ -12,26 +12,6 @@ namespace Sigetre.Api.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Clients",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
-                    Ein = table.Column<string>(type: "VARCHAR(32)", maxLength: 32, nullable: false),
-                    Email = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Companies",
                 columns: table => new
                 {
@@ -43,9 +23,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,9 +47,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,8 +77,6 @@ namespace Sigetre.Api.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(180)", maxLength: 180, nullable: true),
@@ -129,9 +107,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -153,9 +131,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -172,9 +150,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -194,23 +172,17 @@ namespace Sigetre.Api.Migrations
                     StreetName = table.Column<string>(type: "NVARCHAR(128)", maxLength: 128, nullable: false),
                     Number = table.Column<string>(type: "NVARCHAR(5)", maxLength: 5, nullable: false),
                     Complement = table.Column<string>(type: "NVARCHAR(64)", maxLength: 64, nullable: true),
+                    CompanyId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: true),
-                    CompanyId = table.Column<long>(type: "BIGINT", nullable: true),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Address", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Address_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Address_Companies_CompanyId",
                         column: x => x.CompanyId,
@@ -226,27 +198,23 @@ namespace Sigetre.Api.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<string>(type: "VARCHAR(16)", maxLength: 16, nullable: false),
+                    CompanyId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: true),
-                    CompanyId = table.Column<long>(type: "BIGINT", nullable: true),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Phones", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Phones_Clients_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "Clients",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Phones_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -261,9 +229,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -288,9 +256,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -315,9 +283,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -428,9 +396,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -479,9 +447,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -532,9 +500,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -561,9 +529,9 @@ namespace Sigetre.Api.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<short>(type: "SMALLINT", nullable: false),
-                    ClientId = table.Column<long>(type: "BIGINT", nullable: false),
                     CreatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false),
-                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true)
+                    UpdatedBy = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: true),
+                    User = table.Column<string>(type: "VARCHAR(160)", maxLength: 160, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -649,18 +617,10 @@ namespace Sigetre.Api.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Address_ClientId",
-                table: "Address",
-                column: "ClientId",
-                unique: true,
-                filter: "[ClientId] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Address_CompanyId",
                 table: "Address",
                 column: "CompanyId",
-                unique: true,
-                filter: "[CompanyId] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Alternatives_QuestionId",
@@ -732,11 +692,6 @@ namespace Sigetre.Api.Migrations
                 name: "IX_InstructorTraining_TrainingsId",
                 table: "InstructorTraining",
                 column: "TrainingsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Phones_ClientId",
-                table: "Phones",
-                column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Phones_CompanyId",
@@ -822,9 +777,6 @@ namespace Sigetre.Api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Instructors");
-
-            migrationBuilder.DropTable(
-                name: "Clients");
 
             migrationBuilder.DropTable(
                 name: "Companies");

@@ -22,9 +22,6 @@ public class TrainingMapping : IEntityTypeConfiguration<Training>
         builder.Property(x => x.Status)
             .IsRequired(true)
             .HasColumnType("SMALLINT");
-        builder.Property(x => x.ClientId)
-            .IsRequired(true)
-            .HasColumnType("BIGINT");
         builder.Property(x => x.CreatedBy)
             .IsRequired(true)
             .HasColumnType("VARCHAR")
@@ -32,6 +29,10 @@ public class TrainingMapping : IEntityTypeConfiguration<Training>
         builder.Property(x => x.UpdatedBy)
             .IsRequired(false)
             .HasColumnType("VARCHAR")
-            .HasMaxLength(160);;
+            .HasMaxLength(160);
+        builder.Property(x => x.User)
+            .IsRequired()
+            .HasColumnType("VARCHAR")
+            .HasMaxLength(160);
     }
 }

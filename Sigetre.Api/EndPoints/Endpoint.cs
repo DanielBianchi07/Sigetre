@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Identity.Data;
 using Sigetre.Api.Common.Api;
 using Sigetre.Api.EndPoints.Addresses;
 using Sigetre.Api.EndPoints.Alternatives;
 using Sigetre.Api.EndPoints.AttendanceLists;
-using Sigetre.Api.EndPoints.Clients;
 using Sigetre.Api.EndPoints.Companies;
 using Sigetre.Api.EndPoints.Instructors;
 using Sigetre.Api.EndPoints.Courses;
@@ -59,15 +57,6 @@ public static class Endpoint
             .MapEndpoint<DeleteAttendanceListEndpoint>()
             .MapEndpoint<GetAttendanceListByIdEndpoint>()
             .MapEndpoint<GetAllAttendanceListEndoint>();
-            
-        endpoints.MapGroup("v1/clients")
-            .WithTags("Clients")
-            .RequireAuthorization()
-            .MapEndpoint<CreateClientEndpoint>()
-            .MapEndpoint<UpdateClientEndpoint>()
-            .MapEndpoint<DeleteClientEndpoint>()
-            .MapEndpoint<GetClientByIdEndpoint>()
-            .MapEndpoint<GetAllClientEndpoint>();
         
         endpoints.MapGroup("v1/companies")
             .WithTags("Companies")
@@ -94,8 +83,7 @@ public static class Endpoint
         endpoints.MapGroup("v1/identity")
             .WithTags("Identity")
             .MapEndpoint<LogoutEndpoint>()
-            .MapEndpoint<GetRolesEndpoint>()
-            .MapEndpoint<InscribeEndpoint>();
+            .MapEndpoint<GetRolesEndpoint>();
         
         endpoints.MapGroup("v1/instructors")
             .WithTags("Instructors")
@@ -106,15 +94,14 @@ public static class Endpoint
             .MapEndpoint<GetInstructorByIdEndpoint>()
             .MapEndpoint<GetInstructorBySpecializationEndpoint>()
             .MapEndpoint<GetAllInstructorEndpoint>();
-        
+
         endpoints.MapGroup("v1/phones")
             .WithTags("Phones")
             .RequireAuthorization()
             .MapEndpoint<CreatePhoneEndpoint>()
             .MapEndpoint<UpdatePhoneEndpoint>()
             .MapEndpoint<DeletePhoneEndpoint>()
-            .MapEndpoint<GetPhoneByCompanyEndpoint>()
-            .MapEndpoint<GetPhoneByClientEndpoint>();
+            .MapEndpoint<GetPhoneByCompanyEndpoint>();
 
         endpoints.MapGroup("v1/programContents")
             .WithTags("ProgramContents")

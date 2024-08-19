@@ -78,7 +78,6 @@ public static class BuildExtension
         builder.Services.AddTransient<IAlternativeHandler, AlternativeHandler>();
         builder.Services.AddTransient<IAttendanceListHandler, AttendanceListHandler>();
         builder.Services.AddTransient<ICompanyHandler, CompanyHandler>();
-        builder.Services.AddTransient<IClientHandler, ClientHandler>();
         builder.Services.AddTransient<ICourseHandler, CourseHandler>();
         builder.Services.AddTransient<IInstructorHandler, InstructorHandler>();
         builder.Services.AddTransient<IPhoneHandler, PhoneHandler>();

@@ -13,9 +13,6 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
                 var instructor = new Instructor
                 {
                     Name = request.Name,
@@ -27,17 +24,14 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
                     SpecializationId = request.SpecializationId,
                     CreatedAt = request.CreatedAt,
                     Status = request.Status,
-                    ClientId = user.ClientId,
-                    CreatedBy = request.CreateBy,
+                    User = request.User,
+                    CreatedBy = request.User,
                 };
 
                 await context.Instructors.AddAsync(instructor);
                 await context.SaveChangesAsync();
 
                 return new Response<Instructor?>(instructor, 201, "Instrutor cadastrado com sucesso");
-            }
-            else
-                return new Response<Instructor?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -49,10 +43,7 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
-            if (user != null)
-            {
-                var instructor = await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                var instructor = await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
 
                 if (instructor == null)
                     return new Response<Instructor?>(null, 404, "Instrutor não encontrado");
@@ -61,9 +52,6 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
                 await context.SaveChangesAsync();
 
                 return new Response<Instructor?>(instructor, 200, "Instrutor removido com sucesso");
-            }
-            else
-                return new Response<Instructor?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -75,10 +63,7 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
-                var instructor = await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                var instructor = await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
 
                 if (instructor == null)
                     return new Response<Instructor?>(null, 404, "Instrutor não encontrado");
@@ -92,16 +77,13 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
                 instructor.SpecializationId = request.SpecializationId;
                 instructor.UpdatedAt = request.UpdatedAt;
                 instructor.Status = request.Status;
-                instructor.ClientId = user.ClientId;
-                instructor.UpdatedBy = request.UpdatedBy;
+                instructor.User = request.User;
+                instructor.UpdatedBy = request.User;
 
                 context.Instructors.Update(instructor);
                 await context.SaveChangesAsync();
 
                 return new Response<Instructor?>(instructor);
-            }
-            else
-                return new Response<Instructor?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -113,17 +95,11 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
-            if (user != null)
-            {
                 var instructor =
-                    await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                    await context.Instructors.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
                 return instructor is null
                     ? new Response<Instructor?>(null, 404, "Instrutor não encontrado")
                     : new Response<Instructor?>(instructor);
-            }
-            else
-                return new Response<Instructor?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -135,12 +111,9 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
-            if (user != null)
-            {
                 var query = context.Instructors
                     .AsNoTracking()
-                    .Where(x => x.ClientId == user.ClientId)
+                    .Where(x => x.User == request.User)
                     .OrderBy(x => x.Name);
 
                 var instructors = await query
@@ -150,9 +123,6 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
                 var count = await query.CountAsync();
 
                 return new PagedResponse<List<Instructor>>(instructors, count, request.PageNumber, request.PageSize);
-            }
-            else
-                return new PagedResponse<List<Instructor>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -164,12 +134,9 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == request.User);
-            if (user != null)
-            {
                 var query = context.Instructors
                     .AsNoTracking()
-                    .Where(x => x.SpecializationId == request.SpecialityId && x.ClientId == user.ClientId)
+                    .Where(x => x.SpecializationId == request.SpecialityId && x.User == request.User)
                     .OrderBy(x => x.Name);
 
                 var instructors = await query
@@ -179,9 +146,6 @@ public class InstructorHandler(AppDbContext context) : IInstructorHandler
                 var count = await query.CountAsync();
 
                 return new PagedResponse<List<Instructor>>(instructors, count, request.PageNumber, request.PageSize);
-            }
-            else
-                return new PagedResponse<List<Instructor>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
