@@ -222,9 +222,6 @@ namespace Sigetre.Api.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<long?>("ClientId")
-                        .HasColumnType("BIGINT");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -241,10 +238,6 @@ namespace Sigetre.Api.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(180)
@@ -299,10 +292,6 @@ namespace Sigetre.Api.Migrations
                     b.Property<short>("Answer")
                         .HasColumnType("SMALLINT");
 
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
-
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -329,6 +318,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
@@ -343,10 +337,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -380,6 +370,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<byte[]>("Watermark")
                         .HasColumnType("VARBINARY(MAX)");
 
@@ -403,10 +398,7 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("NVARCHAR");
 
-                    b.Property<long?>("ClientId")
-                        .HasColumnType("BIGINT");
-
-                    b.Property<long?>("CompanyId")
+                    b.Property<long>("CompanyId")
                         .HasColumnType("BIGINT");
 
                     b.Property<string>("Complement")
@@ -451,6 +443,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<string>("ZipCode")
                         .IsRequired()
                         .HasMaxLength(9)
@@ -458,13 +455,8 @@ namespace Sigetre.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId")
-                        .IsUnique()
-                        .HasFilter("[ClientId] IS NOT NULL");
-
                     b.HasIndex("CompanyId")
-                        .IsUnique()
-                        .HasFilter("[CompanyId] IS NOT NULL");
+                        .IsUnique();
 
                     b.ToTable("Address", (string)null);
                 });
@@ -477,10 +469,7 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("ClientId")
-                        .HasColumnType("BIGINT");
-
-                    b.Property<long?>("CompanyId")
+                    b.Property<long>("CompanyId")
                         .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -506,9 +495,12 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
-                    b.HasKey("Id");
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
 
-                    b.HasIndex("ClientId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
@@ -522,10 +514,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -559,6 +547,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<byte[]>("Watermark")
                         .HasColumnType("VARBINARY(MAX)");
 
@@ -569,51 +562,6 @@ namespace Sigetre.Api.Migrations
                     b.ToTable("Certificates", (string)null);
                 });
 
-            modelBuilder.Entity("Sigetre.Core.Models.Client", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(160)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<string>("Ein")
-                        .IsRequired()
-                        .HasMaxLength(32)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(160)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<short>("Status")
-                        .HasColumnType("SMALLINT");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .HasMaxLength(160)
-                        .HasColumnType("VARCHAR");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Clients", (string)null);
-                });
-
             modelBuilder.Entity("Sigetre.Core.Models.Company", b =>
                 {
                     b.Property<long>("Id")
@@ -622,10 +570,6 @@ namespace Sigetre.Api.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -654,6 +598,11 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("User")
+                        .IsRequired()
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
@@ -669,10 +618,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -709,6 +654,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<short>("Validity")
                         .HasColumnType("SMALLINT");
 
@@ -724,10 +674,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -777,6 +723,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SpecializationId");
@@ -791,10 +742,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<long>("CourseId")
                         .HasColumnType("bigint");
@@ -822,6 +769,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<short?>("Workload")
                         .HasColumnType("SMALLINT");
 
@@ -839,10 +791,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -873,6 +821,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
@@ -887,10 +840,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -915,6 +864,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.HasKey("Id");
 
                     b.ToTable("Specializations", (string)null);
@@ -927,10 +881,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -974,6 +924,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.HasKey("Id");
 
                     b.ToTable("Students", (string)null);
@@ -986,10 +941,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -1014,6 +965,11 @@ namespace Sigetre.Api.Migrations
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
                     b.HasKey("Id");
 
                     b.ToTable("Tests", (string)null);
@@ -1026,10 +982,6 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long?>("ClientId")
-                        .IsRequired()
-                        .HasColumnType("BIGINT");
 
                     b.Property<long>("CourseId")
                         .HasColumnType("bigint");
@@ -1055,6 +1007,11 @@ namespace Sigetre.Api.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
+                        .HasMaxLength(160)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<string>("User")
+                        .IsRequired()
                         .HasMaxLength(160)
                         .HasColumnType("VARCHAR");
 
@@ -1198,32 +1155,22 @@ namespace Sigetre.Api.Migrations
 
             modelBuilder.Entity("Sigetre.Core.Models.Birrelational.Address", b =>
                 {
-                    b.HasOne("Sigetre.Core.Models.Client", "Client")
-                        .WithOne("Address")
-                        .HasForeignKey("Sigetre.Core.Models.Birrelational.Address", "ClientId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Sigetre.Core.Models.Company", "Company")
                         .WithOne("Address")
                         .HasForeignKey("Sigetre.Core.Models.Birrelational.Address", "CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Client");
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });
 
             modelBuilder.Entity("Sigetre.Core.Models.Birrelational.Phone", b =>
                 {
-                    b.HasOne("Sigetre.Core.Models.Client", "Client")
-                        .WithMany("Telephones")
-                        .HasForeignKey("ClientId");
-
                     b.HasOne("Sigetre.Core.Models.Company", "Company")
                         .WithMany("Telephones")
-                        .HasForeignKey("CompanyId");
-
-                    b.Navigation("Client");
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Company");
                 });
@@ -1301,14 +1248,6 @@ namespace Sigetre.Api.Migrations
             modelBuilder.Entity("Sigetre.Api.Models.User", b =>
                 {
                     b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("Sigetre.Core.Models.Client", b =>
-                {
-                    b.Navigation("Address")
-                        .IsRequired();
-
-                    b.Navigation("Telephones");
                 });
 
             modelBuilder.Entity("Sigetre.Core.Models.Company", b =>

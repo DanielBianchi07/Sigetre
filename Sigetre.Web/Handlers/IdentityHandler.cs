@@ -20,7 +20,7 @@ public class IdentityHandler(IHttpClientFactory _httpClientFactory) : IIdentityH
 
     public async Task<Response<string>> RegisterAsync(RegisterRequest request)
     {
-        var result = await _client.PostAsJsonAsync("v1/identity/inscribe", request);
+        var result = await _client.PostAsJsonAsync("v1/identity/register", request);
         return result.IsSuccessStatusCode
             ? new Response<string>("Cadastro realizado com sucesso", 201, "Cadastro realizado com sucesso")
             : new Response<string>(null, (int)result.StatusCode, "Não foi possível realizar o cadastro");

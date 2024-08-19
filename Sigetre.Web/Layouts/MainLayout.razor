@@ -8,21 +8,41 @@
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
-<MudLayout>
-    <MudAppBar>
-        Sigetre
-        <MudSpacer />
-        <MudSwitch @bind-Value="_IsDarkMode" />
-    </MudAppBar>
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Medium">
-            @Body
-        </MudContainer>
-    </MudMainContent>
-</MudLayout>
+<AuthorizeView>
+    <Authorized>
+        <MudLayout>
+            <MudAppBar Fixed="false" Dense="true" Elevation="12">
+                <MudIconButton Class="me-8" Icon="@Icons.Material.Filled.Menu" Color="Color.Warning" Edge="Edge.Start" OnClick="OnChangeButtonMenu" />
+                <h5>Sigetre</h5>
+                <MudSpacer />
+                <MudText>
+                    @context.User.Identity?.Name
+                </MudText>
+                <MudSwitch
+                    Color="Color.Inherit"
+                    Class="ma-4"
+                    ThumbIcon="@Icons.Material.TwoTone.LightMode"
+                    T="bool"
+                    @bind-Value="_IsDarkMode" />
+            </MudAppBar>
+            <MudDrawer Open="@_IsDrawerOpened">
+                <h1>Sigetre Menu</h1>
+            </MudDrawer>
+            <MudMainContent>
+                <MudContainer MaxWidth="MaxWidth.Medium">
+                    @Body
+                </MudContainer>
+            </MudMainContent>
+        </MudLayout>
+    </Authorized>
+    <NotAuthorized>
+        <LoginRedirect />
+    </NotAuthorized>
+</AuthorizeView>
 
 @code{
 
+    private bool _IsDrawerOpened = false;
     private bool _IsDarkMode = true;
     private MudThemeProvider _mudThemeProvider = null!;
 
@@ -35,6 +55,9 @@
             StateHasChanged();
         }
     }
+
+    public void OnChangeButtonMenu()
+    => _IsDrawerOpened = !_IsDrawerOpened;
 
     private Task OnSystemPreferenceChanged(bool newValue)
     {

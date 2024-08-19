@@ -16,26 +16,20 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
                 var phone = new Phone()
                 {
                     Number = request.Number,
                     CreatedAt = request.CreatedAt,
                     Status = request.Status,
-                    CreatedBy = request.CreateBy,
+                    CreatedBy = request.User,
                     CompanyId = request.CompanyId,
-                    ClientId = user.ClientId,
+                    User = request.User,
                 };
 
                 await context.Phones.AddAsync(phone);
                 await context.SaveChangesAsync();
 
                 return new Response<Phone?>(phone, 201, "Telefone cadastrado com sucesso");
-            }
-            else
-                return new Response<Phone?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -47,11 +41,8 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
                 var phone =
-                    await context.Phones.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                    await context.Phones.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
 
                 if (phone == null)
                     return new Response<Phone?>(null, 404, "Telefone não encontrado");
@@ -59,9 +50,6 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
                 await context.SaveChangesAsync();
 
                 return new Response<Phone?>(phone, message: "Telefone excluído com sucesso");
-            }
-            else
-                return new Response<Phone?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -73,18 +61,15 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
-                var phone = await context.Phones.FirstOrDefaultAsync(x => x.Id == request.Id && x.ClientId == user.ClientId);
+                var phone = await context.Phones.FirstOrDefaultAsync(x => x.Id == request.Id && x.User == request.User);
 
                 if (phone == null)
                     return new Response<Phone?>(null, 404, "Telefone não encontrado");
 
                 phone.Number = request.Number;
-                phone.ClientId = user.ClientId;
+                phone.User = request.User;
                 phone.CompanyId = request.CompanyId;
-                phone.UpdatedBy = request.UpdatedBy;
+                phone.UpdatedBy = request.User;
                 phone.UpdatedAt = request.UpdatedAt;
                 phone.Status = request.Status;
 
@@ -92,9 +77,6 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
                 await context.SaveChangesAsync();
 
                 return new Response<Phone?>(phone);
-            }
-            else
-                return new Response<Phone?>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {
@@ -106,12 +88,9 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
     {
         try
         {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
                 var query = context.Phones
                     .AsNoTracking()
-                    .Where(x => x.CompanyId == request.CompanyId && x.ClientId == user.ClientId)
+                    .Where(x => x.CompanyId == request.CompanyId && x.User == request.User)
                     .OrderBy(x => x.Company.Name);
 
                 var phones = await query
@@ -121,38 +100,6 @@ public class PhoneHandler(AppDbContext context) : IPhoneHandler
                 var count = await query.CountAsync();
 
                 return new PagedResponse<List<Phone>>(phones, count, request.PageNumber, request.PageSize);
-            }
-            else
-                return new PagedResponse<List<Phone>>(null, 404, "Nenhum usuário autenticado");
-        }
-        catch
-        {
-            return new PagedResponse<List<Phone>>(null, 500, "Não foi possivel consultar os telefones");
-        }
-    }
-
-    public async Task<PagedResponse<List<Phone>>> GetByClientAsync(GetPhoneByClientRequest request)
-    {
-        try
-        {
-            var user = await context.Users.FirstOrDefaultAsync(x=>x.UserName == request.User);
-            if (user != null)
-            {
-                var query = context.Phones
-                    .AsNoTracking()
-                    .Where(x => x.ClientId == user.ClientId && x.CompanyId == null)
-                    .OrderBy(x => x.Client.Name);
-
-                var phones = await query
-                    .Skip(request.PageSize * (request.PageNumber - 1))
-                    .Take(request.PageSize)
-                    .ToListAsync();
-                var count = await query.CountAsync();
-                    
-                return new PagedResponse<List<Phone>>(phones, count, request.PageNumber, request.PageSize);
-            }
-            else
-                return new PagedResponse<List<Phone>>(null, 404, "Nenhum usuário autenticado");
         }
         catch
         {

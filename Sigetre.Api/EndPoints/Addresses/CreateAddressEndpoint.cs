@@ -23,7 +23,7 @@ public class CreateAddressEndpoint : IEndpoint
             IAddressHandler handler,
             CreateAddressRequest request)
     {
-        request.User = user.Identity.Name;
+        request.User = user.Identity?.Name ?? string.Empty;
         var result = await handler.CreateAsync(request);
         return result.IsSuccess
             ? TypedResults.Created($"/{result.Data?.Id}", result)

@@ -8,7 +8,8 @@ public abstract class BaseClass
     public DateTime? UpdatedAt { get; set; }
     public EStatus Status { get; set; }
 
-    public long? ClientId { get; set; }
     public string CreatedBy { get; set; } = string.Empty;
     public string? UpdatedBy { get; set; }
+
+    public string User { get; set; } = string.Empty;
 }

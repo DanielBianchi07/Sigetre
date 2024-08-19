@@ -3,6 +3,6 @@ using Sigetre.Core.Responses;
 
 namespace Sigetre.Core.Requests.Phones;
 
-public class GetAllPhoneRequest : PagedNullableRequest
+public class GetAllPhoneRequest : PagedRequest
 {
 }

@@ -1,6 +1,6 @@
 namespace Sigetre.Core.Models.Birrelational;
 
-public class Address : BaseNullableClass
+public class Address : BaseClass
 {
     public long Id { get; set; }
     public string ZipCode { get; set; } = String.Empty;
@@ -11,7 +11,7 @@ public class Address : BaseNullableClass
     public string Number { get; set; } = String.Empty;
     public string? Complement { get; set; }
     
+    public long CompanyId { get; set; }
     public Company Company { get; set; } = null!;
-    public Client Client { get; set; } = null!;
 
 }
